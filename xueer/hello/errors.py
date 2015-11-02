@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-  
 from flask import render_template
-from app.hello import hello
+from . import hello
 
 
 @hello.app_errorhandler(404)

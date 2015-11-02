@@ -1,4 +1,4 @@
-# -*- coding:utf-8 -*-  
+# -*- coding:utf-8 -*-
 from datetime import datetime
 import hashlib
 from flask import current_app, request
@@ -12,7 +12,8 @@ class Permission:
     WRITE_ARTICLES = 0x04
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
-	
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -68,7 +69,7 @@ class User(UserMixin, db.Model):
                 self.role = Role.query.filter_by(permissions=0xff).first()
             if self.role is None:
                 self.role = Role.query.filter_by(default=True).first()
-				
+
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
@@ -79,8 +80,8 @@ class User(UserMixin, db.Model):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
-		
-	
+
+
 
     def can(self, permissions):
         return self.role is not None and \
@@ -88,11 +89,11 @@ class User(UserMixin, db.Model):
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
-		
+
     def ping(self):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
-		
+
     def gravatar(self, size=100, default='identicon', rating='g'):
         if request.is_secure:
             url = 'https://secure.gravatar.com/avatar'
@@ -100,11 +101,11 @@ class User(UserMixin, db.Model):
             url = 'http://www.gravatar.com/avatar'
         hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
         return '{url}/{hash}?s={size}&d={default}&r={rating}'.format(
-            url=url, hash=hash, size=size, default=default, rating=rating)		
-			
+            url=url, hash=hash, size=size, default=default, rating=rating)
+
     def __repr__(self):
         return '<User %r>' % self.username
-		
+
 class AnonymousUser(AnonymousUserMixin):
     def can(self, permissions):
         return False
@@ -117,7 +118,7 @@ login_manager.anonymous_user = AnonymousUser
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
-	
+
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -125,9 +126,9 @@ class Post(db.Model):
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    
-    
-    
+
+
+
 #new stuff
 UserLike = db.Table('UserLike',
     db.Column('userb_id', db.Integer, db.ForeignKey('userb.id')),
@@ -169,7 +170,8 @@ class Courses(db.Model):
 	#category(定义和CourseCategories的多对一关系)
     category = db.relationship('CourseCategories', backref=db.backref('courses', lazy='dynamic'))
 
-	#按文理艺体分类 
+	#按文理艺体分类
+
     type_id = db.Column(db.Integer, db.ForeignKey('type.id'))
 	#type(定义和CourseCategories的多对一关系)
     type = db.relationship('CourseTypes', backref=db.backref('courses', lazy='dynamic'))
@@ -190,7 +192,7 @@ class Courses(db.Model):
 
 	#comment(定义和Comments表的一对多关系)???
     comment = db.relationship('Comments',backref = 'course')
-    
+
     tags = db.relationship('CourseTag', backref='courses')
 
     def __repr__(self):
@@ -213,7 +215,7 @@ class CourseCategories(db.Model):
 		return '<CourseCategory %r>' % self.name
 
 #CourseTypes
-#	id    name    
+#	id    name
 #	1     理科
 #	2     文科
 #	3     艺体
@@ -238,7 +240,7 @@ class Comments(db.Model):
     body = db.Column(db.Text)
     #is_useful计数
     is_useful = db.Column(db.Integer)
-    
+
     def __repr__(self):
 		return '<Comments %r>' % self.course_id
 

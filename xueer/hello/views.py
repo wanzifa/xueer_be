@@ -1,4 +1,5 @@
-# -*- coding:utf-8 -*-  
+# -*- coding:utf-8 -*-
+
 from flask import render_template, redirect, url_for, abort, flash, request
 from . import hello
 from ..decorators import admin_required, permission_required
@@ -20,12 +21,14 @@ def index():
         return redirect(url_for('.index'))
     posts = Post.query.order_by(Post.timestamp.desc()).all()
     return render_template('index.html', form=form, posts=posts)
-	
+
+
 @hello.route('/admin')
 @login_required
 @admin_required
 def admin_only():
     return "for admin!!"
+
 
 @hello.route('/user/<username>')
 def user(username):
@@ -48,8 +51,8 @@ def edit_profile():
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form=form)
-	
-	
+
+
 @hello.route('/edit-profile/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
@@ -73,7 +76,7 @@ def edit_profile_admin(id):
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)
-    
+
 @hello.route("/course/<id>", methods=['GET', 'POST'])
 def course_page(id):
     course = Courses.query.filter_by(id=id).first()
@@ -103,13 +106,13 @@ def course_page(id):
                     nt = Tags.query.filter_by(name=l).first()
                     link.tags = nt
                     link.course_id = course.id
-                    course.tags.append(link) 
+                    course.tags.append(link)
                     db.session.add(link)
             else:
                 link = CourseTag(count=1)
                 nt = Tags(name=l)
                 link.tags = nt
-                course.tags.append(link) 
+                course.tags.append(link)
                 db.session.add(nt)
         db.session.add(c)
         course.comment.append(c)
@@ -122,6 +125,3 @@ def course_page(id):
     pagination = Comments.query.filter_by(course_id = id).paginate(page, per_page = 5, error_out = False)
     comments = pagination.items
     return render_template('course.html', course = course, form = form, comments = comments, tags = tags, pagination = pagination)
-    
-
-    
