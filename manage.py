@@ -6,6 +6,8 @@ from flask.ext.migrate import Migrate, MigrateCommand
 # from flask.ext.admin import Admin
 # from flask.ext.admin.contrib.sqla import ModelView
 from xueer import app, db
+from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseCategories, \
+		 CourseTypes, Comments,	Teachers, Tags
 
 
 # 编码设置
@@ -22,7 +24,17 @@ def make_shell_context():
     """自动加载环境"""
     return dict(
         app = app,
-        db = db
+        db = db,
+		Permission = Permission,
+		Role = Role,
+		User = User,
+		AnonymousUser = AnonymousUser,
+		Courses = Courses,
+		CourseCategories = CourseCategories,
+		CourseTypes = CourseTypes,
+		Comments = Comments,
+		Teachers = Teachers,
+		Tags = Tags
     )
 
 
