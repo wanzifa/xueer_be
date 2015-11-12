@@ -95,7 +95,7 @@ class User(UserMixin, db.Model):
 	def __init__(self, **kwargs):
 		super(User, self).__init__(**kwargs)
 		if self.role is None:
-			if self.email == 'xueer_muxi@163.com':
+			if self.username  == 'xueer_muxi@163.com':
 				self.role = Role.query.filter_by(permissions=0x04).first()
 			if self.role is None:
 				self.role = Role.query.filter_by(default=True).first()
