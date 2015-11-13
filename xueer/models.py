@@ -196,9 +196,9 @@ class Courses(db.Model):
 
     def to_json(self):
 		json_courses={
-			'url': url_for('api.get_courses', id=self.id, _external=True)
-			'course_name': self.name
-			'teacher': url_for('api.get_teacher', id=self.teacher_id, _external=True)
+			'url': url_for('api.get_courses', id=self.id, _external=True),
+			'course_name': self.name,
+			'teacher': url_for('api.get_teacher', id=self.teacher_id, _external=True),
 			'introduction': self.introduction,
 			'comments': url_for('api.get_comments', id=self.id, _external=True),
 			'category': self.category.first().name,
