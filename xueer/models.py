@@ -136,12 +136,12 @@ class User(UserMixin, db.Model):
 
 	def to_json(self):
 		json_user = {
-            'url': url_for('api.get_user', id=self.id, _external=True),
-            'username': self.username,
-            'like': self.like.all(),
-            'qq': self.qq,
-			'phone': self.phone,
-            'school': self.school,
+				'url': url_for('api.get_user', id=self.id, _external=True),
+				'username': self.username,
+				'like': self.like.all(),
+				'qq': self.qq,
+				'phone': self.phone,
+				'school': self.school,
 		}
 		return json_user
 
@@ -258,12 +258,12 @@ class Comments(db.Model):
 
     def to_json(self):
 		json_comments = {
-		    'url': url_for('api.get_comments_id', id=self.course_id, _external=True),
-            'user': url_for('api.get_user_id', id=self.user_id, _external=True),
-            'course': url_for('api.get_course_id', id=self.course_id, _external=True),
-            'time': self.time,
-            'body': self.body,
-            'is_useful': self.useful
+			'url': url_for('api.get_comments_id', id=self.course_id, _external=True),
+			'user': url_for('api.get_user_id', id=self.user_id, _external=True),
+			'course': url_for('api.get_course_id', id=self.course_id, _external=True),
+			'time': self.time,
+			'body': self.body,
+			'is_useful': self.useful
 	    }
 		return json_comments
 
@@ -289,13 +289,13 @@ class Teachers(db.Model):
 
 	def to_json(self):
 		json_teacher = {
-		    'url': url_for('api.get_teacher_id', id=self.id, _external=True),
-		    'name': self.name,
-            'department': self.department,
-            'introduction': self.introduction,
-            'phone': self.phone,
-            'weibo': self.weibo,
-            'courses': self.courses.all()
+			'url': url_for('api.get_teacher_id', id=self.id, _external=True),
+			'name': self.name,
+			'department': self.department,
+			'introduction': self.introduction,
+			'phone': self.phone,
+			'weibo': self.weibo,
+			'courses': self.courses.all()
 		}
 
 
