@@ -198,9 +198,9 @@ class Courses(db.Model):
 		json_courses={
 			'url': url_for('api.get_course_id', id=self.id, _external=True),
 			'course_name': self.name,
-			'teacher': url_for('api.get_teacher', id=self.teacher_id, _external=True),
+			'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
 			'introduction': self.introduction,
-			'comments': url_for('api.get_comments', id=self.id, _external=True),
+			'comments': url_for('api.get_comments_id', id=self.id, _external=True),
 			'category': self.category.first().name,
 			'credit': self.credit,
 			'like_count': len(self.user.all()),
