@@ -1,6 +1,6 @@
 from flask import current_app, request, url_for, jsonify
 from . import api
-from ..models import User,
+from ..models import User
 
 @app.route('users/<int:id>')
 def get_user_id(id):
