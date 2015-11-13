@@ -195,7 +195,7 @@ class Courses(db.Model):
 		return '<Courses %r>' % self.name
 
     def to_json(self):
-		json_courses={
+	    json_courses={
 			'url': url_for('api.get_course_id', id=self.id, _external=True),
 			'course_name': self.name,
 			'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
@@ -207,7 +207,7 @@ class Courses(db.Model):
 			'tags': self.tags.all(),
 			'type': self.type.first().name
 			}
-		return json_courses
+	    return json_courses
 
 
 #CourseCategories
