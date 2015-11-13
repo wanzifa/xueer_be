@@ -3,6 +3,7 @@ from flask.ext.httpauth import HTTPBasicAuth
 from flask import g, jsonify
 from . import api
 from ..models import User, AnonymousUser
+from .errors import unauthorized, forbidden, not_found, server_error
 
 
 auth = HTTPBasicAuth()
@@ -11,7 +12,7 @@ auth = HTTPBasicAuth()
 @auth.verify_password
 def verify_password(email_or_token, password):
     if email_or_token == '':
-        g.current_user == AnonymousUser()
+        g.current_user = AnonymousUser()
         return True
     if password == '':
         g.current_user = User.verify_password(email_or_token)
@@ -40,3 +41,18 @@ def get_token():
         'token': g.current_user.generate_auth_token(expiration = 3600),
         'expiration': 3600
     })
+
+
+@auth.error_handler
+def auth_error():
+    return unauthorized('Invalid credentials')
+
+
+@auth.error_handler
+def not_found_error():
+    return not_found('Not found')
+
+
+@auth.error_handler
+def server_error_error():
+    return server_error('Server error')
