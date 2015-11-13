@@ -4,6 +4,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
+from flask import current_app
 
 
 class Permission:
@@ -54,6 +55,7 @@ class Role(db.Model):
 
 	def __repr__(self):
 		return '<Role %r>' % self.name
+
 
 # a secondary table
 UserLike = db.Table(
@@ -111,6 +113,13 @@ class User(UserMixin, db.Model):
 	def verify_password(self, password):
 		return check_password_hash(self.password_hash, password)
 
+	def generate_auth_token(self, expiration):
+		s=Serializer(current_app.config['SECRET_KEY'],
+		expires_in=expiration
+		)
+		return s.dumps({id:self.id}).decode('ascii')
+
+
 	def can(self, permissions):
 		return self.role is not None and \
 				(self.role.permissions & permissions) == permissions
@@ -124,6 +133,17 @@ class User(UserMixin, db.Model):
 
 	def __repr__(self):
 		return '<User %r>' % self.username
+
+	def to_json(self):
+		json_user = {
+			'url': url_for('api.get_user', id=self.id, _external=True),
+			'username': self.username,
+			'like': self.like.all(),
+			'qq': self.qq,
+			'phone': self.phone,
+			'school': self.school,
+		}
+		return json_user
 
 
 class AnonymousUser(AnonymousUserMixin):
@@ -161,7 +181,7 @@ class Courses(db.Model):
 	# likecount = db.Column(db.Integer)
 
 	#comment(定义和Comments表的一对多关系)
-	comment = db.relationship('Comments', backref = 'course')
+	comment = db.relationship('Comments', backref = 'courses')
 
 	# 定义与标签的多对多关系
 	tags = db.relationship(
@@ -173,6 +193,21 @@ class Courses(db.Model):
 
 	def __repr__(self):
 		return '<Courses %r>' % self.name
+
+    def to_json(self):
+		json_courses={
+			'url': url_for('api.get_courses', id=self.id, _external=True)
+			'course_name': self.name
+			'teacher': url_for('api.get_teacher', id=self.teacher_id, _external=True)
+			'introduction': self.introduction,
+			'comments': url_for('api.get_comments', id=self.id, _external=True),
+			'category': self.category.first().name,
+			'credit': self.credit,
+			'like_count': len(self.user.all()),
+			'tags': self.tags.all(),
+			'type': self.type.first().name
+			}
+		return json_courses
 
 
 #CourseCategories
@@ -221,6 +256,23 @@ class Comments(db.Model):
 	def __repr__(self):
 		return '<Comments %r>' % self.course_id
 
+    def to_json(self):
+		json_comments = {
+		    'url': url_for('api.get_comments_id', id=self.course_id, _external=True),
+			'user': url_for('api.get_user_id', id=self.user_id, _external=True),
+			'course': url_for('api.get_course_id', id=self.course_id, _external=True),
+			'time': self.time,
+			'body': self.body,
+			'is_useful': self.useful
+	    }
+		return json_comments
+
+	@staticmethod
+	def from_json(json_comments):
+		body = json_comments.get('body')
+		if body is None or body == '':
+			raise ValidationError('评论不能为空哦！')
+		return Comment(body=body)
 
 class Teachers(db.Model):
 	# __table_args__ = {'mysql_charset':'utf8'}
@@ -234,6 +286,17 @@ class Teachers(db.Model):
 
 	def __repr__(self):
 		return '<Teachers %r>' % self.name
+
+	def to_json(self):
+		json_teacher = {
+		    'url': url_for('api.get_teacher_id', id=self.id, _external=True),
+		    'name': self.name,
+			'department': self.department,
+			'introduction': self.introduction,
+			'phone': self.phone,
+			'weibo': self.weibo,
+			'courses': self.courses.all()
+		}
 
 
 class Tags(db.Model):
