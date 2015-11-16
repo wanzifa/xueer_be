@@ -27,7 +27,7 @@ def get_comments_id(id):
         'conut': pagination.total
     })
 
-@api.route('/courses/<int:id/comments>',method=['POST', 'GET'])
+@api.route('/courses/<int:id/comments>',methods['POST', 'GET'])
 @permission_required(Permission.COMMENT)
 def new_comment(id):
     comment = Comment.from_json(request.json)

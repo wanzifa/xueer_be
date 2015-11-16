@@ -26,6 +26,6 @@ def get_courses():
 
 
 @api.route('/courses/<int:id>')
-def get_course_id():
+def get_course_id(id):
     course = Courses.query.get_or_404(id)
     return jsonify(course.to_json())
