@@ -35,3 +35,25 @@ def server_error(message):
 @api.error_handler(ValidationError)
 def ValidationError(e):
      return bad_request(e.args[0])
+
+
+@api.error_handler(ValidationError)
+def ValidationError(e):
+     return not_found(e.args[0])
+
+ 
+@api.error_handler(ValidationError)
+ def ValidationError(e):
+     return unauthorized(e.args[0])
+
+
+@api.error_handler(ValidationError)
+def ValidationError(e):
+    return forbidden(e.args[0])
+
+
+@api.error_handler(ValidationError)
+def ValidationError(e):
+    return server_error(e.args[0])
+
+
