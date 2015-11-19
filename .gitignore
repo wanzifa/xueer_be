@@ -1,5 +1,6 @@
-.pyc
-.pyo
+**/*.pyc
+*.pyc
 venv/
+-1
 migrations/
 xueer_test.sqlite
