@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from flask import request, jsonify, url_for, current_app, g
 from .. import db
 from ..models import Comments, Courses, User, Permission
@@ -9,7 +11,7 @@ from .decorators import permission_required
 def get_comments_id(id):
     course = Courses.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
-    pagination = course.comment.order_by(Comment.timastamp.asc()).paginate(
+    pagination = course.comment.order_by(Comments.timastamp.asc()).paginate(
         page, per_page=current_app.config['FLASKY_COMMENTS_PER_PAGE'],
         error_out=False
     )
@@ -28,16 +30,18 @@ def get_comments_id(id):
     })
 
 
-@api.route('/courses/<int:id>/comments',methods = ['POST', 'GET'])
+@api.route('/courses/<int:id>/comments', methods = ['POST', 'GET'])
 @permission_required(Permission.COMMENT)
 def new_comment(id):
-    comment = Comment.from_json(request.json)
+    comment = Comments.from_json(request.json)
     comment.author = g.current_user
     comment.course_id = id
     db.session.add(comment)
     db.session.commit()
     return jsonify(
         comment.to_json()), 201, {
-            'Location': url_for('api.get_comments_id',
-            id=comment.course_id, _external=True)
-            }
+               'Location': url_for(
+                    'api.get_comments_id',
+                    id=comment.course_id, _external=True
+               )
+        }
