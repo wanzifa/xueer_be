@@ -9,6 +9,11 @@ from .forms import EditProfileForm, EditProfileAdminForm, PostForm, CommentForm
 from .. import db
 
 
+@hello.route('/index')
+def index():
+    return "<h1>this is a index!</h1>"
+
+
 @hello.route("/course/<id>", methods=['GET', 'POST'])
 def course_page(id):
     course = Courses.query.filter_by(id=id).first()
