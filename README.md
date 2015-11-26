@@ -46,8 +46,8 @@
 	
 	
 ## 4. ToDo
+~~0. clean~~
 
-    0. clean
     1. APi 测试
     2. 部署测试数据库(from sqlite to mysql)
 
