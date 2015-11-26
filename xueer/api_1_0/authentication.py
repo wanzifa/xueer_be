@@ -33,7 +33,7 @@ def before_request():
 
 
 @auth.login_required
-@api.route('/token', method = ['POST', 'GET'])
+@api.route('/token', methods = ['POST', 'GET'])
 def get_token():
     if g.token_used:
          return unauthorized('Invalid credentials')

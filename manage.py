@@ -25,17 +25,17 @@ def make_shell_context():
     return dict(
         app = app,
         db = db,
-		Permission = Permission,
-		Role = Role,
-		User = User,
-		AnonymousUser = AnonymousUser,
-		Courses = Courses,
-		CourseCategories = CourseCategories,
-		CourseTypes = CourseTypes,
-		Comments = Comments,
-		Teachers = Teachers,
-		Tags = Tags
-    )
+        Permission = Permission,
+        Role = Role,
+        User = User,
+        AnonymousUser = AnonymousUser,
+        Courses = Courses,
+        CourseCategories = CourseCategories,
+        CourseTypes = CourseTypes,
+        Comments = Comments,
+        Teachers = Teachers,
+        Tags = Tags
+        )
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))

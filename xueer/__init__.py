@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 
 from flask import Flask
-from flask.ext.bootstrap import Bootstrap
 from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
@@ -17,13 +16,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'xu
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 app.config['FLASK_COMMENTS_PER_PAGE'] = 10
 app.config['FLASK_COURSES_PER_PAGE'] = 10
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
 
-bootstrap = Bootstrap(app)
 moment = Moment(app)
 db = SQLAlchemy(app)
 login_manager.init_app(app)
@@ -36,7 +35,5 @@ app.register_blueprint(hello)
 from auth import auth as auth_blueprint
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
-from api_1_0 import import api as api_1_0_blueprint
-app.register_blurprint(api_1_0_blueprint, url_prefix='/api/v1.0')
-
-return app
+from api_1_0 import api as api_1_0_blueprint
+app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')

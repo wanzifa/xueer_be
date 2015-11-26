@@ -1,5 +1,6 @@
 from flask import jsonify, url_for, request, current_app
 from ..models import Courses
+from . import api
 
 
 @api.route('/courses')

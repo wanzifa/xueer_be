@@ -1,6 +1,6 @@
 from flask import request, jsonify, url_for, current_app, g
 from .. import db
-from ..models import Comments, Courses, User
+from ..models import Comments, Courses, User, Permission
 from . import api
 from .decorators import permission_required
 
@@ -27,7 +27,8 @@ def get_comments_id(id):
         'conut': pagination.total
     })
 
-@api.route('/courses/<int:id/comments>',methods['POST', 'GET'])
+
+@api.route('/courses/<int:id>/comments',methods = ['POST', 'GET'])
 @permission_required(Permission.COMMENT)
 def new_comment(id):
     comment = Comment.from_json(request.json)
@@ -35,4 +36,8 @@ def new_comment(id):
     comment.course_id = id
     db.session.add(comment)
     db.session.commit()
-    return jsonify(comment.to_json()), 201, {'Location': url_for('api.get_comments_id', id=comment.course_id, _external=True)}
+    return jsonify(
+        comment.to_json()), 201, {
+            'Location': url_for('api.get_comments_id',
+            id=comment.course_id, _external=True)
+            }
