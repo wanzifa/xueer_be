@@ -18,7 +18,7 @@ def index():
 def course_page(id):
     course = Courses.query.filter_by(id=id).first()
     form = CommentForm()
-    #save the comments and tags data into db
+    # save the comments and tags data into db
     if form.validate_on_submit():
         course = Courses.query.filter_by(id=id).first()
         all_tags = Tags.query.all()
@@ -36,7 +36,7 @@ def course_page(id):
                 if l in taglist_this:
                     t_id = Tags.query.filter_by(name=l).first().id
                     row = CourseTag.query.filter_by(course_id=id).filter_by(tag_id=t_id).first()
-                    row.count = row.count + 1
+                    row.count += 1
                     db.session.add(row)
                 else:
                     link = CourseTag(count=1)
