@@ -14,6 +14,7 @@
     $ chmod 777 data.sh
     $ ./data.sh
     >> Role.insert_roles()
+    >> quit()
     
 ### add user
 

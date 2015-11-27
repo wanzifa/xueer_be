@@ -113,10 +113,8 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration
-                       )
-        return s.dumps({id: self.id}).decode('ascii')
+        s = Serializer(current_app.config['SECRET_KEY'], expiration)
+        return s.dumps({'id': self.id}).decode('ascii')
 
     def can(self, permissions):
         return self.role is not None and \
@@ -150,6 +148,9 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self):
         return False
+
+    def generate_auth_token(self, expiration):
+        return None
 
 
 login_manager.anonymous_user = AnonymousUser

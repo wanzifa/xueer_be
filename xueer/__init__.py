@@ -9,7 +9,7 @@ import os
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hard to guess string'
+app.config['SECRET_KEY'] = "I hate flask hahahahhahahahhahahha"
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flasky:1234@localhost/flaskynew?charset=utf8'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://neo1218:test@115.28.152.113/xueer_test.myd?charset=utf8'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'xueer_test.sqlite')
