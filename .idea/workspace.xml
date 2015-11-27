@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e28b443e-5220-412d-a32d-24408e4ce701" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xueer/__init__.py" afterPath="$PROJECT_DIR$/xueer/__init__.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xueer/api_1_0/authentication.py" afterPath="$PROJECT_DIR$/xueer/api_1_0/authentication.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.py" afterPath="$PROJECT_DIR$/manage.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="xueer_be.iws" />
@@ -53,8 +50,8 @@
       <file leaf-file-name="users.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/xueer/api_1_0/users.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.38273922">
-              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.35084426">
+              <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
               <folding>
                 <element signature="e#17#73#0" expanded="true" />
               </folding>
@@ -161,6 +158,7 @@
         <option value="$PROJECT_DIR$/xueer/api_1_0/authentication.py" />
         <option value="$PROJECT_DIR$/manage.py" />
         <option value="$PROJECT_DIR$/xueer/__init__.py" />
+        <option value="$PROJECT_DIR$/xueer/api_1_0/users.py" />
       </list>
     </option>
   </component>
@@ -415,9 +413,9 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32572114" sideWeight="0.4883721" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32572114" sideWeight="0.4883721" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26923078" sideWeight="0.5116279" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -741,8 +739,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/xueer/api_1_0/users.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38273922">
-          <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.35084426">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding>
             <element signature="e#17#73#0" expanded="true" />
           </folding>
