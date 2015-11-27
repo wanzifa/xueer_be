@@ -18,7 +18,9 @@
     
 ### add user
 
-    $ python manage.py adduser username
+    $ python manage.py adduser username email
+    password: (输入密码,不显示) 
+    confirm: （确认密码,不显示）
 
 ## 1. 参与人员
 
@@ -49,6 +51,7 @@
 ## 4. ToDo
 ~~0. clean~~
 
-    1. APi 测试
+    1. API 测试
+        1. token可以请求(@王怡凡)
     2. 部署测试数据库(from sqlite to mysql)
 
