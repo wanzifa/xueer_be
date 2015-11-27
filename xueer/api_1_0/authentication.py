@@ -6,7 +6,6 @@ from . import api
 from ..models import User, AnonymousUser
 from .errors import unauthorized, not_found, server_error
 
-
 auth = HTTPBasicAuth()
 
 
@@ -34,7 +33,14 @@ def verify_password(email_or_token, password):
 
 @api.before_request
 def before_request():
-    g.token_used = False
+    """
+    if g.current_user.id is None:
+        return jsonify({
+            'haha 😄': 'you need login first!'
+        })
+    """
+    # g.token_used =
+    pass
 
 
 @api.route('/token', methods=['POST', 'GET'])
@@ -43,8 +49,8 @@ def get_token():
     if g.token_used:
         return unauthorized('Invalid credentials')
     return jsonify({
-        'token': g.current_user.generate_auth_token(expiration=3600*24),
-        'expiration': 3600*24
+        'token': g.current_user.generate_auth_token(expiration=3600 * 24),
+        'expiration': 3600 * 24
     })
 
 

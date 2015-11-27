@@ -53,12 +53,13 @@ manager.add_command('db', MigrateCommand)
 # 后台数据库管理界面
 # admin.add_view(ModelView([models], db.session))
 @manager.command
-def adduser(username):
+def adduser(username, email):
     """添加用户"""
     password = getpass('password ')
     confirm = getpass('confirm ')
     if password == confirm:
         u = User(
+            email = email,
             username = username,
             password = password
         )
