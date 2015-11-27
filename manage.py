@@ -1,6 +1,6 @@
 # coding: utf-8
-from getpass import getpass
 
+from getpass import getpass
 import sys
 import os
 from flask.ext.script import Manager, Shell

@@ -8,3 +8,5 @@ flask-moment
 flask-bootstrap
 flask-wtf
 flask-httpauth
+mysql-python
+
