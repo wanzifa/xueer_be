@@ -5,19 +5,7 @@ from flask.ext.moment import Moment
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager
 from config import config
-from _basedir import basedir
-import os
 
-
-# app = Flask(__name__)
-# app.config['SECRET_KEY'] = 'I hate flask hahahaha'
-# # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://flasky:1234@localhost/flaskynew?charset=utf8'
-# # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://neo1218:test@115.28.152.113/xueer_test.myd?charset=utf8'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'xueer_test.sqlite')
-# app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-# app.config['FLASK_COMMENTS_PER_PAGE'] = 10
-# app.config['FLASK_COURSES_PER_PAGE'] = 10
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
