@@ -2,11 +2,12 @@
 from getpass import getpass
 
 import sys
+import os
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 # from flask.ext.admin import Admin
 # from flask.ext.admin.contrib.sqla import ModelView
-from xueer import app, db
+from xueer import create_app, db
 from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseCategories, \
     CourseTypes, Comments, Teachers, Tags
 
@@ -14,6 +15,11 @@ from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseC
 # 编码设置
 reload(sys)
 sys.setdefaultencoding('utf-8')
+
+
+# use create_app to create flask app
+app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
+
 
 manager = Manager(app)
 migrate = Migrate(app, db)
