@@ -4,4 +4,5 @@ venv/
 -1
 migrations/
 xueer_test.sqlite
+xueer_dev.sqlite
 .idea/

@@ -18,8 +18,8 @@ sys.setdefaultencoding('utf-8')
 
 
 # use create_app to create flask app
+# app = create_app(os.environ.get('XUEER_CONFIG') or 'testing')
 app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
-
 
 manager = Manager(app)
 migrate = Migrate(app, db)
@@ -59,9 +59,9 @@ def adduser(username, email):
     confirm = getpass('confirm ')
     if password == confirm:
         u = User(
-            email = email,
-            username = username,
-            password = password
+            email=email,
+            username=username,
+            password=password
         )
         db.session.add(u)
         db.session.commit()

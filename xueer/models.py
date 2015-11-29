@@ -1,11 +1,12 @@
 # coding:utf-8
 
 from datetime import datetime
-from itsdangerous import Serializer
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin, AnonymousUserMixin
 from . import db, login_manager
 from flask import current_app, url_for
+from xueer.exceptions import ValidationError
 
 
 class Permission:
@@ -117,8 +118,20 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expiration):
-        s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        return s.dumps({'id': self.id}).decode('ascii')
+        s = Serializer(
+            current_app.config['SECRET_KEY'],
+            expiration
+        )
+        return s.dumps({'id': self.id})
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except:
+            return None
+        return User.query.get_or_404(data['id'])
 
     def can(self, permissions):
         return self.role is not None and \
@@ -277,7 +290,7 @@ class Comments(db.Model):
         body = json_comments.get('body')
         if body is None or body == '':
             raise ValidationError('评论不能为空哦！')
-        return Comment(body=body)
+        return Comments(body=body)
 
 
 class Teachers(db.Model):

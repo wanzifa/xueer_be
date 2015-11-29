@@ -18,19 +18,19 @@ def get_comments_id(id):
     comments = pagination.items
     prev = None
     if pagination.has_prev:
-        prev = url_for('api.get_comments', page=page-1, _external=True)
+        prev = url_for('api.get_comments', page=page - 1, _external=True)
     next = None
     if pagination.has_next:
-        next = url_for('api.get_comments', page=page+1, _external=True)
+        next = url_for('api.get_comments', page=page + 1, _external=True)
     return jsonify({
-        'posts':[comment.to_json for comment in comments],
+        'posts': [comment.to_json for comment in comments],
         'prev': prev,
         'next': next,
         'conut': pagination.total
     })
 
 
-@api.route('/courses/<int:id>/comments', methods = ['POST', 'GET'])
+@api.route('/courses/<int:id>/comments', methods=['POST', 'GET'])
 @permission_required(Permission.COMMENT)
 def new_comment(id):
     comment = Comments.from_json(request.json)
@@ -41,7 +41,7 @@ def new_comment(id):
     return jsonify(
         comment.to_json()), 201, {
                'Location': url_for(
-                    'api.get_comments_id',
-                    id=comment.course_id, _external=True
+                   'api.get_comments_id',
+                   id=comment.course_id, _external=True
                )
-        }
+           }
