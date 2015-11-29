@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from xueer.exceptions import ValidationError
 from flask import jsonify
 from . import api

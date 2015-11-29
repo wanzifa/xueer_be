@@ -2,12 +2,13 @@
 
 from flask import request, jsonify, url_for, current_app, g
 from .. import db
+from flask_login import current_user
 from ..models import Comments, Courses, User, Permission
 from . import api
 from .decorators import permission_required
 
 
-@api.route('/courses/<int:id>/comments')
+@api.route('/<int:id>/comments/<int:page>')
 def get_comments_id(id):
     course = Courses.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
@@ -26,7 +27,20 @@ def get_comments_id(id):
         'posts': [comment.to_json for comment in comments],
         'prev': prev,
         'next': next,
-        'conut': pagination.total
+        'count': pagination.total
+    })
+
+
+@api.route('/courses/<int:id>/comments/hot')
+def hot_comments(id):
+    course = Courses.query.get_or_404(id)
+    comments = course.comment.order_by(course.comment.user.count()).all()
+    for comment in course.comment:
+        if comment.likes > 3:
+            comments.append(comment)
+
+    return jsonify({
+        'posts': [comment.to_json for comment in comments]
     })
 
 
@@ -45,3 +59,14 @@ def new_comment(id):
                    id=comment.course_id, _external=True
                )
            }
+
+
+@api.route('/comments/<int:id>/like', methods=['POST', 'GET'])
+@permission_required(Permission.COMMENT)
+def comment_like(id):
+    comment = Comments.query.get_or_404(id)
+    user = User.filter_by(id=current_user.id).first()
+    comment.user.all().append(user)
+    db.session.add(comment)
+    db.session.commit()
+    return jsonify(comment.to_json()), 200

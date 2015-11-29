@@ -24,6 +24,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     XUEER_COMMENTS_PER_PAGE = 10
     XUEER_COURSES_PER_PAGE = 10
+    XUEER_TAGS_PER_PAGE = 10
 
     @staticmethod
     def init_app(app):
