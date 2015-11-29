@@ -210,8 +210,8 @@ class Courses(db.Model):
     # likecount = db.Column(db.Integer)
 
     # comment(定义和Comments表的一对多关系)
-    comment = db.relationship('Comments', backref='courses')
-        # 定义与标签的多对多关系
+    comment = db.relationship('Comments', backref='courses', lazy='dynamic')
+    # 定义与标签的多对多关系
     tags = db.relationship(
         "Tags",
         secondary=CourseTag,
@@ -354,6 +354,6 @@ class Tags(db.Model):
     def to_json(self):
         json_tag = {
             'id': self.id,
-            'tag_url': url_for('api.get_tags',  _external=True),
+            'tag_url': url_for('api.get_tags', _external=True),
             'title': self.name
         }
