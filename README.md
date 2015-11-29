@@ -1,6 +1,6 @@
 # xueer_be
 
-  the backend of xueer::学而后台
+    the backend of xueer::学而后台
   
 ## 0. build
 ### virtual environment
@@ -10,7 +10,7 @@
     
 ### install extensions
 
-    $ pip install -r requirement.text (--no-cache-dir)
+    $ pip install -r requirement.txt (--no-cache-dir)
     
 ### test database
 

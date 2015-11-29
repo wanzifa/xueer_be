@@ -36,7 +36,7 @@ def get_course_id(id):
     return jsonify(course.to_json())
 
 
-@api('/courses/<int:id>/like', methods=['POST', 'GET'])
+@api.route('/courses/<int:id>/like', methods=['POST', 'GET'])
 def course_like():
     course = Courses.query.get_or_404(id)
     user = User.query.filter_by(id=current_user.id).first()

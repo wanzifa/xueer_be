@@ -55,7 +55,7 @@ class TestConfig(Config):
     测试环境下配置
     """
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://muxi:muxi@115.28.152.113/xueer_test_db'  # test for mysql
+    SQLALCHEMY_DATABASE_URI = 'mysql://muxi:muxi@115.28.152.113/xueer_test'  # test for mysql
     XUEER_ADMIN = os.environ.get('XUEER_ADMIN') or 'neo1218@yeah.net'
 
 config = {
