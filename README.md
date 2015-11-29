@@ -7,6 +7,9 @@
 
     $ virtual venv
     $ source venv/bin/activate
+    
+### install extensions
+
     $ pip install -r requirement.text (--no-cache-dir)
     
 ### test database
@@ -16,11 +19,13 @@
     >> Role.insert_roles()
     >> quit()
     
-### add user
+    $ password:
+    $ confirm:
+    
+### run
 
-    $ python manage.py adduser username email
-    password: (输入密码,不显示) 
-    confirm: （确认密码,不显示）
+    python manage.py run (--help)
+    
 
 ## 1. 参与人员
 
