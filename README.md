@@ -59,9 +59,11 @@
 	
 ## 4. ToDo
 ~~0. clean~~ <br/>
-~~1. token可以请求~~
+~~1. token可以请求~~ <br/>
+~~3. mysql 数据库测试成功~~ <br/>
 
     1. API 测试
-        根据文档编写API
-    2. 部署测试数据库(from sqlite to mysql)
+        测试基础数据库API
+    2. API 编写
+        首页、课程信息页、登录页、注册页 API 编写
 
