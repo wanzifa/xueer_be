@@ -92,7 +92,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(164), index=True)
     qq = db.Column(db.String(164), index=True)
     phone = db.Column(db.String(164), index=True)
-    major = db.Column(db.String(164), index=True)
+    major = db.Column(db.String(200), index=True)
     password_hash = db.Column(db.String(128))
     comments = db.relationship("Comments", backref='users', lazy="dynamic")
     like = db.relationship(
@@ -116,6 +116,35 @@ class User(UserMixin, db.Model):
         if self.role is None:
             if self.username == 'neo1218':
                 self.role = Role.query.filter_by(permissions=0x04).first()
+
+    @staticmethod
+    def generate_fake(count=100):
+        """
+        生成虚拟数据
+        :param count: count 生成数据量
+        :return: None 提交到数据库的对象
+        """
+        from sqlalchemy.exc import IntegrityError
+        # IntegrityError: Wraps a DB-API IntegrityError.
+        from random import seed
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            u = User(
+                username=forgery_py.name.full_name(),
+                email=forgery_py.internet.email_address(),
+                password=forgery_py.lorem_ipsum.word(),
+                qq='834597629',
+                phone='13007149711',
+                major=u'软件工程',
+                school=u'计算机'
+            )
+            db.session.add(u)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
 
     @property
     def password(self):
@@ -210,7 +239,7 @@ class Courses(db.Model):
     # likecount = db.Column(db.Integer)
 
     # comment(定义和Comments表的一对多关系)
-    comment = db.relationship('Comments', backref='courses', lazy='dynamic')
+    comment = db.relationship('Comments', backref="courses", lazy='dynamic')
     # 定义与标签的多对多关系
     tags = db.relationship(
         "Tags",
@@ -218,6 +247,30 @@ class Courses(db.Model):
         backref=db.backref('courses', lazy="dynamic"),
         lazy="dynamic"
     )
+
+    @staticmethod
+    def generate_fake(count=100):
+        """
+        生成课程虚拟数据
+        :param count:  生成虚拟数据的个数
+        :return:  None 向数据库的一系列的添加
+        """
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py
+
+        seed()  # 初始化
+        for i in range(count):
+            c = Courses(
+                name=forgery_py.name.full_name(),
+                credit=10,
+                introduction=forgery_py.lorem_ipsum.sentence()
+            )
+            db.session.add(c)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
 
     @property
     def liked(self):
@@ -289,6 +342,7 @@ class Comments(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     body = db.Column(db.Text)
+    count = db.Column(db.Integer)  # 客户端能否+1
     # is_useful计数
     is_useful = db.Column(db.Integer)
 

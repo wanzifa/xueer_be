@@ -8,8 +8,8 @@ from . import api
 from .decorators import permission_required
 
 
-@api.route('/<int:id>/comments/<int:page>')
-def get_comments_id(id):
+@api.route('/courses/<int:id>/comments/<int:page>')
+def get_comments_id(id, page):
     course = Courses.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
     pagination = course.comment.order_by(Comments.timastamp.asc()).paginate(

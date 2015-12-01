@@ -13,19 +13,25 @@
     $ pip install -r requirement.txt (--no-cache-dir)
     
 ### test database
+#### create Role
 
     $ chmod 777 data.sh
     $ ./data.sh
     >> Role.insert_roles()
+
+#### fake data
+
+    >> User.generate_fake()
+    >> Courses.generate_fake()
     >> quit()
-    
+
     $ password:
     $ confirm:
-    
+
 ### run
 
     python manage.py run (--help)
-    
+
 
 ## 1. 参与人员
 
@@ -55,6 +61,8 @@
 	151127: 完成mysql远程数据库部署
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	151129: fix ISSUE #2, 依据文档部分完成API编写
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    151201: 添加虚拟数据、修复API部分bug
 	
 	
 ## 4. ToDo
@@ -63,6 +71,7 @@
 ~~3. mysql 数据库测试成功~~ <br/>
 
     1. API 测试
+        数据库分页编写
         测试基础数据库API
     2. API 编写
         首页、课程信息页、登录页、注册页 API 编写

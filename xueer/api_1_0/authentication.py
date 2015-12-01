@@ -1,10 +1,10 @@
 # coding: utf-8
 
 from flask import g, jsonify
-from flask.ext.httpauth import HTTPBasicAuth
+from flask_httpauth import HTTPBasicAuth
 from . import api
 from ..models import User, AnonymousUser
-from .errors import unauthorized, not_found, server_error, forbidden
+from .errors import unauthorized, not_found, server_error
 
 
 #  只需要在蓝图包中初始化
