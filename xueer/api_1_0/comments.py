@@ -1,4 +1,7 @@
 # coding: utf-8
+"""
+评论API模块
+"""
 
 from flask import request, jsonify, url_for, current_app, g
 from .. import db
@@ -8,8 +11,13 @@ from . import api
 from .decorators import permission_required
 
 
-@api.route('/courses/<int:id>/comments/<int:page>')
-def get_comments_id(id, page):
+@api.route('/courses/<int:id>/comments/')
+def get_comments_id(id):
+    """
+    获取特定id课程的评论
+    :param id: 课程的id
+    :return: 评论json数据
+    """
     course = Courses.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
     pagination = course.comment.order_by(Comments.timastamp.asc()).paginate(
@@ -31,8 +39,13 @@ def get_comments_id(id, page):
     })
 
 
-@api.route('/courses/<int:id>/comments/hot')
+@api.route('/courses/<int:id>/comments/hot/')
 def hot_comments(id):
+    """
+    获取特定id课程的热门评论(以3作为热门鉴定)
+    :param id: 课程id
+    :return: 评论 json 数据
+    """
     course = Courses.query.get_or_404(id)
     comments = course.comment.order_by(course.comment.user.count()).all()
     for comment in course.comment:
@@ -44,9 +57,14 @@ def hot_comments(id):
     })
 
 
-@api.route('/courses/<int:id>/comments', methods=['POST', 'GET'])
+@api.route('/courses/<int:id>/comments/', methods=['POST', 'GET'])
 @permission_required(Permission.COMMENT)
 def new_comment(id):
+    """
+    向特定id的课程发布一个评论
+    :param id: 课程id
+    :return:
+    """
     comment = Comments.from_json(request.json)
     comment.author = g.current_user
     comment.course_id = id
@@ -55,15 +73,20 @@ def new_comment(id):
     return jsonify(
         comment.to_json()), 201, {
                'Location': url_for(
-                   'api.get_comments_id',
-                   id=comment.course_id, _external=True
+                    'api.get_comments_id',
+                    id=comment.course_id, _external=True
                )
            }
 
 
-@api.route('/comments/<int:id>/like', methods=['POST', 'GET'])
+@api.route('/comments/<int:id>/like/', methods=['POST', 'GET'])
 @permission_required(Permission.COMMENT)
 def comment_like(id):
+    """
+    对特定id的评论点赞
+    :param id:
+    :return:
+    """
     comment = Comments.query.get_or_404(id)
     user = User.filter_by(id=current_user.id).first()
     comment.user.all().append(user)

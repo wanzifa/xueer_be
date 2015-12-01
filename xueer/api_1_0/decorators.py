@@ -1,4 +1,11 @@
 # coding: utf-8
+"""
+decorators.py
+~~~~~~~~~~~~~
+
+    用户权限装饰器
+
+"""
 
 from functools import wraps
 from flask import g

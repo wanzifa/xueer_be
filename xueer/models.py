@@ -286,13 +286,15 @@ class Courses(db.Model):
             'id': self.id,
             'url': url_for('api.get_course_id', id=self.id, _external=True),
             'title': self.name,
-            'teacher': self.teacher.name,
+            'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
+            # 'teacher': url_for('api.get_teacher_id', id=1, _external=True),
+            # 'teacher': Teachers.query.first().name,
             'introduction': self.introduction,
             'comments': url_for('api.get_comments_id', id=self.id, _external=True),
             'category': self.category.first().name,
             'credit': self.credit,
             'likes': len(self.user.all()),
-            'like_url': url_for('api.like_add', id=self.id, _external=True),
+            'like_url': url_for('api.like_add', id  =self.id, _external=True),
             'liked': self.liked,
             'Tags': self.tags.all(),
             'cat': self.type.first().name,
@@ -381,8 +383,31 @@ class Teachers(db.Model):
     weibo = db.Column(db.String(150))
     courses = db.relationship("Courses", backref="teacher", lazy="dynamic")
 
-    def __repr__(self):
-        return '<Teachers %r>' % self.name
+    @staticmethod
+    def generate_fake(count=100):
+        """
+         生成教师虚拟数据
+        :param count:  100
+        :return: None
+        """
+        from sqlalchemy.exc import IntegrityError
+        from random import seed
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            t = Teachers(
+                name=forgery_py.name.full_name(),
+                department=u'文学院',
+                introduction=forgery_py.lorem_ipsum.sentence(),
+                phone='13007145519',
+                weibo='neo1218'
+            )
+            db.session.add(t)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
 
     def to_json(self):
         json_teacher = {
@@ -394,6 +419,10 @@ class Teachers(db.Model):
             'weibo': self.weibo,
             'courses': self.courses.all()
         }
+        return json_teacher
+
+    def __repr__(self):
+        return '<Teachers %r>' % self.name
 
 
 class Tags(db.Model):

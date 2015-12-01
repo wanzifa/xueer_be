@@ -5,8 +5,12 @@ from ..models import Tags
 from . import api
 
 
-@api.route('/tags/<int:page>')
+@api.route('/tags/')
 def get_tags():
+    """
+    获取所有标签信息
+    :return:
+    """
     page = request.args.get('page', 1, type=int)
     pagination = Tags.query.order_by(Tags.courses.count()).paginate(
         page,
@@ -16,10 +20,10 @@ def get_tags():
     tags = pagination.items
     prev = None
     if pagination.has_prev:
-        prev = url_for('get_tags', page=page - 1, _external=True)
+        prev = url_for('get_tags', page=page-1, _external=True)
     next = None
     if pagination.has_next:
-        next = url_for('get_tags', page=page + 1, _external=True)
+        next = url_for('get_tags', page=page+1, _external=True)
     return jsonify({
         'course': [tag.to_json() for tag in tags],
         'prev': prev,
@@ -28,6 +32,7 @@ def get_tags():
     })
 
 
-@api.route('/tags/<int:id>/courses/<int:page>?<string:sort>&<int:main_cat>&<int:ts_cat>')
-def get_tags_id():
+# @api.route('/tags/<int:id>/courses/<int:page>?<string:sort>&<int:main_cat>&<int:ts_cat>')
+@api.route('/tags/<int:id>/courses')
+def get_tags_id(id):
     pass
