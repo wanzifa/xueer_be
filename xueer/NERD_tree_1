@@ -1,0 +1,27 @@
+" Press ? for help
+
+.. (up a dir)
+/Users/wangyifan/muxi/xueer/
+|~api_1_0/
+| |-__init__.py
+| |-authentication.py
+| |-comments.py
+| |-courses.py
+| |-decorators.py
+| |-errors.py
+| |-register.py
+| |-tags.py
+| |-teachers.py
+| |-tips.py
+| `-users.py
+|+auth/
+|+hello/
+|+static/
+|+templates/
+|-__init__.py
+|-__init__.pyc
+|-decorators.py
+|-exceptions.py
+|-exceptions.pyc
+|-models.py
+`-models.pyc
