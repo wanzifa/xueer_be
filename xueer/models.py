@@ -209,6 +209,7 @@ class User(UserMixin, db.Model):
         qq = json_user.get('qq')
         magor = json_user.get('major')
         phone = json_user.get('phone')
+        school = json_user.get('school')
         if username is None or username == '':
             raise ValidationError('用户名不能为空哦！')
         if password is None or password == '':

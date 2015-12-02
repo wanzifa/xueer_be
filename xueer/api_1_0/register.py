@@ -4,7 +4,7 @@ from ..models import User
 from . import api
 
 
-@api.route('/api/register', methods=['GET', 'POST'])
+@api.route('/register', methods=['GET', 'POST'])
 def register():
     """
     用户注册页面
