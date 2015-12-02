@@ -211,9 +211,9 @@ class User(UserMixin, db.Model):
         phone = json_user.get('phone')
         if username is None or username == '':
             raise ValidationError('用户名不能为空哦！')
-        if password is None or password ='':
+        if password is None or password == '':
             raise ValidationError('请输入密码！')
-        if email is None or email ='':
+        if email is None or email == '':
             raise ValidationError('请输入邮箱地址！')
         return User(username=username, password=password, email=email)
 
