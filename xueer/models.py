@@ -3,7 +3,7 @@
 from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin, AnonymousUserMixin
+from flask_login import UserMixin, AnonymousUserMixin, current_user
 from . import db, login_manager
 from flask import current_app, url_for, g
 from xueer.exceptions import ValidationError
@@ -95,18 +95,6 @@ class User(UserMixin, db.Model):
     major = db.Column(db.String(200), index=True)
     password_hash = db.Column(db.String(128))
     comments = db.relationship("Comments", backref='users', lazy="dynamic")
-    like = db.relationship(
-        'Comments',
-        secondary=UCMLike,
-        backref=db.backref('user', lazy='dynamic'),
-        lazy='dynamic'
-    )
-    like_2 = db.relationship(
-        'Courses',
-        secondary=UCLike,
-        backref=db.backref('user', lazy='dynamic'),
-        lazy='dynamic'
-    )
     qq = db.Column(db.Integer, default=None)
     phone = db.Column(db.Integer, default=None)
     school = db.Column(db.String(200), index=True, default=None)
@@ -158,6 +146,7 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expiration):
+        """generate a token"""
         s = Serializer(
             current_app.config['SECRET_KEY'],
             expiration
@@ -166,11 +155,13 @@ class User(UserMixin, db.Model):
 
     @staticmethod
     def verify_auth_token(token):
+        """verify the user with token"""
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
         except:
             return None
+        # get id
         return User.query.get_or_404(data['id'])
 
     def can(self, permissions):
@@ -184,30 +175,27 @@ class User(UserMixin, db.Model):
         self.last_seen = datetime.utcnow()
         db.session.add(self)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
-
     def to_json(self):
         json_user = {
             'url': url_for('api.get_user_id', id=self.id, _external=True),
             'username': self.username,
-            'password': self.password,
-            'like': self.like.all(),
+            'password': self.password_hash,
+            # 'like': self.courses.all(),
             'email': self.email,
             'qq': self.qq,
-            'magor': self.magor,
+            'major': self.major,
             'phone': self.phone,
             'school': self.school,
         }
         return json_user
 
     @staticmethod
-    def from_json(json_users):
+    def from_json(json_user):
         username = json_user.get('username')
         password = json_user.get('password')
         email = json_user.get('email')
         qq = json_user.get('qq')
-        magor = json_user.get('major')
+        major = json_user.get('major')
         phone = json_user.get('phone')
         school = json_user.get('school')
         if username is None or username == '':
@@ -218,8 +206,12 @@ class User(UserMixin, db.Model):
             raise ValidationError('请输入邮箱地址！')
         return User(username=username, password=password, email=email)
 
+    def __repr__(self):
+        return '<User %r>' % self.username
+
 
 class AnonymousUser(AnonymousUserMixin):
+
     def can(self, permissions):
         return False
 
@@ -254,10 +246,6 @@ class Courses(db.Model):
     # introduction(课程介绍)
     introduction = db.Column(db.Text)
 
-    # likecount决定用redis数据库
-    # like(对点赞的计数，只有登录用户可以点赞课程)
-    # likecount = db.Column(db.Integer)
-
     # comment(定义和Comments表的一对多关系)
     comment = db.relationship('Comments', backref="courses", lazy='dynamic')
     # 定义与标签的多对多关系
@@ -266,6 +254,13 @@ class Courses(db.Model):
         secondary=CourseTag,
         backref=db.backref('courses', lazy="dynamic"),
         lazy="dynamic"
+    )
+
+    users = db.relationship(
+        "User",
+        secondary=UCLike,
+        backref=db.backref('courses', lazy="dynamic"),
+        lazy='dynamic'
     )
 
     @staticmethod
@@ -294,12 +289,14 @@ class Courses(db.Model):
 
     @property
     def liked(self):
-        if self in g.current_user.like.all():
+        """
+        查询当前用户是否点赞了这门课
+        :return:
+        """
+        if self in g.current_user.courses.all():
             return True
-        return False
-
-    def __repr__(self):
-        return '<Courses %r>' % self.name
+        else:
+            return False
 
     def to_json(self):
         json_courses = {
@@ -307,27 +304,50 @@ class Courses(db.Model):
             'url': url_for('api.get_course_id', id=self.id, _external=True),
             'title': self.name,
             'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
-            # 'teacher': url_for('api.get_teacher_id', id=1, _external=True),
-            # 'teacher': Teachers.query.first().name,
             'introduction': self.introduction,
             'comments': url_for('api.get_comments_id', id=self.id, _external=True),
-            'category': self.category.first().name,
+            'category': self.category.name,
             'credit': self.credit,
-            'likes': len(self.user.all()),
-            'like_url': url_for('api.like_add', id  =self.id, _external=True),
-            'liked': self.liked,
-            'Tags': self.tags.all(),
-            'cat': self.type.first().name,
-            'comment_url': url_for('api.get_comments_id', id=self.id, _external=True)
+            'likes': len(self.users.all()),  # 点赞的总数
+            'like_url': url_for('api.course_like', id=self.id, _external=True),  # 给一门课点赞
+            'liked': self.liked,  # 查询的用户是否点赞了
+            'tags': url_for('api.get_courses_id_tags', id=self.id, _external=True),
+            'cat': self.type.name,
         }
         return json_courses
 
+    @staticmethod
+    def from_json(request_json):
+        name = request_json.get('name')
+        teacher_id = request_json.get('teacher_id')
+        introduction = request_json.get('introduction')
+        category_id = request_json.get('category_id')
+        comment = request_json.get('comment')
+        credit = request_json.get('credit')
+        tags = request_json.get('tags')
+        type_id = request_json.get('type_id')
+        course = Courses(
+            name = name,
+            teacher_id = teacher_id,
+            introduction = introduction,
+            category_id = category_id,
+            comment = comment,
+            credit = credit,
+            tags = tags,
+            type_id = type_id
+        )
+        db.session.add(course)
+        db.session.commit()
+
+    def __repr__(self):
+        return '<Courses %r>' % self.name
+
 
 # CourseCategories
-#	1     公必
-#	2     公选
-#	3     专必
-#	4     专选
+#   1     公必
+#   2     公选
+#   3     专必
+#   4     专选
 class CourseCategories(db.Model):
     # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'category'
@@ -340,10 +360,11 @@ class CourseCategories(db.Model):
 
 
 # CourseTypes
-#	id    name
-#	1     理科
-#	2     文科
-#	3     艺体
+#   id    name
+#   1     理科
+#   2     文科
+#   3     艺体
+#   4     工科
 class CourseTypes(db.Model):
     # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'type'
@@ -431,13 +452,14 @@ class Teachers(db.Model):
 
     def to_json(self):
         json_teacher = {
+            'id': self.id,
             'url': url_for('api.get_teacher_id', id=self.id, _external=True),
             'name': self.name,
             'department': self.department,
             'introduction': self.introduction,
             'phone': self.phone,
             'weibo': self.weibo,
-            'courses': self.courses.all()
+            'courses': url_for('api.get_courses', teacher=self.id, _external=True)
         }
         return json_teacher
 
@@ -458,5 +480,6 @@ class Tags(db.Model):
         json_tag = {
             'id': self.id,
             'tag_url': url_for('api.get_tags', _external=True),
-            'title': self.name
+            'name': self.name
         }
+        return json_tag

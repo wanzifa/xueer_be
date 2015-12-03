@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from flask import request, jsonify, url_for
 from .. import db
 from ..models import User

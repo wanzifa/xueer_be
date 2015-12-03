@@ -6,8 +6,7 @@ from ..models import Teachers
 from xueer.api_1_0.authentication import auth
 
 
-@auth.login_required
-@api.route('/teachers/<int:id>')
+@api.route('/teachers/<int:id>/')
 def get_teacher_id(id):
     """
     根据id获取老师信息
