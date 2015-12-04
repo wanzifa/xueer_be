@@ -424,6 +424,7 @@ class Comments(db.Model):
     def __repr__(self):
         return '<Comments %r>' % self.id
 
+
 class Teachers(db.Model):
     __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
@@ -472,6 +473,21 @@ class Teachers(db.Model):
             'courses': url_for('api.get_courses', teacher=self.id, _external=True)
         }
         return json_teacher
+
+    @staticmethod
+    def from_json(request_json):
+        name = request_json.get('name')
+        department = request_json.get('department')
+        introduction = request_json.get('introduction')
+        phone = request_json.get('phone')
+        weibo = request_json.get('weibo')
+        return Teachers(
+            name=name,
+            department=department,
+            introduction=introduction,
+            phone=phone,
+            weibo=weibo
+        )
 
     def __repr__(self):
         return '<Teachers %r>' % self.name
