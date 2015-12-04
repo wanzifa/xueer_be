@@ -63,7 +63,7 @@ def delete_tags(id):
     db.session.delete(tag)
     db.session.commit()
     return jsonify({
-       'message': '该标签以移除'
+       'message': '该标签已移除'
     })
 
 

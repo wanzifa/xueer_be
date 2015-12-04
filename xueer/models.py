@@ -309,7 +309,7 @@ class Courses(db.Model):
             'title': self.name,
             'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
             'introduction': self.introduction,
-            'comments': url_for('api.get_comments_id', id=self.id, _external=True),
+            'comments': url_for('api.get_courses_id_comments', id=self.id, _external=True),
             'category': self.category.name,
             'credit': self.credit,
             'likes': len(self.users.all()),  # 点赞的总数
@@ -332,7 +332,8 @@ class Courses(db.Model):
         credit = request_json.get('credit')
         tags = request_json.get('tags')
         type_id = request_json.get('type_id')
-        course = Courses(
+        return Courses(
+            # 原来创建是从后往前创建的
             name = name,
             teacher_id = teacher_id,
             introduction = introduction,
@@ -342,8 +343,6 @@ class Courses(db.Model):
             tags = tags,
             type_id = type_id
         )
-        db.session.add(course)
-        db.session.commit()
 
     def __repr__(self):
         return '<Courses %r>' % self.name
@@ -404,8 +403,8 @@ class Comments(db.Model):
     def to_json(self):
         json_comments = {
             'id': self.id,
-            'url': url_for('api.get_comments_id', id=self.course_id, _external=True),
-            'user': url_for('api.get_user_id', id=self.user_id, _external=True),
+            'url': url_for('api.get_courses_id_comments', id=self.course_id, _external=True),
+            'user': url_for('api.get_comments_id_users', id=self.id, _external=True),
             'course': url_for('api.get_course_id', id=self.course_id, _external=True),
             'date': self.time,
             'body': self.body,
@@ -423,7 +422,7 @@ class Comments(db.Model):
         return Comments(body=body)
 
     def __repr__(self):
-        return '<Comments %r>' % self.course_id
+        return '<Comments %r>' % self.id
 
 class Teachers(db.Model):
     __table_args__ = {'mysql_charset':'utf8'}

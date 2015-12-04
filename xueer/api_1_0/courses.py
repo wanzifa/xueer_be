@@ -7,7 +7,7 @@ from . import api
 from xueer import db
 
 
-@api.route('/courses/')  # ?string=sort&main_cat&ts_cat
+@api.route('/courses/', methods=["GET"])  # ?string=sort&main_cat&ts_cat
 def get_courses():
     """
     获取全部课程
@@ -74,15 +74,19 @@ def get_courses():
     next = None
     if pagination.has_next:
         next = url_for('api.get_courses', page=page + 1, _external=True)
+    courses_count = len(Courses.query.all())
+    page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE'] + 1
+    last = url_for('api.get_courses', page=page_count, _external=True)
     return jsonify({
         'course': [course.to_json() for course in courses],
         'prev': prev,
         'next': next,
         'count': pagination.total
-    })
+    }), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
-@api.route('/courses/<int:id>/')
+
+@api.route('/courses/<int:id>/', methods=["GET"])
 def get_course_id(id):
     """
     获取特定id课程的信息
@@ -92,6 +96,58 @@ def get_course_id(id):
     course = Courses.query.get_or_404(id)
     return jsonify(course.to_json())
 
+
+@api.route('/courses/', methods=["GET", "POST"])
+def new_course():
+    """
+    创建一个新的课程
+    :return:
+    """
+    course = Courses.from_json(request.json)
+    db.session.add(course)
+    db.session.commit()
+    return jsonify(course.to_json()), 201, {
+        'location': url_for('api.get_course_id', id=course.id, _external=True)
+    }
+
+
+@api.route('/courses/<int:id>/', methods=["GET", "PUT"])
+def put_course(id):
+    """
+    更新一门课
+    :return:
+    """
+    course = Courses.query.get_or_404(id)
+    if request.json.get('name'):
+        course.name = request.json.get('name')
+    if request.json.get('teacher_id'):
+        course.teacher_id = request.json.get('teacher_id')
+    if request.json.get('introduction'):
+        course.introduction = request.json.get('introduction')
+    if request.json.get('category_id'):
+        course.category_id = request.json.get('category_id')
+    if request.json.get('credit'):
+        course.credit = request.json.get('credit')
+    if request.json.get('type_id'):
+        course.type_id = request.json.get('type_id')
+    db.session.add(course)
+    db.session.commit()
+    return jsonify(course.to_json()), 200
+
+
+@api.route('/courses/<int:id>/', methods=['GET', 'DELETE'])
+def delete_course(id):
+    """
+    删除一个课程
+    :param id:
+    :return:
+    """
+    course = Courses.query.get_or_404(id)
+    db.session.delete(course)
+    db.session.commit()
+    return jsonify({
+        'message': '该课程已被删除'
+    })
 
 @api.route('/courses/<int:id>/like/', methods=['GET', 'PUT'])
 def course_like(id):
@@ -117,7 +173,7 @@ def delete_course_like(id):
     """
     course = Courses.query.get_or_404(id)
     if current_user not in course.users.all():
-        return jsonify({'error':'你还未点赞哦'}), 403
+        return jsonify({'error':'你还未点赞哦'}), 403  # forbidden
     else:
         course.users.all().remove(current_user)
     db.session.add(course)

@@ -3,7 +3,7 @@
 from flask import current_app, request, url_for, jsonify
 from . import api
 from werkzeug.security import generate_password_hash
-from ..models import User, Courses
+from ..models import User, Courses, Comments
 from xueer import db
 
 
@@ -117,3 +117,15 @@ def get_like_courses_id_users(id):
     return jsonify({
         'users': [user.to_json() for user in courses.users.all()]
     })
+
+
+@api.route('/comments/<int:id>/users/', methods=["GET"])
+def get_comments_id_users(id):
+    """
+    获取特定id的评论的作者
+    :param id:
+    :return:
+    """
+    comments = Comments.query.get_or_404(id)
+    user = User.query.filter_by(id=comments.user_id).first()
+    return jsonify(user.to_json())

@@ -1,6 +1,12 @@
 # coding: utf-8
 """
 评论API模块
+
+     评论的资源比较特殊，所有评论堆在一起是对我们毫无益处的
+     评论需要依托其赋予的对象的实体，在学而中就是课程
+     当然评论的创造者 用户 也是重要的一块资源
+
+         用户 ---> 评论 ---> 课程
 """
 
 from flask import request, jsonify, url_for, current_app, g
@@ -11,8 +17,8 @@ from . import api
 from .decorators import permission_required
 
 
-@api.route('/courses/<int:id>/comments/')
-def get_comments_id(id):
+@api.route('/courses/<int:id>/comments/', methods=['GET'])
+def get_courses_id_comments(id):
     """
     获取特定id课程的评论
     :param id: 课程的id
@@ -31,34 +37,43 @@ def get_comments_id(id):
     next = None
     if pagination.has_next:
         next = url_for('api.get_comments', page=page + 1, _external=True)
+    comments_count = len(Comments.query.filter_by(course_id=id).all())
+    page_count = comments_count//current_app.config["XUEER_COMMENTS_PER_PAGE"] + 1
+    last = url_for('api.get_courses_id_comments', id=id, page=page_count, _external=True)
     return jsonify({
         'posts': [comment.to_json() for comment in comments],
         'prev': prev,
         'next': next,
         'count': pagination.total
-    })
+    }), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
-@api.route('/courses/<int:id>/comments/hot/')
-def hot_comments(id):
+@api.route('/courses/<int:id>/comments/hot/', methods=["GET"])
+def get_hot_comments(id):
     """
     获取特定id课程的热门评论(以3作为热门鉴定)
     :param id: 课程id
     :return: 评论 json 数据
     """
-    course = Courses.query.get_or_404(id)
-    comments = course.comment.order_by(course.comment.user.count()).all()
-    for comment in course.comment:
-        if comment.likes > 3:
-            comments.append(comment)
-
+    comments_dict = {}  # 存取键值: {评论: 点赞数}
+    course = Courses.query.get_or_404(id)  # 获取这个id课程
+    comments = Comments.query.filter_by(course_id=id).all()  # 该课程对应评论的时间列表(默认按id排序)
+    for comment in comments:
+        if comment.user.count() >= 3:
+            comments_dict[comment] = comment.user.count()
+    # 按点赞数从大到小排序
+    sorted(comments_dict.items(), lambda x, y: cmp(y[1], x[1]))
+    # 获取最热评论列表
+    hot_comments = []
+    for item in comments_dict:
+        hot_comments.append(item)
     return jsonify({
-        'posts': [comment.to_json for comment in comments]
+        'hot_comments': [comment.to_json() for comment in hot_comments]
     })
 
 
 @api.route('/courses/<int:id>/comments/', methods=['POST', 'GET'])
-@permission_required(Permission.COMMENT)
+# @permission_required(Permission.COMMENT)
 def new_comment(id):
     """
     向特定id的课程发布一个评论
@@ -73,10 +88,25 @@ def new_comment(id):
     return jsonify(
         comment.to_json()), 201, {
                'Location': url_for(
-                    'api.get_comments_id',
-                    id=comment.course_id, _external=True
+                    'api.get_courses_id_comments',
+                    id=id, _external=True
                )
            }
+
+
+@api.route('/comments/<int:id>/', methods=["GET", "DELETE"])
+def delete_comment(id):
+    """
+    删除一个评论
+    :param id:
+    :return:
+    """
+    comment = Comments.query.get_or_404(id)
+    db.session.delete(comment)
+    db.session.commit()
+    return jsonify({
+        'message': '该评论已经被删除'
+    })
 
 
 @api.route('/comments/<int:id>/like/', methods=['PUT', 'GET'])
