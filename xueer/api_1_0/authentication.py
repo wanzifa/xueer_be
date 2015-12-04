@@ -46,7 +46,6 @@ def verify_password(email_or_token, password):
 
 
 @api.before_request
-@auth.login_required
 def before_request():
     """
     保护API只允许登录用户访问
