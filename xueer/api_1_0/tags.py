@@ -3,10 +3,11 @@
 from flask import jsonify, url_for, request, current_app
 from ..models import Tags, Courses
 from . import api
+from xueer import db
 from xueer.api_1_0.authentication import auth
 
 
-@api.route('/tags/')
+@api.route('/tags/', methods=["GET"])
 def get_tags():
     """
     获取所有标签信息
@@ -34,13 +35,36 @@ def get_tags():
     })
 
 
-@api.route('/tags/<int:id>/')
+@api.route('/tags/<int:id>/', methods=["GET"])
 def get_tags_id(id):
     """
     获取特定id的标签
     """
     tags = Tags.query.get_or_404(id)
     return jsonify(tags.to_json())
+
+
+@api.route('/tags/', methods=["GET", "POST"])
+def new_tag():
+    """
+    创建一个新的tag
+    """
+    tag = Tags.from_json(request.json)
+    db.session.add(tag)
+    db.session.commit()
+    return jsonify(tag.to_json()), 201, {
+        # location 会自动写在头部
+        'location': url_for('api.get_tags_id', id=tag.id, _external=True)
+    }
+
+@api.route('/tags/<int:id>', methods=["GET", "DELETE"])
+def delete_tags(id):
+    tag = Tags.query.get_or_404(id)
+    db.session.delete(tag)
+    db.session.commit()
+    return jsonify({
+       'message': '该标签以移除'
+    })
 
 
 @api.route('/courses/<int:id>/tags/')

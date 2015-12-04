@@ -26,6 +26,7 @@ class Role(db.Model):
     2. Moderator: MODERATE_COMMENTS
     3. Administrator: ADMINISTER
     """
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -85,18 +86,17 @@ class User(UserMixin, db.Model):
     id, username, password, like(Courses), comment(Comment),
     UserLike: m to m
     """
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(164), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
     email = db.Column(db.String(164), index=True)
     qq = db.Column(db.String(164), index=True)
-    phone = db.Column(db.String(164), index=True)
     major = db.Column(db.String(200), index=True)
     password_hash = db.Column(db.String(128))
     comments = db.relationship("Comments", backref='users', lazy="dynamic")
-    qq = db.Column(db.Integer, default=None)
-    phone = db.Column(db.Integer, default=None)
+    phone = db.Column(db.String(200), default=None)
     school = db.Column(db.String(200), index=True, default=None)
 
     def __init__(self, **kwargs):
@@ -125,8 +125,10 @@ class User(UserMixin, db.Model):
                 password=forgery_py.lorem_ipsum.word(),
                 qq='834597629',
                 phone='13007149711',
-                major=u'软件工程',
-                school=u'计算机'
+                # major=u'软件工程',
+                major = 'CS',
+                # school=u'计算机'
+                school = 'CCNUCS'
             )
             db.session.add(u)
             try:
@@ -179,8 +181,8 @@ class User(UserMixin, db.Model):
         json_user = {
             'url': url_for('api.get_user_id', id=self.id, _external=True),
             'username': self.username,
-            'password': self.password_hash,
-            # 'like': self.courses.all(),
+            'like_courses': url_for('api.get_user_like_courses', id=self.id, _external=True),
+            # 'like_comments': self.comment.all(),
             'email': self.email,
             'qq': self.qq,
             'major': self.major,
@@ -211,6 +213,7 @@ class User(UserMixin, db.Model):
 
 
 class AnonymousUser(AnonymousUserMixin):
+    __table_args__ = {'mysql_charset': 'utf8'}
 
     def can(self, permissions):
         return False
@@ -231,6 +234,7 @@ def load_user(user_id):
 
 
 class Courses(db.Model):
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
     # __table_args__ = {'mysql_charset': 'utf8'}
     id = db.Column(db.Integer, primary_key=True)
@@ -309,10 +313,12 @@ class Courses(db.Model):
             'category': self.category.name,
             'credit': self.credit,
             'likes': len(self.users.all()),  # 点赞的总数
-            'like_url': url_for('api.course_like', id=self.id, _external=True),  # 给一门课点赞
+            # 'like_url': url_for('api.course_like', id=self.id, _external=True),  # 给一门课点赞
+            # 喜欢这门课的所有用户
+            'like_users': url_for('api.get_like_courses_id_users', id=self.id, _external=True),
             'liked': self.liked,  # 查询的用户是否点赞了
             'tags': url_for('api.get_courses_id_tags', id=self.id, _external=True),
-            'cat': self.type.name,
+            'cat': CourseTypes.query.filter_by(id=self.type_id).first().name
         }
         return json_courses
 
@@ -344,12 +350,12 @@ class Courses(db.Model):
 
 
 # CourseCategories
-#   1     公必
-#   2     公选
-#   3     专必
-#   4     专选
+#   1     公共课
+#   2     通识课
+#   3     专业课
+#   4     素质课
 class CourseCategories(db.Model):
-    # __table_args__ = {'mysql_charset': 'utf8'}
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
@@ -366,7 +372,7 @@ class CourseCategories(db.Model):
 #   3     艺体
 #   4     工科
 class CourseTypes(db.Model):
-    # __table_args__ = {'mysql_charset': 'utf8'}
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'type'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
@@ -377,7 +383,7 @@ class CourseTypes(db.Model):
 
 
 class Comments(db.Model):
-    # __table_args__ = {'mysql_charset':'utf8'}
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
@@ -388,21 +394,24 @@ class Comments(db.Model):
     count = db.Column(db.Integer)  # 客户端能否+1
     # is_useful计数
     is_useful = db.Column(db.Integer)
-
-    def __repr__(self):
-        return '<Comments %r>' % self.course_id
+    user = db.relationship(
+        "User",
+        secondary=UCMLike,
+        backref=db.backref('comment', lazy="dynamic"),
+        lazy='dynamic'
+    )
 
     def to_json(self):
         json_comments = {
             'id': self.id,
             'url': url_for('api.get_comments_id', id=self.course_id, _external=True),
-            'user_name': url_for('api.get_user_id', id=self.user_id, _external=True),
+            'user': url_for('api.get_user_id', id=self.user_id, _external=True),
             'course': url_for('api.get_course_id', id=self.course_id, _external=True),
             'date': self.time,
             'body': self.body,
-            'is_useful': self.useful,
+            'is_useful': self.is_useful,
             'likes': len(self.user.all()),
-            'like_url': url_for('api.comment_like_add', id=self.id, _external=True)
+            'like_url': url_for('api.comment_like', id=self.id, _external=True)
         }
         return json_comments
 
@@ -413,9 +422,11 @@ class Comments(db.Model):
             raise ValidationError('评论不能为空哦！')
         return Comments(body=body)
 
+    def __repr__(self):
+        return '<Comments %r>' % self.course_id
 
 class Teachers(db.Model):
-    # __table_args__ = {'mysql_charset':'utf8'}
+    __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     department = db.Column(db.String(150))
@@ -468,18 +479,24 @@ class Teachers(db.Model):
 
 
 class Tags(db.Model):
+    __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tags'
     # __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
 
-    def __repr__(self):
-        return '<Tags %r>' % self.name
-
     def to_json(self):
         json_tag = {
             'id': self.id,
-            'tag_url': url_for('api.get_tags', _external=True),
+            'tag_url': url_for('api.get_tags_id', id=self.id, _external=True),
             'name': self.name
         }
         return json_tag
+
+    @staticmethod
+    def from_json(json_tag):
+        name=json_tag.get('name')
+        return Tags(name=name)
+
+    def __repr__(self):
+        return '<Tags %r>' % self.name

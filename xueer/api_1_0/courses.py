@@ -5,7 +5,6 @@ from flask_login import current_user
 from ..models import Courses, User, Tags
 from . import api
 from xueer import db
-from xueer.api_1_0.authentication import auth
 
 
 @api.route('/courses/')  # ?string=sort&main_cat&ts_cat
@@ -135,5 +134,18 @@ def get_tags_id_courses(id):
     """
     tags = Tags.query.get_or_404(id)
     return jsonify({
-        'courses': [course.to_json for course in tags.courses.all()]
+        'courses': [course.to_json() for course in tags.courses.all()]
+    })
+
+
+@api.route('/users/<int:id>/courses/')
+def get_user_like_courses(id):
+    """
+    获取特定id用户点赞的所有课程
+    :param id:
+    :return:
+    """
+    user = User.query.get_or_404(id)
+    return jsonify({
+        'courses': [course.to_json() for course in user.courses.all()]
     })

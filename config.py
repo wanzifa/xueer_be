@@ -24,6 +24,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     XUEER_COMMENTS_PER_PAGE = 10
     XUEER_COURSES_PER_PAGE = 20
+    XUEER_USERS_PER_PAGE = 20
     XUEER_TAGS_PER_PAGE = 10
 
     @staticmethod
@@ -55,7 +56,7 @@ class TestConfig(Config):
     测试环境下配置
     """
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://muxi:muxi@115.28.152.113/xueer_test_db'  # test for mysql
+    SQLALCHEMY_DATABASE_URI = 'mysql://neo1218:1234@115.28.152.113/xueer_test'  # test for mysql
     XUEER_ADMIN = os.environ.get('XUEER_ADMIN') or 'neo1218@yeah.net'
 
 

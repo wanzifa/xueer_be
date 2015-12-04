@@ -19,8 +19,8 @@ sys.setdefaultencoding('utf-8')
 
 
 # use create_app to create flask app
-# app = create_app(os.environ.get('XUEER_CONFIG') or 'testing')
-app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
+app = create_app(os.environ.get('XUEER_CONFIG') or 'testing')
+# app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
 
 manager = Manager(app)
 migrate = Migrate(app, db)

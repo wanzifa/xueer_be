@@ -20,8 +20,8 @@ def get_comments_id(id):
     """
     course = Courses.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
-    pagination = course.comment.order_by(Comments.timastamp.asc()).paginate(
-        page, per_page=current_app.config['FLASKY_COMMENTS_PER_PAGE'],
+    pagination = course.comment.order_by(Comments.time.asc()).paginate(
+        page, per_page=current_app.config['XUEER_COMMENTS_PER_PAGE'],
         error_out=False
     )
     comments = pagination.items
@@ -32,7 +32,7 @@ def get_comments_id(id):
     if pagination.has_next:
         next = url_for('api.get_comments', page=page + 1, _external=True)
     return jsonify({
-        'posts': [comment.to_json for comment in comments],
+        'posts': [comment.to_json() for comment in comments],
         'prev': prev,
         'next': next,
         'count': pagination.total
@@ -79,8 +79,8 @@ def new_comment(id):
            }
 
 
-@api.route('/comments/<int:id>/like/', methods=['POST', 'GET'])
-@permission_required(Permission.COMMENT)
+@api.route('/comments/<int:id>/like/', methods=['PUT', 'GET'])
+# @permission_required(Permission.COMMENT)
 def comment_like(id):
     """
     对特定id的评论点赞
@@ -88,7 +88,7 @@ def comment_like(id):
     :return:
     """
     comment = Comments.query.get_or_404(id)
-    user = User.filter_by(id=current_user.id).first()
+    user = User.query.filter_by(id=g.current_user.id).first()
     comment.user.all().append(user)
     db.session.add(comment)
     db.session.commit()
