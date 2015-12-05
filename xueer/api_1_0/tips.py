@@ -13,3 +13,14 @@
     }
 """
 # 挖坑
+# 填坑
+from xueer.api_1_0 import api
+
+
+@api.route('/tips/', methods=["GET"])
+def get_tips():
+    """
+    获取首页的每日tip
+    :return:
+    """
+    pass
