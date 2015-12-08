@@ -51,9 +51,7 @@ def before_request():
     保护API只允许登录用户访问
     并将错误处理递交 get_token 函数处理
     """
-    if not hasattr(g.current_user, "is_anonymous"):
-        # pass it to auth error
-        pass
+    pass
 
 
 @api.route('/token/', methods=['POST', 'GET'])

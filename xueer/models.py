@@ -406,7 +406,7 @@ class Comments(db.Model):
             'url': url_for('api.get_courses_id_comments', id=self.course_id, _external=True),
             'user': url_for('api.get_comments_id_users', id=self.id, _external=True),
             'course': url_for('api.get_course_id', id=self.course_id, _external=True),
-            'date': self.time,
+            'date': '2015-12-05',  # 占位
             'body': self.body,
             'is_useful': self.is_useful,
             'likes': len(self.user.all()),

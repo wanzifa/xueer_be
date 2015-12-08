@@ -5,6 +5,7 @@ from flask_login import current_user
 from ..models import Courses, User, Tags
 from . import api
 from xueer import db
+import json
 
 
 @api.route('/courses/', methods=["GET"])  # ?string=sort&main_cat&ts_cat
@@ -77,12 +78,9 @@ def get_courses():
     courses_count = len(Courses.query.all())
     page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE'] + 1
     last = url_for('api.get_courses', page=page_count, _external=True)
-    return jsonify({
-        'course': [course.to_json() for course in courses],
-        'prev': prev,
-        'next': next,
-        'count': pagination.total
-    }), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    return json.dumps(
+        [course.to_json() for course in courses],
+    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 

@@ -15,7 +15,7 @@ from flask_login import current_user
 from ..models import Comments, Courses, User, Permission
 from . import api
 from .decorators import permission_required
-
+import json
 
 @api.route('/courses/<int:id>/comments/', methods=['GET'])
 def get_courses_id_comments(id):
@@ -40,12 +40,10 @@ def get_courses_id_comments(id):
     comments_count = len(Comments.query.filter_by(course_id=id).all())
     page_count = comments_count//current_app.config["XUEER_COMMENTS_PER_PAGE"] + 1
     last = url_for('api.get_courses_id_comments', id=id, page=page_count, _external=True)
-    return jsonify({
-        'posts': [comment.to_json() for comment in comments],
-        'prev': prev,
-        'next': next,
-        'count': pagination.total
-    }), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    return json.dumps(
+        [comment.to_json() for comment in comments],
+        ensure_ascii=False
+    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 @api.route('/courses/<int:id>/comments/hot/', methods=["GET"])
@@ -67,9 +65,10 @@ def get_hot_comments(id):
     hot_comments = []
     for item in comments_dict:
         hot_comments.append(item)
-    return jsonify({
-        'hot_comments': [comment.to_json() for comment in hot_comments]
-    })
+    return json.dumps(
+        [comment.to_json() for comment in hot_comments],
+        ensure_ascii=False
+    ), 200
 
 
 @api.route('/courses/<int:id>/comments/', methods=['POST', 'GET'])
