@@ -68,7 +68,8 @@ def get_hot_comments(id):
         hot_comments.append(item)
     return json.dumps(
         [comment.to_json() for comment in hot_comments],
-        ensure_ascii=False
+        ensure_ascii=False,
+        indent=1
     ), 200
 
 
