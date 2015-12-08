@@ -297,8 +297,14 @@ class Courses(db.Model):
         查询当前用户是否点赞了这门课
         :return:
         """
-        if self in g.current_user.courses.all():
-            return True
+        if hasattr(g, 'current_user'):
+            # 如果当前用户登录
+            # 查看用户是否点赞
+            # 匿名用户和未点赞用户返回False
+            if self in g.current_user.courses.all():
+                return True
+            else:
+                return False
         else:
             return False
 
@@ -307,7 +313,9 @@ class Courses(db.Model):
             'id': self.id,
             'url': url_for('api.get_course_id', id=self.id, _external=True),
             'title': self.name,
-            'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
+            # 'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
+            # 老师只返回姓名
+            'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
             'introduction': self.introduction,
             'comments': url_for('api.get_courses_id_comments', id=self.id, _external=True),
             'category': self.category.name,

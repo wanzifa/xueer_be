@@ -4,6 +4,7 @@ from flask import jsonify, url_for, request, current_app
 from ..models import Tags, Courses
 from . import api
 from xueer import db
+import json
 from xueer.api_1_0.authentication import auth
 
 
@@ -21,18 +22,23 @@ def get_tags():
         error_out=False
     )
     tags = pagination.items
-    prev = None
+    prev = ""
     if pagination.has_prev:
-        prev = url_for('get_tags', page=page-1, _external=True)
-    next = None
+        prev = url_for('api.get_tags', page=page-1, _external=True)
+    next = ""
     if pagination.has_next:
-        next = url_for('get_tags', page=page+1, _external=True)
-    return jsonify({
-        'course': [tag.to_json() for tag in tags],
-        'prev': prev,
-        'next': next,
-        'count': pagination.total
-    })
+        next = url_for('api.get_tags', page=page+1, _external=True)
+    tags_count = len(Tags.query.all())
+    if tags_count % current_app.config['XUEER_TAGS_PER_PAGE'] == 0:
+        page_count = tags_count//current_app.config['XUEER_TAGS_PER_PAGE']
+    else:
+        page_count = tags_count//current_app.config['XUEER_TAGS_PER_PAGE']+1
+    last = url_for('api.get_tags', page=page_count, _external=True)
+    return json.dumps(
+        [tag.to_json() for tag in tags],
+        ensure_ascii=False,
+        indent=1
+    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 @api.route('/tags/<int:id>/', methods=["GET"])

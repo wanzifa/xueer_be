@@ -14,6 +14,7 @@ def get_courses():
     获取全部课程
     排序存在问题
     """
+    global pagination
     page = request.args.get('page', 1, type=int)
     if request.args.get('teacher'):
         # /api/v1.0/courses/?teacher=1
@@ -69,17 +70,23 @@ def get_courses():
             error_out=False
         )
     courses = pagination.items
-    prev = None  # should init
+    # <> 当页面不存在是返回空
+    prev = ""  # should init
     if pagination.has_prev:
         prev = url_for('api.get_courses', page=page - 1, _external=True)
-    next = None
+    next = ""
     if pagination.has_next:
         next = url_for('api.get_courses', page=page + 1, _external=True)
     courses_count = len(Courses.query.all())
-    page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE'] + 1
+    if courses_count%current_app.config['XUEER_COURSES_PER_PAGE'] == 0:
+        page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE']
+    else:
+        page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE']+1
     last = url_for('api.get_courses', page=page_count, _external=True)
     return json.dumps(
         [course.to_json() for course in courses],
+        ensure_ascii=False,
+        indent=1
     ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
@@ -186,10 +193,34 @@ def get_tags_id_courses(id):
     :param id: tag的id
     :return: 该id tag对应的所有课程
     """
-    tags = Tags.query.get_or_404(id)
-    return jsonify({
-        'courses': [course.to_json() for course in tags.courses.all()]
-    })
+    # 根据id获取tag
+    tag = Tags.query.get_or_404(id)
+    page = request.args.get('page', 1, type=int)
+    pagination = tag.courses.paginate(
+        page,
+        per_page=current_app.config["XUEER_COURSES_PER_PAGE"],
+        error_out=False
+    )
+    courses = pagination.items  # 获取分页的courses对象
+    prev = ""
+    if pagination.has_prev:
+        prev = url_for('api.get_tags_id_courses', id=id, page=page-1, _external=True)
+    next = ""
+    if pagination.has_next:
+        next = url_for('api.get_tags_id_courses', id=id, page=page+1, _external=True)
+    courses_count = tag.courses.count()
+    if courses_count % current_app.config['XUEER_TAGS_PER_PAGE'] == 0:
+        page_count = courses_count//current_app.config['XUEER_TAGS_PER_PAGE']
+    else:
+        page_count = courses_count//current_app.config['XUEER_TAGS_PER_PAGE']+1
+    last = url_for('api.get_tags_id_courses', id=id, page=page_count, _external=True)
+    return json.dumps(
+        [course.to_json() for course in courses],
+        ensure_ascii=False,
+        indent=1
+    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+
+
 
 
 @api.route('/users/<int:id>/courses/')
@@ -199,7 +230,29 @@ def get_user_like_courses(id):
     :param id:
     :return:
     """
-    user = User.query.get_or_404(id)
-    return jsonify({
-        'courses': [course.to_json() for course in user.courses.all()]
-    })
+    page = request.args.get('page', 1, type=int)
+    # pagination = Tags.query.order_by(Tags.courses.count()).paginate(
+    pagination = Tags.query.paginate(
+        page,
+        per_page=current_app.config['XUEER_TAGS_PER_PAGE'],
+        error_out=False
+    )
+    tags = pagination.items
+    prev = ""
+    if pagination.has_prev:
+        prev = url_for('api.get_tags', page=page-1, _external=True)
+    next = ""
+    if pagination.has_next:
+        next = url_for('api.get_tags', page=page+1, _external=True)
+    tags_count = len(Tags.query.all())
+    if tags_count % current_app.config['XUEER_TAGS_PER_PAGE'] == 0:
+        page_count = tags_count//current_app.config['XUEER_TAGS_PER_PAGE']
+    else:
+        page_count = tags_count//current_app.config['XUEER_TAGS_PER_PAGE']+1
+    last = url_for('api.get_tags', page=page_count, _external=True)
+    return json.dumps(
+        [tag.to_json() for tag in tags],
+        ensure_ascii=False,
+        indent=1
+    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+

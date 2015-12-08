@@ -25,7 +25,7 @@ class Config(object):
     XUEER_COMMENTS_PER_PAGE = 10
     XUEER_COURSES_PER_PAGE = 20
     XUEER_USERS_PER_PAGE = 20
-    XUEER_TAGS_PER_PAGE = 10
+    XUEER_TAGS_PER_PAGE = 20
 
     @staticmethod
     def init_app(app):

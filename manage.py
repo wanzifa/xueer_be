@@ -19,8 +19,8 @@ sys.setdefaultencoding('utf-8')
 
 
 # use create_app to create flask app
-app = create_app(os.environ.get('XUEER_CONFIG') or 'testing')
-# app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
+# app = create_app(os.environ.get('XUEER_CONFIG') or 'testing')
+app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
 
 manager = Manager(app)
 migrate = Migrate(app, db)
@@ -50,6 +50,13 @@ def make_shell_context():
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
 manager.add_command('db', MigrateCommand)
+
+
+@manager.command
+def config():
+    """项目配置"""
+    pass
+
 
 
 # 后台数据库管理界面
