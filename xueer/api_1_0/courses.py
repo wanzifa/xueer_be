@@ -154,37 +154,6 @@ def delete_course(id):
         'message': '该课程已被删除'
     })
 
-@api.route('/courses/<int:id>/like/', methods=['GET', 'PUT'])
-def course_like(id):
-    """
-    向特定id的课程点赞
-    更新资源
-    登录用户都可以点赞
-    :param id:
-    :return:
-    """
-    course = Courses.query.get_or_404(id)
-    course.users.all().append(current_user)
-    db.session.add(course)
-    db.session.commit()
-    # PUT 更新资源返回 200 状态码
-    return jsonify(course.to_json()), 200
-
-
-@api.route('/courses/<int:id>/like/', methods=['GET', 'DELETE'])
-def delete_course_like(id):
-    """
-    登录用户可以取消点赞
-    """
-    course = Courses.query.get_or_404(id)
-    if current_user not in course.users.all():
-        return jsonify({'error':'你还未点赞哦'}), 403  # forbidden
-    else:
-        course.users.all().remove(current_user)
-    db.session.add(course)
-    db.session.commit()
-    return jsonify(course.to_json()), 200
-
 
 @api.route('/tags/<int:id>/courses/')
 def get_tags_id_courses(id):
