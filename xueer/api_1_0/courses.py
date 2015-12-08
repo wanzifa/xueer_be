@@ -62,6 +62,7 @@ def get_courses():
                         per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
                         error_out=False
                 )
+        else:
     else:
         pagination = Courses.query.paginate(
             # 查询对象query具有paginate属性

@@ -252,6 +252,8 @@ class Courses(db.Model):
 
     # comment(定义和Comments表的一对多关系)
     comment = db.relationship('Comments', backref="courses", lazy='dynamic')
+    # count: 课程对应的评论数
+    count = db.column(db.Integer)
     # 定义与标签的多对多关系
     tags = db.relationship(
         "Tags",

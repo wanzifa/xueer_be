@@ -54,18 +54,19 @@ def get_hot_comments(id):
     :param id: 课程id
     :return: 评论 json 数据
     """
-    comments_dict = {}  # 存取键值: {评论: 点赞数}
-    course = Courses.query.get_or_404(id)  # 获取这个id课程
-    comments = Comments.query.filter_by(course_id=id).all()  # 该课程对应评论的时间列表(默认按id排序)
-    for comment in comments:
-        if comment.user.count() >= 3:
-            comments_dict[comment] = comment.user.count()
-    # 按点赞数从大到小排序
-    sorted(comments_dict.items(), lambda x, y: cmp(y[1], x[1]))
-    # 获取最热评论列表
-    hot_comments = []
-    for item in comments_dict:
-        hot_comments.append(item)
+    # comments_dict = {}  # 存取键值: {评论: 点赞数}
+    # course = Courses.query.get_or_404(id)  # 获取这个id课程
+    # comments = Comments.query.filter_by(course_id=id).all()  # 该课程对应评论的时间列表(默认按id排序)
+    # for comment in comments:
+    #     if comment.user.count() >= 3:
+    #         comments_dict[comment] = comment.user.count()
+    # # 按点赞数从大到小排序
+    # sorted(comments_dict.items(), lambda x, y: cmp(y[1], x[1]))
+    # # 获取最热评论列表
+    # hot_comments = []
+    # for item in comments_dict:
+    #     hot_comments.append(item)
+    hot_comments = Courses.query.filter_by(count>=3).order_by(count).all()
     return json.dumps(
         [comment.to_json() for comment in hot_comments],
         ensure_ascii=False,
@@ -85,6 +86,10 @@ def new_comment(id):
     comment.author = g.current_user
     comment.course_id = id
     db.session.add(comment)
+    db.session.commit()
+    course = Courses.query.get_or_404(id)
+    course.count = len(course.comment.all())
+    db.session.add(course)
     db.session.commit()
     return jsonify(
         comment.to_json()), 201, {
