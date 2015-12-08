@@ -31,10 +31,10 @@ def get_courses_id_comments(id):
         error_out=False
     )
     comments = pagination.items
-    prev = None
+    prev = ""
     if pagination.has_prev:
         prev = url_for('api.get_comments', page=page - 1, _external=True)
-    next = None
+    next = ""
     if pagination.has_next:
         next = url_for('api.get_comments', page=page + 1, _external=True)
     comments_count = len(Comments.query.filter_by(course_id=id).all())
@@ -42,7 +42,8 @@ def get_courses_id_comments(id):
     last = url_for('api.get_courses_id_comments', id=id, page=page_count, _external=True)
     return json.dumps(
         [comment.to_json() for comment in comments],
-        ensure_ascii=False
+        ensure_ascii=False,
+        indent=1
     ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 

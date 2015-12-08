@@ -396,7 +396,8 @@ class Comments(db.Model):
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
     # user外键关联到user表的username
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    # time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    time = db.Column(db.String(164), index=True)
     body = db.Column(db.Text)
     count = db.Column(db.Integer)  # 客户端能否+1
     # is_useful计数
