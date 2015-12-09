@@ -236,7 +236,6 @@ def load_user(user_id):
 class Courses(db.Model):
     __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
-    # __table_args__ = {'mysql_charset': 'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(280))
     # 按专必公必分类 category_id(外键)
@@ -253,7 +252,9 @@ class Courses(db.Model):
     # comment(定义和Comments表的一对多关系)
     comment = db.relationship('Comments', backref="courses", lazy='dynamic')
     # count: 课程对应的评论数
-    count = db.column(db.Integer)
+    count = db.Column(db.Integer)
+    # likes: 课程对应的点赞数
+    likes = db.Column(db.Integer)
     # 定义与标签的多对多关系
     tags = db.relationship(
         "Tags",
@@ -310,27 +311,55 @@ class Courses(db.Model):
         else:
             return False
 
+    @property
+    def hot_tags(self):
+        """
+        返回热门的4个标签
+        用空格隔开、组成4个字符串
+        :return:
+        """
+        tags = self.tags
+        hot_tag = []
+        for tag in tags:
+            # 筛选排序
+            hot_tag.append(tag.name)
+        return hot_tag
+
     def to_json(self):
         json_courses = {
             'id': self.id,
-            'url': url_for('api.get_course_id', id=self.id, _external=True),
+            #'url': url_for('api.get_course_id', id=self.id, _external=True),
             'title': self.name,
             # 'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
             # 老师只返回姓名
             'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
-            'introduction': self.introduction,
-            'comments': url_for('api.get_courses_id_comments', id=self.id, _external=True),
-            'category': self.category.name,
-            'credit': self.credit,
-            'likes': len(self.users.all()),  # 点赞的总数
-            # 'like_url': url_for('api.course_like', id=self.id, _external=True),  # 给一门课点赞
+            #'introduction': self.introduction,
+            'comment_url': url_for('api.get_courses_id_comments', id=self.id, _external=True),
+            'hot_tags': self.hot_tags,
+            # 'category': self.category.name,
+            #'credit': self.credit,
+            'likes': self.likes,  # 点赞的总数
+            'like_url': url_for('api.new_courses_id_like', id=self.id, _external=True),  # 给一门课点赞
             # 喜欢这门课的所有用户
-            'like_users': url_for('api.get_like_courses_id_users', id=self.id, _external=True),
+            #'like_users': url_for('api.get_like_courses_id_users', id=self.id, _external=True),
             'liked': self.liked,  # 查询的用户是否点赞了
-            'tags': url_for('api.get_courses_id_tags', id=self.id, _external=True),
-            'cat': CourseTypes.query.filter_by(id=self.type_id).first().name
+            # 'tags': url_for('api.get_courses_id_tags', id=self.id, _external=True),
+            'cat': CourseTypes.query.filter_by(id=self.type_id).first().name,
+            'views': self.count  # 浏览量其实是评论数
         }
         return json_courses
+
+    def to_json2(self):
+        json_courses2 = {
+            'id': self.id,
+            'title': self.name,
+            'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
+            'views': self.count, # 浏览量其实是评论数
+            'likes': self.likes,  # 点赞的总数
+            'main_cat': self.category.name,
+            'ts_cat': CourseTypes.query.filter_by(id=self.type_id).first().name
+        }
+        return json_courses2
 
     @staticmethod
     def from_json(request_json):
@@ -402,6 +431,7 @@ class Comments(db.Model):
     time = db.Column(db.String(164), index=True)
     body = db.Column(db.Text)
     count = db.Column(db.Integer)  # 客户端能否+1
+    likes = db.Column(db.Integer)  # 评论被点赞的数目
     # is_useful计数
     is_useful = db.Column(db.Integer)
     user = db.relationship(
@@ -411,17 +441,37 @@ class Comments(db.Model):
         lazy='dynamic'
     )
 
+    @property
+    def liked(self):
+        """
+        查询当前用户是否点赞了这门课
+        :return:
+        """
+        if hasattr(g, 'current_user'):
+            # 如果当前用户登录
+            # 查看用户是否点赞
+            # 匿名用户和未点赞用户返回False
+            if self in g.current_user.comment.all():
+                return True
+            else:
+                return False
+        else:
+            return False
+
     def to_json(self):
         json_comments = {
             'id': self.id,
-            'url': url_for('api.get_courses_id_comments', id=self.course_id, _external=True),
-            'user': url_for('api.get_comments_id_users', id=self.id, _external=True),
-            'course': url_for('api.get_course_id', id=self.course_id, _external=True),
+            # 'url': url_for('api.get_courses_id_comments', id=self.course_id, _external=True),
+            # 'user': url_for('api.get_comments_id_users', id=self.id, _external=True),
+            'user_name': User.query.filter_by(id=self.user_id).first().username,
+            'avatar' : 'http://7xj431.com1.z0.glb.clouddn.com/1-140G2160520962.jpg', # 占位
+            # 'course': url_for('api.get_course_id', id=self.course_id, _external=True),
             'date': '2015-12-05',  # 占位
             'body': self.body,
             'is_useful': self.is_useful,
-            'likes': len(self.user.all()),
-            'like_url': url_for('api.comment_like', id=self.id, _external=True)
+            'likes': self.likes,
+            'liked': self.liked,
+            'like_url': url_for('api.new_comments_id_like', id=self.id, _external=True)
         }
         return json_comments
 
@@ -510,12 +560,13 @@ class Tags(db.Model):
     # __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
+    count = db.Column(db.Integer)
 
     def to_json(self):
         json_tag = {
             'id': self.id,
             'tag_url': url_for('api.get_tags_id', id=self.id, _external=True),
-            'name': self.name
+            'title': self.name
         }
         return json_tag
 

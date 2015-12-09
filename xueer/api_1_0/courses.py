@@ -2,6 +2,7 @@
 
 from flask import jsonify, url_for, request, current_app
 from flask_login import current_user
+from sqlalchemy import desc
 from ..models import Courses, User, Tags
 from . import api
 from xueer import db
@@ -30,7 +31,7 @@ def get_courses():
                 pagination = Courses.query.filter_by(
                         type_id=request.args.get('ts_cat'),
                         category_id=request.args.get('main_cat')
-                ).paginate(
+                ).order_by(desc(Courses.count)).paginate(
                         page,
                         per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
                         error_out=False
@@ -43,6 +44,12 @@ def get_courses():
                         per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
                         error_out=False
                 )
+        else:
+            pagination = Courses.query.order_by(desc(Courses.count)).paginate(
+                page,
+                per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
+                error_out=False
+            )
     elif request.args.get('sort') == 'like':
         if request.args.get('main_cat'):
             if request.args.get('ts_cat'):
@@ -63,6 +70,11 @@ def get_courses():
                         error_out=False
                 )
         else:
+            pagination = Courses.query.order_by(desc(Courses.likes)).paginate(
+                page,
+                per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
+                error_out=False
+            )
     else:
         pagination = Courses.query.paginate(
             # 查询对象query具有paginate属性
@@ -85,7 +97,7 @@ def get_courses():
         page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE']+1
     last = url_for('api.get_courses', page=page_count, _external=True)
     return json.dumps(
-        [course.to_json() for course in courses],
+        [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
     ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
@@ -185,7 +197,7 @@ def get_tags_id_courses(id):
         page_count = courses_count//current_app.config['XUEER_TAGS_PER_PAGE']+1
     last = url_for('api.get_tags_id_courses', id=id, page=page_count, _external=True)
     return json.dumps(
-        [course.to_json() for course in courses],
+        [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
     ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
