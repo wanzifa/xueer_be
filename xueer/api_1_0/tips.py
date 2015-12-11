@@ -37,16 +37,21 @@ def get_tips():
     tips = pagination.items
     prev = None
     if pagination.has_prev:
-        prev = url_for('api.get_tips', page=page-1, _external=True)
+        prev = url_for('api.get_tips', page=page - 1, _external=True)
     next = None
     if pagination.has_next:
-        next = url_for('api.get_tips', page=page-1, _external=True)
-    return jsonify({
-        'posts': [tip.to_json() for tip in tips],
-        'prev': prev,
-        'next': next,
-        'count': pagination.total
-    })
+        next = url_for('api.get_tips', page=page + 1, _external=True)
+    tips_count = len(Tips.query.all())
+    if tips_count%current_app.config['XUEER_TIPS_PER_PAGE'] == 0:
+        page_count = tips_count//current_app.config['XUEER_TIPS_PER_PAGE']
+    else:
+        page_count = tips_count//current_app.config['XUEER_TIPS_PER_PAGE']+1
+    last = url_for('api.get_tips', page=page_count, _external=True)
+    return json.dumps(
+        [tip.to_json() for tip in tips],
+        ensure_ascii=False,
+        indent=1
+    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 @api.route('/tip/<int:id>', methods=['GET'])

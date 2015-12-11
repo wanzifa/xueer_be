@@ -12,7 +12,7 @@ from flask import request, jsonify, url_for, current_app, g
 from .. import db
 from flask_login import current_user
 from sqlalchemy import desc
-from ..models import Comments, Courses, User, Permission
+from ..models import Comments, Courses, User, Permission, Tips
 from . import api
 from .decorators import permission_required
 import json
@@ -183,7 +183,7 @@ def new_tip_comment(id):
 
 
 @api.route('/tip/<int:id>/comments/', methods=['DELETE', 'GET'])
-@auth.login_required)
+@auth.login_required
 def delete_tip_comment(id):
     """
     删除贴士下的一个评论
