@@ -599,7 +599,7 @@ class Tips(db.Model):
     count = db.Column(db.Integer, default=0)
     users = db.relationship(
         "User",
-        secondary=UTlike,
+        secondary=UTLike,
         backref=db.backref('tips', lazy="dynamic"),
         lazy='dynamic'
     )
