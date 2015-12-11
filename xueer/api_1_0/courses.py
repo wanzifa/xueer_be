@@ -136,20 +136,16 @@ def put_course(id):
     :return:
     """
     course = Courses.query.get_or_404(id)
-    if request.json.get('name'):
-        course.name = request.json.get('name')
-    if request.json.get('teacher_id'):
-        course.teacher_id = request.json.get('teacher_id')
-    if request.json.get('introduction'):
-        course.introduction = request.json.get('introduction')
-    if request.json.get('category_id'):
-        course.category_id = request.json.get('category_id')
-    if request.json.get('credit'):
-        course.credit = request.json.get('credit')
-    if request.json.get('type_id'):
-        course.type_id = request.json.get('type_id')
-    db.session.add(course)
-    db.session.commit()
+    if request.method == "PUT":
+        data_dict = eval(request.data)
+        course.name = data_dict.get('name', course.name)
+        course.teacher_id = data_dict.get('teacher_id', course.teacher_id)
+        course.introduction = data_dict.get('introduction', course.introduction)
+        course.category_id = data_dict.get('category_id', course.category_id)
+        course.credit = data_dict.get('credit', course.credit)
+        course.type_id = data_dict.get('type_id', course.type_id)
+        db.session.add(course)
+        db.session.commit()
     return jsonify(course.to_json()), 200
 
 
