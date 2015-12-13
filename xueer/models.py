@@ -245,7 +245,9 @@ class Courses(db.Model):
     # credit记录学分
     credit = db.Column(db.Integer)
     # teacher_id(外键)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
+    # teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
+    # just teacher's name
+    teacher = db.Column(db.String(164))
     # introduction(课程介绍)
     introduction = db.Column(db.Text)
 
@@ -332,7 +334,8 @@ class Courses(db.Model):
             'title': self.name,
             # 'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
             # 老师只返回姓名
-            'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
+            # 'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
+            'teacher': self.teacher,
             #'introduction': self.introduction,
             'comment_url': url_for('api.get_courses_id_comments', id=self.id, _external=True),
             'hot_tags': self.hot_tags,
@@ -494,7 +497,7 @@ class Teachers(db.Model):
     introduction = db.Column(db.Text)
     phone = db.Column(db.String(20))
     weibo = db.Column(db.String(150))
-    courses = db.relationship("Courses", backref="teacher", lazy="dynamic")
+    # courses = db.relationship("Courses", backref="teacher", lazy="dynamic")
 
     @staticmethod
     def generate_fake(count=100):
