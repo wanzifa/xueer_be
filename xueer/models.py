@@ -438,7 +438,7 @@ class Comments(db.Model):
     # user外键关联到user表的username
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     # time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    time = db.Column(db.String(164), index=True)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     body = db.Column(db.Text)
     count = db.Column(db.Integer)  # 客户端能否+1
     likes = db.Column(db.Integer, default=0)  # 评论被点赞的数目
@@ -451,6 +451,12 @@ class Comments(db.Model):
         backref=db.backref('comment', lazy="dynamic"),
         lazy='dynamic'
     )
+
+    @property
+    def time(self):
+        time_str = str(self.timestamp)
+        time = time_str[0:10]
+        return time
 
     @property
     def liked(self):
@@ -477,7 +483,7 @@ class Comments(db.Model):
             'user_name': User.query.filter_by(id=self.user_id).first().username,
             'avatar' : 'http://7xj431.com1.z0.glb.clouddn.com/1-140G2160520962.jpg', # 占位
             # 'course': url_for('api.get_course_id', id=self.course_id, _external=True),
-            'date': '2015-12-05',  # 占位
+            'date': self.time,  
             'body': self.body,
             'is_useful': self.is_useful,
             'likes': self.likes,
@@ -612,6 +618,12 @@ class Tips(db.Model):
     )
 
     @property
+    def time(self):
+        time_str = str(self.timestamp)
+        time = time_str[0:10]
+        return time
+
+    @property
     def liked(self):
         """
         查询当前用户是否点赞了这个贴士
@@ -635,7 +647,7 @@ class Tips(db.Model):
             'url': url_for('api.get_tip_id', id=self.id, _external=True),
             'views': self.count,
             'likes': self.likes,
-            'date': self.timestamp
+            'date': self.time
         }
         return json_tips
 
