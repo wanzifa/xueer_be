@@ -444,7 +444,7 @@ class Comments(db.Model):
     likes = db.Column(db.Integer, default=0)  # 评论被点赞的数目
     # is_useful计数
     is_useful = db.Column(db.Integer)
-    tip_id = db.Column(db.Integer, db.Foreignkey('tips.id'))
+    tip_id = db.Column(db.Integer, db.ForeignKey('tips.id'))
     user = db.relationship(
         "User",
         secondary=UCMLike,
