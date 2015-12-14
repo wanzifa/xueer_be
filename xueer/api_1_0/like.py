@@ -106,3 +106,51 @@ def new_comments_id_like(id):
             return jsonify({
                 "error": "你还没有点赞这个评论哦!"
             }), 403
+
+
+@api.route('/tip/<int:id>/like/', methods=["GET", "PUT", "DELETE"])
+@auth.login_required
+def new_tips_id_like(id):
+    """
+    点赞特定id对应的贴士
+    :param id:
+    :return:
+    """
+    tip = Tips.query.get_or_404(id)
+    if request.method == "PUT":
+        if tip.liked:
+            return jsonify({
+                'error': '你已经点赞过该贴士'
+            })
+        else:
+            tip.users.append(g.current_user)
+            db.session.add(tip)
+            db.session.commit()
+            tip.likes = len(tip.users.all())
+            db.session.add(tip)
+            db.session.commit()
+            tip = Tips.query.get_or_404(id)
+            return jsonify(
+                tip.to_json()
+            ), 201
+    elif request.method == "DELETE":
+        """
+        删除特定id的贴士点赞
+        :param id:
+        :return:
+        """
+        if tip.liked:
+            tip.users.remove(g.current_user)
+            db.session.add(tip)
+            db.session.commit()
+            tip.likes = len(tip.users.all())
+            db.session.add(tip)
+            db.session.commit()
+            tip = Tips.query.get_or_404(id)
+            return jsonify(
+                tip.to_json()
+            ), 200
+        else:
+            return jsonify({
+                "error": "你还没有点赞这个贴士哦!"
+            }), 403

@@ -73,6 +73,12 @@ UCMLike = db.Table(
     db.Column('comment_id', db.Integer, db.ForeignKey('comments.id'))
 )
 
+UTLike = db.Table(
+    'user_tips_like',
+    db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('tips_id', db.Integer, db.ForeignKey('tips.id'))
+)
+
 # a secondary table
 CourseTag = db.Table(
     'CourseTag',
@@ -434,9 +440,10 @@ class Comments(db.Model):
     time = db.Column(db.String(164), index=True)
     body = db.Column(db.Text)
     count = db.Column(db.Integer)  # 客户端能否+1
-    likes = db.Column(db.Integer)  # 评论被点赞的数目
+    likes = db.Column(db.Integer, default=0)  # 评论被点赞的数目
     # is_useful计数
     is_useful = db.Column(db.Integer)
+    tip_id = db.Column(db.Integer, db.Foreignkey('tips.id'))
     user = db.relationship(
         "User",
         secondary=UCMLike,
@@ -580,3 +587,64 @@ class Tags(db.Model):
 
     def __repr__(self):
         return '<Tags %r>' % self.name
+
+
+class Tips(db.Model):
+     __table_args__ = {'mysql_charset':'utf8'}
+    __tablename__ = 'tips'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.Text)
+    body = db.Column(db.Text)
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    likes = db.Column(db.Integer, default=0)
+    comment = db.relationship('Comments', backref="tips", lazy="dynamic")
+    count = db.Column(db.Integer, default=0)
+    users = db.relationship(
+        "User",
+        secondary=UTLike,
+        backref=db.backref('tips', lazy="dynamic"),
+        lazy='dynamic'
+    )
+
+    @property
+    def liked(self):
+        """
+        查询当前用户是否点赞了这个贴士
+        :return:
+        """
+        if hasattr(g, 'current_user'):
+            # 如果当前用户登录
+            # 查看用户是否点赞
+            # 匿名用户和未点赞用户返回False
+            if self in g.current_user.tips.all():
+                return True
+            else:
+                return False
+        else:
+            return False
+
+    def to_json(self):
+        json_tips={
+            'id': self.id,
+            'title': self.title,
+            'url': url_for('api.get_tip_id', id=self.id, _external=True),
+            'views': self.count,
+            'likes': self.likes,
+            'date': self.timestamp
+        }
+        return json_tips
+
+    @staticmethod
+    def from_json(json_tips):
+        body = json_tips.get('body')
+        if body is None or body == '':
+            raise ValidationError('小贴士没有内容哦!')
+        return Tips(body=body)
+
+    def __repr__(self):
+        return '<Tips %r>' % self.name
+
+
+
+
