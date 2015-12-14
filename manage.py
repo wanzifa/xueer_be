@@ -3,14 +3,14 @@
 from getpass import getpass
 import sys
 import os
-from flask.ext.script import Manager, Shell
-from flask.ext.migrate import Migrate, MigrateCommand
+from flask_script import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand
 # from flask.ext.admin import Admin
 # from flask.ext.admin.contrib.sqla import ModelView
 from flask import g
 from xueer import create_app, db
 from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseCategories, \
-    CourseTypes, Comments, Teachers, Tags
+    CourseTypes, Comments, Teachers, Tags, Tips
 
 
 # 编码设置
@@ -44,7 +44,8 @@ def make_shell_context():
         CourseTypes=CourseTypes,
         Comments=Comments,
         Teachers=Teachers,
-        Tags=Tags
+        Tags=Tags,
+        Tips=Tips
     )
 
 

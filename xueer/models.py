@@ -61,6 +61,7 @@ class Role(db.Model):
 
 
 # a secondary table
+# 多对多关系的中间表
 UCLike = db.Table(
     'user_like',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
@@ -132,9 +133,9 @@ class User(UserMixin, db.Model):
                 qq='834597629',
                 phone='13007149711',
                 # major=u'软件工程',
-                major = 'CS',
+                major='CS',
                 # school=u'计算机'
-                school = 'CCNUCS'
+                school='CCNUCS'
             )
             db.session.add(u)
             try:
@@ -590,15 +591,18 @@ class Tags(db.Model):
 
 
 class Tips(db.Model):
-     __table_args__ = {'mysql_charset':'utf8'}
+    # __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tips'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     body = db.Column(db.Text)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author = db.Column(db.String(80))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    # likes number
     likes = db.Column(db.Integer, default=0)
     comment = db.relationship('Comments', backref="tips", lazy="dynamic")
+    # comments number
     count = db.Column(db.Integer, default=0)
     users = db.relationship(
         "User",
@@ -644,7 +648,3 @@ class Tips(db.Model):
 
     def __repr__(self):
         return '<Tips %r>' % self.name
-
-
-
-
