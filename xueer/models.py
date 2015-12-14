@@ -440,7 +440,7 @@ class Comments(db.Model):
     likes = db.Column(db.Integer, default=0)  # 评论被点赞的数目
     # is_useful计数
     is_useful = db.Column(db.Integer)
-    tip_id = db.Column(db.Integer, db.Foreignkey('tips.id'))
+    tip_id = db.Column(db.Integer, db.ForeignKey('tips.id'))
     user = db.relationship(
         "User",
         secondary=UCMLike,
@@ -587,7 +587,7 @@ class Tags(db.Model):
 
 
 class Tips(db.Model):
-     __table_args__ = {'mysql_charset':'utf8'}
+    __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tips'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
