@@ -2,11 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e28b443e-5220-412d-a32d-24408e4ce701" name="Default" comment="ggk">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xueer/api_1_0/comments.py" afterPath="$PROJECT_DIR$/xueer/api_1_0/comments.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xueer/api_1_0/courses.py" afterPath="$PROJECT_DIR$/xueer/api_1_0/courses.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xueer/api_1_0/like.py" afterPath="$PROJECT_DIR$/xueer/api_1_0/like.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manage.py" afterPath="$PROJECT_DIR$/manage.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/xueer/models.py" afterPath="$PROJECT_DIR$/xueer/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="xueer_be.iws" />
@@ -32,7 +27,7 @@
         <entry file="file://$PROJECT_DIR$/xueer/api_1_0/courses.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="202" column="23" selection-start-line="202" selection-start-column="23" selection-end-line="202" selection-end-column="23" />
+              <caret line="164" column="26" selection-start-line="164" selection-start-column="26" selection-end-line="164" selection-end-column="26" />
               <folding>
                 <element signature="e#17#73#0" expanded="true" />
               </folding>
@@ -44,10 +39,20 @@
         <entry file="file://$PROJECT_DIR$/xueer/api_1_0/like.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="46" column="5" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
+              <caret line="94" column="5" selection-start-line="94" selection-start-column="5" selection-end-line="94" selection-end-column="5" />
               <folding>
                 <element signature="e#36#53#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -62,13 +67,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/xueer/models.py">
+      <file leaf-file-name="manage.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/manage.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="453" column="17" selection-start-line="453" selection-start-column="17" selection-end-line="453" selection-end-column="17" />
+              <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
               <folding>
-                <element signature="e#16#45#0" expanded="true" />
+                <element signature="e#17#44#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -78,22 +83,43 @@
         <entry file="file://$PROJECT_DIR$/xueer/api_1_0/tags.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="60" column="16" selection-start-line="60" selection-start-column="16" selection-end-line="60" selection-end-column="16" />
+              <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comments.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/xueer/api_1_0/comments.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="54" column="26" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/xueer/models.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.77272725">
+              <caret line="614" column="16" selection-start-line="614" selection-start-column="8" selection-end-line="614" selection-end-column="17" />
               <folding>
-                <element signature="e#16#72#0" expanded="true" />
+                <element signature="e#16#45#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="comments.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/xueer/api_1_0/comments.py">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider editor-type-id="MarkdownPreviewEditor">
+            <state />
+          </provider>
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.782516">
-              <caret line="125" column="0" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
-              <folding>
-                <element signature="e#153#212#0" expanded="true" />
-              </folding>
+            <state vertical-scroll-proportion="-2.3448277">
+              <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -121,16 +147,16 @@
         <option value="$PROJECT_DIR$/xueer/api_1_0/tips.py" />
         <option value="$PROJECT_DIR$/xueer/__init__.py" />
         <option value="$PROJECT_DIR$/xueer/decorators.py" />
-        <option value="$PROJECT_DIR$/manage.py" />
-        <option value="$PROJECT_DIR$/config.py" />
         <option value="$PROJECT_DIR$/xueer/api_1_0/authentication.py" />
         <option value="$PROJECT_DIR$/xueer/api_1_0/__init__.py" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/xueer/api_1_0/courses.py" />
         <option value="$PROJECT_DIR$/xueer/api_1_0/tags.py" />
-        <option value="$PROJECT_DIR$/xueer/models.py" />
         <option value="$PROJECT_DIR$/xueer/api_1_0/like.py" />
         <option value="$PROJECT_DIR$/xueer/api_1_0/comments.py" />
+        <option value="$PROJECT_DIR$/xueer/api_1_0/courses.py" />
+        <option value="$PROJECT_DIR$/config.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/manage.py" />
+        <option value="$PROJECT_DIR$/xueer/models.py" />
       </list>
     </option>
   </component>
@@ -138,9 +164,29 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
+    <option name="x" value="-1" />
     <option name="y" value="23" />
     <option name="width" value="1440" />
-    <option name="height" value="836" />
+    <option name="height" value="838" />
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Python</id>
+          </State>
+        </expanded-state>
+        <selected-state>
+          <State>
+            <id>PyBroadExceptionInspection</id>
+          </State>
+        </selected-state>
+      </profile-state>
+    </entry>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -224,9 +270,25 @@
   <component name="PropertiesComponent">
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Font" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../muxisite" />
     <property name="FullScreen" value="false" />
-    <property name="SearchEverywhereHistoryKey" value="comment&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;course&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;m&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;mod&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;like&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/like.py&#10;mode&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;c&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;mo&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;likes&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/like.py&#10;comm&#9;ACTION&#9;CheckinProject&#10;tags&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tags.py&#10;cour&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;commen&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;models&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;cou&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;Re&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/README.md&#10;li&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/like.py&#10;au&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/authentication.py&#10;model&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;comments&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;con&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/config.py&#10;t&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tags.py&#10;tag&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tags.py&#10;tips&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tips.py&#10;REA&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/README.md&#10;co&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;tea&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/teachers.py&#10;users&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/users.py&#10;config&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/config.py&#10;user&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/users.py&#10;cong&#9;null&#9;null&#10;cous&#9;null&#9;null&#10;courses&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="mode&#9;null&#9;null&#10;mo&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;mana&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/manage.py&#10;Re&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/README.md&#10;m&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;conf&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/config.py&#10;courses&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;co&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;comm&#9;ACTION&#9;CheckinProject&#10;READ&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/README.md&#10;comment&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;course&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;mod&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;like&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/like.py&#10;c&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;likes&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/like.py&#10;tags&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tags.py&#10;cour&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;commen&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;models&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;cou&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/courses.py&#10;li&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/like.py&#10;au&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/authentication.py&#10;model&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/models.py&#10;comments&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/comments.py&#10;con&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/config.py&#10;t&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tags.py&#10;tag&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tags.py&#10;tips&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/tips.py&#10;REA&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/README.md&#10;tea&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/teachers.py&#10;users&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/users.py&#10;config&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/config.py&#10;user&#9;FILE&#9;file:///Users/apple/muxi_project/xueer/xueer/api_1_0/users.py&#10;cong&#9;null&#9;null&#10;cous&#9;null&#9;null" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth0" value="146" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth1" value="147" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth2" value="151" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatWidth3" value="945" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_flatOrder3" value="3" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth0" value="146" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder0" value="0" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth1" value="147" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder1" value="1" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth2" value="151" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder2" value="2" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeWidth3" value="945" />
+    <property name="FileHistory.git4idea.history.GitHistoryProvider_treeOrder3" value="3" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
@@ -385,19 +447,19 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="836" extended-state="6" />
+    <frame x="-1" y="23" width="1440" height="838" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.33378017" sideWeight="0.48273432" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.46256685" sideWeight="0.48273432" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33378017" sideWeight="0.5172657" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22057787" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21916842" sideWeight="0.49170125" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2606952" sideWeight="0.5172657" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33378017" sideWeight="0.5172657" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23044397" sideWeight="0.50829875" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32797858" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29411766" sideWeight="0.5172657" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32707775" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -421,7 +483,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -431,7 +493,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="48" column="46" selection-start-line="48" selection-start-column="46" selection-end-line="48" selection-end-column="46" />
           <folding>
-            <element signature="e#17#44#0" expanded="false" />
+            <element signature="e#17#44#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -530,9 +592,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="3" column="16" selection-start-line="3" selection-start-column="16" selection-end-line="3" selection-end-column="16" />
-          <folding>
-            <element signature="e#153#212#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -541,7 +601,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="75" column="0" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
           <folding>
-            <element signature="e#17#44#0" expanded="false" />
+            <element signature="e#17#44#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -595,9 +655,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#153#212#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -755,26 +813,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/manage.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="12" selection-start-line="25" selection-start-column="12" selection-end-line="25" selection-end-column="12" />
-          <folding>
-            <element signature="e#17#44#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
-          <folding>
-            <element signature="e#126#135#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/xueer/api_1_0/authentication.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -793,20 +831,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/tags.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="60" column="16" selection-start-line="60" selection-start-column="16" selection-end-line="60" selection-end-column="16" />
-          <folding>
-            <element signature="e#16#72#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/dominate/tags.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="1018" column="6" selection-start-line="1018" selection-start-column="6" selection-end-line="1018" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/like.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="94" column="5" selection-start-line="94" selection-start-column="5" selection-end-line="94" selection-end-column="5" />
+          <folding>
+            <element signature="e#36#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/comments.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="54" column="26" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/courses.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="164" column="26" selection-start-line="164" selection-start-column="26" selection-end-line="164" selection-end-column="26" />
+          <folding>
+            <element signature="e#17#73#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
           <folding />
         </state>
       </provider>
@@ -816,48 +880,36 @@
         <state />
       </provider>
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7227273">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+        <state vertical-scroll-proportion="-2.3448277">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/manage.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding>
+            <element signature="e#17#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/tags.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="16" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/xueer/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="453" column="17" selection-start-line="453" selection-start-column="17" selection-end-line="453" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.77272725">
+          <caret line="614" column="16" selection-start-line="614" selection-start-column="8" selection-end-line="614" selection-end-column="17" />
           <folding>
             <element signature="e#16#45#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/like.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="46" column="5" selection-start-line="46" selection-start-column="5" selection-end-line="46" selection-end-column="5" />
-          <folding>
-            <element signature="e#36#53#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/courses.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="202" column="23" selection-start-line="202" selection-start-column="23" selection-end-line="202" selection-end-column="23" />
-          <folding>
-            <element signature="e#17#73#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/xueer/api_1_0/comments.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.782516">
-          <caret line="125" column="0" selection-start-line="125" selection-start-column="0" selection-end-line="125" selection-end-column="0" />
-          <folding>
-            <element signature="e#153#212#0" expanded="true" />
           </folding>
         </state>
       </provider>

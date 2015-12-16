@@ -61,6 +61,7 @@ class Role(db.Model):
 
 
 # a secondary table
+# 多对多关系的中间表
 UCLike = db.Table(
     'user_like',
     db.Column('user_id', db.Integer, db.ForeignKey('users.id')),
@@ -132,9 +133,9 @@ class User(UserMixin, db.Model):
                 qq='834597629',
                 phone='13007149711',
                 # major=u'软件工程',
-                major = 'CS',
+                major='CS',
                 # school=u'计算机'
-                school = 'CCNUCS'
+                school='CCNUCS'
             )
             db.session.add(u)
             try:
@@ -251,7 +252,9 @@ class Courses(db.Model):
     # credit记录学分
     credit = db.Column(db.Integer)
     # teacher_id(外键)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
+    # teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
+    # just teacher's name
+    teacher = db.Column(db.String(164))
     # introduction(课程介绍)
     introduction = db.Column(db.Text)
 
@@ -338,7 +341,8 @@ class Courses(db.Model):
             'title': self.name,
             # 'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
             # 老师只返回姓名
-            'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
+            # 'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
+            'teacher': self.teacher,
             #'introduction': self.introduction,
             'comment_url': url_for('api.get_courses_id_comments', id=self.id, _external=True),
             'hot_tags': self.hot_tags,
@@ -507,7 +511,7 @@ class Teachers(db.Model):
     introduction = db.Column(db.Text)
     phone = db.Column(db.String(20))
     weibo = db.Column(db.String(150))
-    courses = db.relationship("Courses", backref="teacher", lazy="dynamic")
+    # courses = db.relationship("Courses", backref="teacher", lazy="dynamic")
 
     @staticmethod
     def generate_fake(count=100):
@@ -593,15 +597,18 @@ class Tags(db.Model):
 
 
 class Tips(db.Model):
-    __table_args__ = {'mysql_charset':'utf8'}
+    # __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tips'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     body = db.Column(db.Text)
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    # author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    author = db.Column(db.String(80))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    # likes number
     likes = db.Column(db.Integer, default=0)
     comment = db.relationship('Comments', backref="tips", lazy="dynamic")
+    # comments number
     count = db.Column(db.Integer, default=0)
     users = db.relationship(
         "User",
@@ -653,7 +660,4 @@ class Tips(db.Model):
 
     def __repr__(self):
         return '<Tips %r>' % self.title
-
-
-
 

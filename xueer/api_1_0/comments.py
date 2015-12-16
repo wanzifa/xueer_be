@@ -67,12 +67,13 @@ def get_courses_id_comments(id):
 def get_hot_comments(id):
     """
     获取特定id课程的热门评论(以3作为热门鉴定)
+    喜欢数大于3作为热门的判定
     :param id: 课程id
     :return: 评论 json 数据
     """
     hot_comments = Comments.query.order_by(desc(Comments.likes)).all()
     return json.dumps(
-        [comment.to_json() for comment in hot_comments],
+        [comment.to_json() for comment in hot_comments if comment.likes >= 3],
         ensure_ascii=False,
         indent=1
     ), 200

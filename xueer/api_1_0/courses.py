@@ -2,8 +2,9 @@
 
 from flask import jsonify, url_for, request, current_app
 from flask_login import current_user
+from .authentication import auth
 from sqlalchemy import desc
-from ..models import Courses, User, Tags
+from ..models import Courses, User, Tags, CourseCategories
 from . import api
 from xueer import db
 import json
@@ -130,26 +131,38 @@ def new_course():
 
 
 @api.route('/courses/<int:id>/', methods=["GET", "PUT"])
+@auth.login_required
 def put_course(id):
     """
     更新一门课
-    :return:
+    {
+            'id':1,
+            'title':"微生物与人类健康",
+            'teacher': "王大锤",
+            'hot_tags':"不点名 老师帅 作业少 很有趣"
+            'views':20,
+            'likes':30,
+            'liked':false,
+            'cat':'公共课'
+            'comment_url':'/1/comments/'
+            'like_url':'/api/courses/1/like'
+
+    }
     """
     course = Courses.query.get_or_404(id)
-    if request.json.get('name'):
-        course.name = request.json.get('name')
-    if request.json.get('teacher_id'):
-        course.teacher_id = request.json.get('teacher_id')
-    if request.json.get('introduction'):
-        course.introduction = request.json.get('introduction')
-    if request.json.get('category_id'):
-        course.category_id = request.json.get('category_id')
-    if request.json.get('credit'):
-        course.credit = request.json.get('credit')
-    if request.json.get('type_id'):
-        course.type_id = request.json.get('type_id')
-    db.session.add(course)
-    db.session.commit()
+    if request.method == "PUT":
+        data_dict = eval(request.data)
+        course.name = data_dict.get('title', course.name)
+        course.teacher = data_dict.get('teacher', course.teacher)
+        # course.teacher_id = Teacher.query.filter_by(name=teacher).first().id
+        course.introduction = data_dict.get('introduction', course.introduction)
+        category = data_dict.get('cat')
+        course.category_id = CourseCategories.query.filter_by(name=category).first().id
+        # course.credit = data_dict.get('credit', course.credit)
+        # course.type_id = data_dict.get('type_id', course.type_id)
+        # update islike(liked) and likes will auto add(funny!)
+        db.session.add(course)
+        db.session.commit()
     return jsonify(course.to_json()), 200
 
 
