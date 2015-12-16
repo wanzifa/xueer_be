@@ -652,7 +652,7 @@ class Tips(db.Model):
         return Tips(body=body)
 
     def __repr__(self):
-        return '<Tips %r>' % self.name
+        return '<Tips %r>' % self.title
 
 
 
