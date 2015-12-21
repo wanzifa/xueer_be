@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import os
 
 from flask import Flask
 from flask_moment import Moment
@@ -39,3 +40,6 @@ def create_app(config_name):
     app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
 
     return app
+
+
+app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
