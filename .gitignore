@@ -1,5 +1,6 @@
 **/*.pyc
 *.pyc
+xueer.sock
 -1
 .idea/
 venv/
