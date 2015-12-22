@@ -4,7 +4,7 @@ from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin, current_user
-from . import db, login_manager
+from . import  login_manager, app, db
 from flask import current_app, url_for, g
 from xueer.exceptions import ValidationError
 

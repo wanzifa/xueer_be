@@ -8,7 +8,7 @@ from flask_migrate import Migrate, MigrateCommand
 # from flask.ext.admin import Admin
 # from flask.ext.admin.contrib.sqla import ModelView
 from flask import g
-from xueer import create_app, db
+from xueer import db, app
 from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseCategories, \
     CourseTypes, Comments, Teachers, Tags, Tips
 
@@ -19,7 +19,6 @@ sys.setdefaultencoding('utf-8')
 
 
 # use create_app to create flask app
-app = create_app(os.environ.get('XUEER_CONFIG') or 'testing')
 # app = create_app(os.environ.get('XUEER_CONFIG') or 'default')
 
 manager = Manager(app)
