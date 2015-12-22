@@ -1,6 +1,0 @@
-flask
-flask-login==0.2
-flask-sqlalchemy
-flask-migrate
-flask-admin
-flask-script

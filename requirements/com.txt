@@ -1,0 +1,10 @@
+flask
+flask-login
+flask-sqlalchemy
+flask-migrate
+flask-admin
+flask-script
+flask-moment
+flask-bootstrap
+flask-wtf
+flask-httpauth

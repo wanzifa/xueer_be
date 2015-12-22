@@ -1,6 +1,10 @@
 **/*.pyc
 *.pyc
-venv/
+xueer.sock
 -1
+.idea/
+venv/
 migrations/
 xueer_test.sqlite
+xueer_dev.sqlite
+.idea/

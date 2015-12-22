@@ -1,3 +1,11 @@
+# coding: utf-8
+"""
+error.py
+~~~~~~~
+
+    错误处理程序
+"""
+
 from xueer.exceptions import ValidationError
 from flask import jsonify
 from . import api
@@ -15,7 +23,7 @@ def bad_request(message):
     return response
 
 
-def unathorized(message):
+def unauthorized(message):
     response = jsonify({'error': 'unathorized', 'message': message})
     response.status_code = 401
     return response
@@ -26,24 +34,26 @@ def forbidden(message):
     response.status_code = 403
     return response
 
+
 def server_error(message):
     response = jsonify({'error': 'server_error', 'message': message})
     response.status_code = 500
     return response
 
 
-@api.error_handler(ValidationError)
-def ValidationError(e):
-     return bad_request(e.args[0])
+# @api.error_handler(ValidationError)
+# def validationError(e):
+#      return bad_request(e.args[0])
 
 
+"""
 @api.error_handler(ValidationError)
 def ValidationError(e):
      return not_found(e.args[0])
 
- 
+
 @api.error_handler(ValidationError)
- def ValidationError(e):
+def ValidationError(e):
      return unauthorized(e.args[0])
 
 
@@ -55,5 +65,4 @@ def ValidationError(e):
 @api.error_handler(ValidationError)
 def ValidationError(e):
     return server_error(e.args[0])
-
-
+"""
