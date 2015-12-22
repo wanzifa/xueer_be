@@ -30,12 +30,12 @@ def create_app(config_name):
 
     # regist blueprint
     from hello import hello
-    app.register_blueprint(hello)
+    app.register_blueprint(hello, url_prefix='/hello')
 
-    from auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    from auth import auth
+    app.register_blueprint(auth, url_prefix='/auth')
 
-    from api_1_0 import api as api_1_0_blueprint
-    app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
+    from api_1_0 import api
+    app.register_blueprint(api, url_prefix='/api')
 
     return app
