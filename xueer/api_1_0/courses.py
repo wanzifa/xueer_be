@@ -4,7 +4,7 @@ from flask import jsonify, url_for, request, current_app
 from flask_login import current_user
 from .authentication import auth
 from sqlalchemy import desc
-from ..models import Courses, User, Tags, CourseCategories
+from ..models import Courses, User, Tags, CourseCategories, CourseTypes
 from . import api
 from xueer import db
 import json
