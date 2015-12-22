@@ -7,6 +7,8 @@ from flask_login import UserMixin, AnonymousUserMixin, current_user
 from . import  login_manager, app, db
 from flask import current_app, url_for, g
 from xueer.exceptions import ValidationError
+from . import app
+import flask.ext.whooshalchemy as whooshalchemy
 
 
 class Permission:
@@ -241,6 +243,7 @@ def load_user(user_id):
 
 
 class Courses(db.Model):
+    __searchable__ = ['teacher', 'name', 'tags_list']
     __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
@@ -279,6 +282,14 @@ class Courses(db.Model):
         lazy='dynamic'
     )
 
+    @property
+    def tags_list(self):
+        all_tags=[]
+        for tag in self.tags.all():
+            tag_name=tag.name
+            all_tags.append(tag.name)
+        return all_tags
+
     @staticmethod
     def generate_fake(count=100):
         """
@@ -292,6 +303,7 @@ class Courses(db.Model):
 
         seed()  # 初始化
         for i in range(count):
+
             c = Courses(
                 name=forgery_py.name.full_name(),
                 credit=10,
@@ -363,7 +375,7 @@ class Courses(db.Model):
         json_courses2 = {
             'id': self.id,
             'title': self.name,
-            'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
+            'teacher': self.teacher,
             'views': self.count, # 浏览量其实是评论数
             'likes': self.likes,  # 点赞的总数
             'main_cat': self.category.name,
@@ -395,6 +407,9 @@ class Courses(db.Model):
 
     def __repr__(self):
         return '<Courses %r>' % self.name
+
+
+whooshalchemy.whoosh_index(app, Courses)
 
 
 # CourseCategories
