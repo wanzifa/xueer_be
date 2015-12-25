@@ -1,4 +1,11 @@
-# -*- coding:utf-8 -*-
+# coding: utf-8
+"""
+xueer
+~~~~~
+
+    华中师范大学评课系统
+
+"""
 import os
 
 from flask import Flask

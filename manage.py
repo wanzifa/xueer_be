@@ -88,6 +88,18 @@ def test():
     unittest.TextTestRunner(verbosity=2).run(tests)
 
 
+@manager.command
+def freeze():
+    """首页静态化"""
+    from xueer.hello import hello
+    from flask_frozen import Freezer
+
+    freezer = Freezer(hello)
+
+    if __name__ == '__main__':
+        freezer.freeze()
+
+
 if __name__ == '__main__':
     app.debug = True
     manager.run()

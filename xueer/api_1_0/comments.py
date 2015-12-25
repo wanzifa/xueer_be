@@ -74,7 +74,7 @@ def get_hot_comments(id):
     :param id: 课程id
     :return: 评论 json 数据
     """
-    hot_comments = Comments.query.order_by(desc(Comments.likes)).all()
+    hot_comments = Comments.query.order_by(Comments.likes).all()
     return json.dumps(
         [comment.to_json() for comment in hot_comments if comment.likes >= 3],
         ensure_ascii=False,
@@ -138,7 +138,7 @@ def get_tip_id_comments(id):
     """
     tip = Tips.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
-    pagination = tip.comment.order_by(Comments.time.asc()).paginate(
+    pagination = tip.comment.order_by(Comments.timestamp.desc()).paginate(
         page, per_page=current_app.config['XUEER_COMMENTS_PER_PAGE'],
         error_out=False
     )
