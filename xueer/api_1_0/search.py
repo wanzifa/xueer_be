@@ -22,7 +22,7 @@ def get_search(keywords):
     if request.args.get('sort') == 'view':
         if request.args.get('main_cat'):
             if request.args.get('ts_cat'):
-                pagination = Courses.query.whoosh_search('keywords').filter_by(
+                pagination = Courses.query.whoosh_search(keywords).filter_by(
                         type_id=request.args.get('ts_cat'),
                         category_id=request.args.get('main_cat')
                 ).order_by(desc(Courses.count)).paginate(
@@ -31,7 +31,7 @@ def get_search(keywords):
                         error_out=False
                 )
             else:
-                pagination = Courses.query.whoosh_search('keywords').filter_by(
+                pagination = Courses.query.whoosh_search(keywords).filter_by(
                         category_id=request.args.get('main_cat')
                 ).paginate(
                         page,
@@ -39,7 +39,7 @@ def get_search(keywords):
                         error_out=False
                 )
         else:
-            pagination = Courses.query.whoosh_search('keywords').order_by(desc(Courses.count)).paginate(
+            pagination = Courses.query.whoosh_search(keywords).order_by(desc(Courses.count)).paginate(
                 page,
                 per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
                 error_out=False
@@ -47,7 +47,7 @@ def get_search(keywords):
     elif request.args.get('sort') == 'like':
         if request.args.get('main_cat'):
             if request.args.get('ts_cat'):
-                pagination = Courses.query.whoosh_search('keywords').filter_by(
+                pagination = Courses.query.whoosh_search(keywords).filter_by(
                         type_id=request.args.get('ts_cat'),
                         category_id=request.args.get('main_cat')
                 ).paginate(
@@ -56,7 +56,7 @@ def get_search(keywords):
                         error_out=False
                 )
             else:
-                pagination = Courses.query.whoosh_search('keywords').filter_by(
+                pagination = Courses.query.whoosh_search(keywords).filter_by(
                         category_id=request.args.get('main_cat')
                 ).paginate(
                         page,
@@ -64,13 +64,13 @@ def get_search(keywords):
                         error_out=False
                 )
         else:
-            pagination = Courses.query.whoosh_search('keywords').order_by(desc(Courses.likes)).paginate(
+            pagination = Courses.query.whoosh_search(keywords).order_by(desc(Courses.likes)).paginate(
                 page,
                 per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
                 error_out=False
             )
     else:
-        pagination = Courses.query.whoosh_search('keywords').paginate(
+        pagination = Courses.query.whoosh_search(keywords).paginate(
             # 查询对象query具有paginate属性
             page,
             per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
@@ -94,7 +94,7 @@ def get_search(keywords):
         [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
-    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 #@api.route('/search/prefetch/<string:keywords>')

@@ -11,7 +11,7 @@ from xueer.api_1_0.authentication import auth
 from xueer.models import Courses, Comments
 
 
-# 权限处理
+# 需要登录
 @api.route('/courses/<int:id>/like/', methods=["GET", "PUT", "DELETE"])
 @auth.login_required
 def new_courses_id_like(id):
@@ -34,9 +34,10 @@ def new_courses_id_like(id):
             db.session.add(course)
             db.session.commit()
             course = Courses.query.get_or_404(id)
-            return jsonify(
-                course.to_json()
-            ), 201
+        return jsonify(
+            course.to_json()
+        ), 201
+
     elif request.method == "DELETE":
         """
         删除特定id的评论

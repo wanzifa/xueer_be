@@ -35,7 +35,7 @@ def get_users():
         'prev': prev,
         'next': next,
         'count': pagination.total
-    }), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    }), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 @api.route('/users/<int:id>/')
