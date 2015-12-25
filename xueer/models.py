@@ -190,7 +190,7 @@ class User(UserMixin, db.Model):
         json_user = {
             'url': url_for('api.get_user_id', id=self.id, _external=True),
             'username': self.username,
-            'like_courses': url_for('api.get_user_like_courses', id=self.id, _external=True),
+            # 'like_courses': url_for('api.get_user_like_courses', id=self.id, _external=True),
             # 'like_comments': self.comment.all(),
             'email': self.email,
             'qq': self.qq,

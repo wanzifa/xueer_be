@@ -94,7 +94,7 @@ def get_search(keywords):
         [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
-    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 #@api.route('/search/prefetch/<string:keywords>')

@@ -38,7 +38,7 @@ def get_tags():
         [tag.to_json() for tag in tags],
         ensure_ascii=False,
         indent=1
-    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 @api.route('/tags/<int:id>/', methods=["GET"])

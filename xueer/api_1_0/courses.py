@@ -101,7 +101,7 @@ def get_courses():
         [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
-    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 
@@ -213,4 +213,4 @@ def get_tags_id_courses(id):
         [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
-    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}

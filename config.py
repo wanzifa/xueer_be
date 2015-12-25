@@ -57,7 +57,7 @@ class TestConfig(Config):
     测试环境下配置
     """
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'mysql://neo1218:1234@115.28.152.113/xueer_test3'  # test for mysql
+    SQLALCHEMY_DATABASE_URI = 'mysql://test:test@115.28.152.113/xueer_test5'  # test for mysql
     XUEER_ADMIN = os.environ.get('XUEER_ADMIN') or 'neo1218@yeah.net'
 
 

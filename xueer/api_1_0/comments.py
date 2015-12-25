@@ -42,25 +42,28 @@ def get_courses_id_comments(id):
     """
     course = Courses.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
-    pagination = course.comment.order_by(Comments.time.asc()).paginate(
+    pagination = course.comment.order_by(Comments.timestamp).paginate(
         page, per_page=current_app.config['XUEER_COMMENTS_PER_PAGE'],
         error_out=False
     )
     comments = pagination.items
     prev = ""
     if pagination.has_prev:
-        prev = url_for('api.get_comments', page=page - 1, _external=True)
+        prev = url_for('api.get_courses_id_comments', id=id, page=page - 1, _external=True)
     next = ""
     if pagination.has_next:
-        next = url_for('api.get_comments', page=page + 1, _external=True)
+        next = url_for('api.get_courses_id_comments', id=id, page=page + 1, _external=True)
     comments_count = len(Comments.query.filter_by(course_id=id).all())
-    page_count = comments_count//current_app.config["XUEER_COMMENTS_PER_PAGE"] + 1
+    if comments_count % current_app.config["XUEER_COMMENTS_PER_PAGE"]:
+        page_count = comments_count//current_app.config["XUEER_COMMENTS_PER_PAGE"]
+    else:
+        page_count = comments_count//current_app.config["XUEER_COMMENTS_PER_PAGE"] + 1
     last = url_for('api.get_courses_id_comments', id=id, page=page_count, _external=True)
     return json.dumps(
         [comment.to_json() for comment in comments],
         ensure_ascii=False,
         indent=1
-    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 @api.route('/courses/<int:id>/comments/hot/', methods=["GET"])
@@ -142,10 +145,10 @@ def get_tip_id_comments(id):
     comments = pagination.items
     prev = ""
     if pagination.has_prev:
-        prev = url_for('api.get_comments', page=page - 1, _external=True)
+        prev = url_for('api.get_tip_id_comments', id=id, page=page - 1, _external=True)
     next = ""
     if pagination.has_next:
-        next = url_for('api.get_comments', page=page + 1, _external=True)
+        next = url_for('api.get_tip_id_comments', id=id, page=page + 1, _external=True)
     comments_count = len(Comments.query.filter_by(course_id=id).all())
     page_count = comments_count//current_app.config["XUEER_COMMENTS_PER_PAGE"] + 1
     last = url_for('api.get_tip_id_comments', id=id, page=page_count, _external=True)
@@ -153,7 +156,7 @@ def get_tip_id_comments(id):
         [comment.to_json() for comment in comments],
         ensure_ascii=False,
         indent=1
-    ), 200, {'Link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
 @api.route('/tip/<int:id>/comments/', methods=['POST', 'GET'])
