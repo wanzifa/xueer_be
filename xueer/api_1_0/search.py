@@ -11,13 +11,15 @@ from sqlalchemy import desc
 
 
 
-@api.route('/search/<string:keywords>/', methods=['GET'])
-def get_search(keywords):
+@api.route('/search/', methods=['GET'])
+def get_search():
     """
     获取搜索结果
     :param keywords:
     :return:
     """
+    if request.args.get('keywords'):
+        keywords = request.args.get('keywords')
     page = request.args.get('page', 1, type=int)
     if request.args.get('sort') == 'view':
         if request.args.get('main_cat'):
