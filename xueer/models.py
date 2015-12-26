@@ -258,7 +258,6 @@ class Courses(db.Model):
     # teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
     # just teacher's name
     teacher = db.Column(db.String(164))
-    tags_list = db.Column(db.String(164))
     # introduction(课程介绍)
     introduction = db.Column(db.Text)
 
@@ -338,6 +337,11 @@ class Courses(db.Model):
             hot_tag.append(tag.name)
         return hot_tag
 
+    """@property
+    def tags_list(self):
+        return self.hot_tags
+    """
+
     def to_json(self):
         json_courses = {
             'id': self.id,
@@ -385,7 +389,6 @@ class Courses(db.Model):
         credit = request_json.get('credit')
         tags = request_json.get('tags')
         type_id = request_json.get('type_id')
-        tags_list = request_json.get('tags_list')
         return Courses(
             # 原来创建是从后往前创建的
             name = name,
@@ -396,7 +399,6 @@ class Courses(db.Model):
             credit = credit,
             tags = tags,
             type_id = type_id,
-            tags_list = tags_list
         )
 
     def __repr__(self):
