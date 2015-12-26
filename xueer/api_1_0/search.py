@@ -11,7 +11,7 @@ from sqlalchemy import desc
 
 
 
-@api.route('/search/<string:keywords>', methods=['GET'])
+@api.route('/search/<string:keywords>/', methods=['GET'])
 def get_search(keywords):
     """
     获取搜索结果

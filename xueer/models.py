@@ -490,6 +490,31 @@ class Comments(db.Model):
         else:
             return False
 
+    @staticmethod
+    def generate_fake(count=100):
+        """
+        自动生成评论虚拟数据
+        :param count: count 生成数据量
+        :return: None 提交到数据库的对象
+        """
+        from sqlalchemy.exc import IntegrityError
+        # IntegrityError: Wraps a DB-API IntegrityError.
+        from random import seed
+        import forgery_py
+
+        seed()
+        for i in range(count):
+            c = Comments(
+                course_id = 1,
+                user_id = 1,
+                body = "我是一个很短的评论,评论,评论"
+            )
+            db.session.add(c)
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+
     def to_json(self):
         json_comments = {
             'id': self.id,
