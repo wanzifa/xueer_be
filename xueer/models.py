@@ -507,7 +507,7 @@ class Comments(db.Model):
             c = Comments(
                 course_id = 1,
                 user_id = 1,
-                body = "我是一个很短的评论,评论,评论"
+                body = u"我是一个很短的评论,评论,评论"
             )
             db.session.add(c)
             try:

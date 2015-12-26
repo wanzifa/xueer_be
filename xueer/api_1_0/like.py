@@ -61,7 +61,7 @@ def new_courses_id_like(id):
             }), 403
 
 
-@api.route('/comments/<int:id>/like/', methods=["GET", "PUT", "DELETE"])
+@api.route('/comments/<int:id>/like/', methods=["GET", "POST", "DELETE"])
 @auth.login_required
 def new_comments_id_like(id):
     """
@@ -70,7 +70,7 @@ def new_comments_id_like(id):
     :return:
     """
     comment = Comments.query.get_or_404(id)
-    if request.method == "PUT":
+    if request.method == "POST":
         if comment.liked:
             return jsonify({
                 'error': '你已经点赞过该评论'
