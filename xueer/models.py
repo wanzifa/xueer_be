@@ -84,7 +84,7 @@ UTLike = db.Table(
 
 # a secondary table
 CourseTag = db.Table(
-    'CourseTag',
+    'courses_tags',
     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
     db.Column('course_id', db.Integer, db.ForeignKey('courses.id'))
 )
@@ -274,21 +274,12 @@ class Courses(db.Model):
         backref=db.backref('courses', lazy="dynamic"),
         lazy="dynamic"
     )
-
     users = db.relationship(
         "User",
         secondary=UCLike,
         backref=db.backref('courses', lazy="dynamic"),
         lazy='dynamic'
     )
-
-    @property
-    def tags_list(self):
-        all_tags=[]
-        for tag in self.tags.all():
-            tag_name=tag.name
-            all_tags.append(tag.name)
-        return all_tags
 
     @staticmethod
     def generate_fake(count=100):
@@ -339,12 +330,17 @@ class Courses(db.Model):
         用空格隔开、组成4个字符串
         :return:
         """
-        tags = self.tags
         hot_tag = []
+        tags = self.tags
         for tag in tags:
             # 筛选排序
             hot_tag.append(tag.name)
         return hot_tag
+
+    """@property
+    def tags_list(self):
+        return self.hot_tags
+    """
 
     def to_json(self):
         json_courses = {
@@ -402,12 +398,11 @@ class Courses(db.Model):
             comment = comment,
             credit = credit,
             tags = tags,
-            type_id = type_id
+            type_id = type_id,
         )
 
     def __repr__(self):
         return '<Courses %r>' % self.name
-
 
 whooshalchemy.whoosh_index(app, Courses)
 
