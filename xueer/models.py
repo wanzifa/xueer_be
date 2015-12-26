@@ -523,7 +523,7 @@ class Comments(db.Model):
             'user_name': User.query.filter_by(id=self.user_id).first().username,
             'avatar' : 'http://7xj431.com1.z0.glb.clouddn.com/1-140G2160520962.jpg', # 占位
             # 'course': url_for('api.get_course_id', id=self.course_id, _external=True),
-            'date': self.time,  
+            'date': self.time,
             'body': self.body,
             'is_useful': self.is_useful,
             'likes': self.likes,
