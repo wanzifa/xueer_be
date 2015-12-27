@@ -109,10 +109,13 @@ def get_search():
                     category_id=request.args.get('main_cat')
                 ).all()
                 tags = Tags.query.whoosh_search(keywords).all()
-                course2 = [tag.course.filter_by(
+                course2 = []
+                for tag in tags:
+                    tc=tag.courses.filter_by(
                     type_id=request.args.get('ts_cat'),
                     category_id=request.args.get('main_cat')
-                ).all() for tag in tags]
+                ).all()
+                    course2 += tc
                 course0 = course1 + course2
                 courses =sorted(course0,  key=lambda course : course.count, reverse=True)
 
@@ -120,17 +123,23 @@ def get_search():
                 course1 = Courses.query.whoosh_search(keywords).filter_by(
                         category_id=request.args.get('main_cat')).all()
                 tags = Tags.query.whoosh_search(keywords).all()
-                course2 = [tag.course.filter_by(
+                course2 = []
+                for tag in tags:
+                    tc = tag.courses.filter_by(
                     category_id=request.args.get('main_cat')
-                ).all() for tag in tags]
+                ).all()
+                    course2 += tc
                 course0 = course1+course2
                 courses =sorted(course0,  key=lambda course : course.count, reverse=True)
 
         else:
             course1 = Courses.query.whoosh_search(keywords).all()
             tags = Tags.query.whoosh_search(keywords).all()
-            course2 = [tag.course.all() for tag in tags]
-            course0 = course1+course2
+            course2 = []
+            for tag in tags:
+                tc=tag.courses.all()
+                course2 += tc
+            course0 = course1 + course2
             courses =sorted(course0,  key=lambda course : course.count, reverse=True)
 
     elif request.args.get('sort') == 'like':
@@ -141,37 +150,49 @@ def get_search():
                     category_id=request.args.get('main_cat')
                 ).all()
                 tags = Tags.query.whoosh_search(keywords).all()
-                course2 = [tag.course.filter_by(
+                course2 = []
+                for tag in tags:
+                    tc = tag.courses.filter_by(
                     type_id=request.args.get('ts_cat'),
                     category_id=request.args.get('main_cat')
-                ).all() for tag in tags]
+                ).all()
+                    course2 += tc
                 course0 = course1 + course2
                 courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
             else:
                 course1 = Courses.query.whoosh_search(keywords).filter_by(
                         category_id=request.args.get('main_cat')).all()
                 tags = Tags.query.whoosh_search(keywords).all()
-                course2 = [tag.course.filter_by(
+                course2 = []
+                for tag in tags:
+                    tc = tag.courses.filter_by(
                     category_id=request.args.get('main_cat')
-                ).all() for tag in tags]
-                course0 = course1+course2
+                ).all()
+                    course2 += tc
+                course0 = course1 + course2
                 courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
         else:
             course1 = Courses.query.whoosh_search(keywords).all()
             tags = Tags.query.whoosh_search(keywords).all()
-            course2 = [tag.course.all() for tag in tags]
-            course0 = course1+course2
+            course2 = []
+            for tag in tags:
+                tc=tag.courses.all()
+                course2 += tc
+            course0 = course1 + course2
             courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
     else:
         course1 = Courses.query.whoosh_search(keywords).all()
         tags = Tags.query.whoosh_search(keywords).all()
-        course2 = [tag.course.all() for tag in tags]
-        courses = course1+course2
+        course2 = []
+        for tag in tags:
+            tc=tag.courses.all()
+            course2 += tc
+        courses = course1 + course2
     return json.dumps(
         [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
-    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    ), 200
 
 
 
