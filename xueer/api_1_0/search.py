@@ -197,9 +197,9 @@ def get_search():
 
 
 @api.route('/search/prefetch/', methods=['GET', 'POST'])
-def get_research2(keywords):
+def get_research2():
     keywords = request.args.get('keywords')
-    if request.methods == 'POST':
+    if request.method == 'POST':
         if request.args.get('keywords'):
             keywords = request.args.get('keywords')
         if request.args.get('sort') == 'view':
