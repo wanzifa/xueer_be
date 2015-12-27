@@ -243,7 +243,7 @@ def load_user(user_id):
 
 
 class Courses(db.Model):
-    __searchable__ = ['teacher', 'name', 'tags_list']
+    __searchable__ = ['teacher', 'name']
     __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
