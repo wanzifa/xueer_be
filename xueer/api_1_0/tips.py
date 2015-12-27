@@ -23,7 +23,7 @@ import json
 from xueer.api_1_0.authentication import auth
 
 
-@api.route('/tips', methods=["GET"])
+@api.route('/tips/', methods=["GET"])
 def get_tips():
     """
     获取首页的每日tip
@@ -54,7 +54,7 @@ def get_tips():
     ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
-@api.route('/tip/<int:id>', methods=['GET'])
+@api.route('/tips/<int:id>/', methods=['GET'])
 def get_tip_id(id):
     """
     获取已知id对应的tip
@@ -62,11 +62,11 @@ def get_tip_id(id):
     """
     tip = Tips.query.get_or_404(id)
     return jsonify(
-        tip.to_json()
+        tip.to_json2()
     )
 
 
-@api.route('/tip/<int:id>', methods=['GET', 'POST'])
+@api.route('/tip/<int:id>/', methods=['GET', 'POST'])
 @auth.login_required
 def new_tip(id):
     """
@@ -86,7 +86,7 @@ def new_tip(id):
            }
 
 
-@api.route('/tip/<int:id>', methods=['GET', 'DELETE'])
+@api.route('/tip/<int:id>/', methods=['GET', 'DELETE'])
 @auth.login_required
 def delete_tip(id):
     """
@@ -100,7 +100,3 @@ def delete_tip(id):
     return jsonify({
         'message': '该贴士已被删除'
     })
-
-
-
-

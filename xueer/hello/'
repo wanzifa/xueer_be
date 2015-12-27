@@ -7,7 +7,7 @@ from jinja2 import Environment
 from . import hello
 
 
-# hello.jinja_env.add_extension('jinja2.ext.loopcontrols')
+hello.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
 
 def is_mobie():
@@ -19,11 +19,11 @@ def is_mobie():
 
 @hello.route('/')
 def index():
-    flag = is_mobie()
-    if flag:
-        return render_template("hello/mobile/index.html")
-    else:
-        return render_template("hello/desktop/index.html")
+	flag = is_mobie()
+	if flag:
+		return render_template("hello/mobile/index.html")
+	else:
+    return render_template("hello/desktop/index.html")
 
 
 # @hello.route('/course')

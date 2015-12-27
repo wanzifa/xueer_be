@@ -633,13 +633,14 @@ class Tags(db.Model):
 
 
 class Tips(db.Model):
-    # __table_args__ = {'mysql_charset':'utf8'}
+    __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tips'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     body = db.Column(db.Text)
+    img = db.Column(db.String(164))
     # author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    author = db.Column(db.String(80))
+    author = db.Column(db.String(100))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     # likes number
     likes = db.Column(db.Integer, default=0)
@@ -680,12 +681,25 @@ class Tips(db.Model):
         json_tips={
             'id': self.id,
             'title': self.title,
+            'body': self.body,
             'url': url_for('api.get_tip_id', id=self.id, _external=True),
             'views': self.count,
             'likes': self.likes,
-            'date': self.time
+            'date': self.time,
+            'img_url': self.img
         }
         return json_tips
+
+    def to_json2(self):
+        json_tips2 = {
+            'id': self.id,
+            'title': self.title,
+            'author': self.author,
+            'body': self.body,
+            'likes': self.likes,
+            'date': self.time
+        }
+        return json_tips2
 
     @staticmethod
     def from_json(json_tips):
