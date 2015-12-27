@@ -18,6 +18,7 @@ def get_search():
     :param keywords:
     :return:
     """
+    """
     if request.args.get('keywords'):
         keywords = request.args.get('keywords')
     page = request.args.get('page', 1, type=int)
@@ -97,6 +98,81 @@ def get_search():
         ensure_ascii=False,
         indent=1
     ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+    """
+    if request.args.get('keywords'):
+        keywords = request.args.get('keywords')
+    if request.args.get('sort') == 'view':
+        if request.args.get('main_cat'):
+            if request.args.get('ts_cat'):
+                course1 = Courses.query.whoosh_search(keywords).filter_by(
+                    type_id=request.args.get('ts_cat'),
+                    category_id=request.args.get('main_cat')
+                ).all()
+                tags = Tags.query.whoosh_search(keywords).all()
+                course2 = [tag.course.filter_by(
+                    type_id=request.args.get('ts_cat'),
+                    category_id=request.args.get('main_cat')
+                ).all() for tag in tags]
+                course0 = course1 + course2
+                courses =sorted(course0,  key=lambda course : course.count, reverse=True)
+
+            else:
+                course1 = Courses.query.whoosh_search(keywords).filter_by(
+                        category_id=request.args.get('main_cat')).all()
+                tags = Tags.query.whoosh_search(keywords).all()
+                course2 = [tag.course.filter_by(
+                    category_id=request.args.get('main_cat')
+                ).all() for tag in tags]
+                course0 = course1+course2
+                courses =sorted(course0,  key=lambda course : course.count, reverse=True)
+
+        else:
+            course1 = Courses.query.whoosh_search(keywords).all()
+            tags = Tags.query.whoosh_search(keywords).all()
+            course2 = [tag.course.all() for tag in tags]
+            course0 = course1+course2
+            courses =sorted(course0,  key=lambda course : course.count, reverse=True)
+
+    elif request.args.get('sort') == 'like':
+        if request.args.get('main_cat'):
+            if request.args.get('ts_cat'):
+                course1 = Courses.query.whoosh_search(keywords).filter_by(
+                    type_id=request.args.get('ts_cat'),
+                    category_id=request.args.get('main_cat')
+                ).all()
+                tags = Tags.query.whoosh_search(keywords).all()
+                course2 = [tag.course.filter_by(
+                    type_id=request.args.get('ts_cat'),
+                    category_id=request.args.get('main_cat')
+                ).all() for tag in tags]
+                course0 = course1 + course2
+                courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
+            else:
+                course1 = Courses.query.whoosh_search(keywords).filter_by(
+                        category_id=request.args.get('main_cat')).all()
+                tags = Tags.query.whoosh_search(keywords).all()
+                course2 = [tag.course.filter_by(
+                    category_id=request.args.get('main_cat')
+                ).all() for tag in tags]
+                course0 = course1+course2
+                courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
+        else:
+            course1 = Courses.query.whoosh_search(keywords).all()
+            tags = Tags.query.whoosh_search(keywords).all()
+            course2 = [tag.course.all() for tag in tags]
+            course0 = course1+course2
+            courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
+    else:
+        course1 = Courses.query.whoosh_search(keywords).all()
+        tags = Tags.query.whoosh_search(keywords).all()
+        course2 = [tag.course.all() for tag in tags]
+        courses = course1+course2
+    return json.dumps(
+        [course.to_json2() for course in courses],
+        ensure_ascii=False,
+        indent=1
+    ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
+
 
 
 #@api.route('/search/prefetch/<string:keywords>')
