@@ -607,6 +607,7 @@ class Teachers(db.Model):
 
 
 class Tags(db.Model):
+    __searchable__ = ['name']
     __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tags'
     # __table_args__ = {'mysql_charset':'utf8'}
