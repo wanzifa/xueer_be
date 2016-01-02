@@ -35,6 +35,7 @@ def get_id_comment(id):
 
 
 @api.route('/courses/<int:id>/comments/', methods=['GET'])
+@auth.login_required
 def get_courses_id_comments(id):
     """
     获取特定id课程的评论
@@ -68,6 +69,7 @@ def get_courses_id_comments(id):
 
 
 @api.route('/courses/<int:id>/comments/hot/', methods=["GET"])
+@auth.login_required
 def get_hot_comments(id):
     """
     获取特定id课程的热门评论(以3作为热门鉴定)
