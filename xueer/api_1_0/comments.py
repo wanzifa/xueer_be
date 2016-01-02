@@ -44,7 +44,7 @@ def get_courses_id_comments(id):
     """
     course = Courses.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
-    pagination = course.comment.order_by(Comments.timestamp).paginate(
+    pagination = course.comment.order_by(desc(Comments.timestamp)).paginate(
         page, per_page=current_app.config['XUEER_COMMENTS_PER_PAGE'],
         error_out=False
     )
@@ -141,7 +141,7 @@ def get_tip_id_comments(id):
     """
     tip = Tips.query.get_or_404(id)
     page = request.args.get('page', 1, type=int)
-    pagination = tip.comment.order_by(Comments.timestamp.desc()).paginate(
+    pagination = tip.comment.order_by(Comments.timestamp).paginate(
         page, per_page=current_app.config['XUEER_COMMENTS_PER_PAGE'],
         error_out=False
     )

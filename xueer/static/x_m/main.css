@@ -58,7 +58,9 @@
         text-align: center;
         font-size: 12px;
         color: #fff;
-        line-height: 20px; }
+        line-height: 20px;
+        border-radius: 2px;
+        /*px*/ }
       .tip .item .bottom .views {
         margin-right: 11px; }
     .tip .item .icon {
@@ -97,7 +99,7 @@ svg g {
   top: 56px;
   left: 0px;
   width: 100%;
-  z-index: 2; }
+  z-index: 9; }
   .search_view .warpper {
     opacity: 0;
     width: 100%;
@@ -314,7 +316,10 @@ svg g {
     vertical-align: middle;
     margin-right: 6px; }
   .course_view .comments .like_icon use {
+    transition: all;
     fill: #999999; }
+  .course_view .comments .liked use {
+    fill: #ec6941; }
 
 .course_view .more_comments {
   margin: 17px auto;
@@ -328,6 +333,129 @@ svg g {
   text-align: center;
   font-size: 16px;
   color: #EEAB5D; }
+
+.course_view .comment_box .container {
+  width: 332px;
+  margin: 0 auto;
+  font-size: 14px;
+  /*px*/ }
+
+.course_view .comment_box .main {
+  width: 325px;
+  margin: 0 auto;
+  padding-top: 17px; }
+
+.course_view .comment_box .textarea {
+  height: 91px;
+  width: 100%;
+  border-top: 1px solid #ECECEC;
+  /*px*/
+  border-bottom: 1px solid #ECECEC;
+  /*px*/
+  box-sizing: border-box;
+  padding: 11px 13px;
+  resize: none; }
+
+.course_view .comment_box .hot_title {
+  font-size: 12px;
+  /*px*/
+  color: #ECECEC;
+  /*px*/
+  padding: 5px 13px; }
+
+.course_view .comment_box .hot_tags {
+  padding: 0px 13px; }
+
+.course_view .comment_box .h_tag {
+  margin-bottom: 5px;
+  display: inline-block;
+  height: 20px;
+  padding: 0px 3px;
+  line-height: 20px;
+  color: #fff;
+  font-size: 14px;
+  /*px*/
+  border-radius: 2px;
+  /*px*/
+  margin-right: 6px;
+  background-color: #CDCDCD;
+  text-align: center; }
+
+.course_view .comment_box .current_tag {
+  min-height: 35px;
+  padding: 0px 13px;
+  line-height: 35px;
+  border-bottom: 1px solid #ECECEC;
+  /*px*/
+  text-align: left; }
+
+.course_view .comment_box .c_tag {
+  height: 35px;
+  color: #999999;
+  font-size: 14px;
+  /*px*/
+  display: inline-block;
+  vertical-align: middle;
+  padding-right: 10px;
+  line-height: 35px; }
+
+.course_view .comment_box .tag_input {
+  height: 35px;
+  display: inline-block;
+  color: #000;
+  font-size: 14px;
+  vertical-align: middle;
+  line-height: 35px;
+  width: 85px; }
+
+.course_view .comment_box .tag_icon {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  vertical-align: middle;
+  padding-right: 5px; }
+
+.course_view .comment_box .btns {
+  padding-top: 47px;
+  width: 100%; }
+  .course_view .comment_box .btns .btn {
+    display: inline-block;
+    width: 156px;
+    box-sizing: border-box;
+    border-radius: 2px;
+    /*px*/
+    text-align: center;
+    line-height: 36px;
+    height: 36px;
+    font-size: 14px;
+    /*px*/ }
+  .course_view .comment_box .btns .comment_close {
+    margin-right: 20px;
+    border: 1px solid #EEAB5D;
+    color: #EEAB5D; }
+  .course_view .comment_box .btns .comment_submit {
+    background-color: #EEAB5D;
+    color: #fff; }
+
+.course_view .no_more_comments {
+  font-size: 14px;
+  /*px*/
+  color: #999999;
+  width: 120px;
+  margin: 0 auto;
+  padding: 15px 0px; }
+
+.course_view .comment_box_pop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  padding-top: 56px;
+  display: none;
+  box-sizing: border-box;
+  z-index: 5;
+  background-color: #fff; }
 
 /**
  * course_list.scss
@@ -446,7 +574,9 @@ svg g {
     /*px*/
     font-size: 14px;
     /*px*/
-    color: #EEAB5D; }
+    color: #EEAB5D;
+    border-radius: 2px;
+    /*px*/ }
   .user_view .register {
     margin-right: 13px; }
   .user_view .hint_text {

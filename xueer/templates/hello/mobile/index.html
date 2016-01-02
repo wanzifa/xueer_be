@@ -207,6 +207,18 @@
         </g>
     </g>
         </symbol>
+        <symbol id="tag_icon" viewBox="0 0 14 14">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="课程详情底部-（---！！！" transform="translate(-32.000000, -205.000000)">
+            <g id="pricetag" transform="translate(32.000000, 205.000000)">
+                <g id="Group">
+                    <path d="M5.29544615,13.6584 C5.37944615,13.7426154 5.48972308,13.7846154 5.6,13.7846154 C5.71027692,13.7846154 5.82055385,13.7426154 5.90455385,13.6584 L13.6584,5.90455385 C13.7391692,5.82378462 13.7846154,5.71415385 13.7846154,5.6 L13.7846154,0.430769231 C13.7846154,0.192984615 13.5916308,0 13.3538462,0 L8.18461538,0 C8.07046154,0 7.96083077,0.0454461538 7.88006154,0.126215385 L0.126215385,7.88006154 C-0.042,8.04827692 -0.042,8.32095385 0.126215385,8.48916923 L5.29544615,13.6584 L5.29544615,13.6584 Z" id="Shape" fill="#999999"></path>
+                    <path d="M10.1230769,5.38461538 C11.0731385,5.38461538 11.8461538,4.6116 11.8461538,3.66153846 C11.8461538,2.71147692 11.0731385,1.93846154 10.1230769,1.93846154 C9.17301538,1.93846154 8.4,2.71147692 8.4,3.66153846 C8.4,4.6116 9.17301538,5.38461538 10.1230769,5.38461538 L10.1230769,5.38461538 Z" id="Shape" fill="#FFFFFF"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+        </symbol>
     </svg>
     <div class="viewport">
         <div id="nav"></div>
@@ -243,7 +255,7 @@
                 <% } %>
             </div>
             <div class="icon_set">
-                <div data-link="/search" class="nav_icon search link">
+                <div data-link="/search" class="nav_icon search">
                     <svg viewBox="0 0 34 34">
                         <use xlink:href="#search"></use>
                     </svg>
@@ -358,6 +370,10 @@
         <div class="comments_title">热门评论</div>
         <div class="comments">
         </div>
+        <div class="comment_box_pop">
+            <div class="comment_box" id="comment_box">
+            </div>
+        </div>
     </script>
     <script type="text/template" id="comments_template">
     </script>
@@ -371,9 +387,12 @@
                 <div class="time"></div>
                 <div class="body"><%= body %></div>
                 <div class="like">
-           			<svg class="like_icon">
-  						<use xlink:href="#heart_f"></use>
-					</svg>
+                    <div class="touch_area">
+                        <svg class="like_icon <% if (liked){ %>liked<% } %>">
+                            <use xlink:href="#heart_f"></use>
+                        </svg>
+                        <span class="like_count"><%= likes %></span>
+                    </div>
 				</div>
             </div>
         </li>
@@ -442,7 +461,9 @@
             </br>
             我们的程序猿正在努力开发个人主页的更多内容…</div>
             <% } else { %>
-            <div>hello there!!!</div>
+            <div class="btns space">
+                <div class="btn logout">注销</div>
+            </div>
             <% } %>
       </script>
       <script type="text/template" id="login_view_template">
@@ -465,7 +486,7 @@
       </script>
       <script type="text/template" id="register_view_template">
             <div class="container">
-                <form>
+                <form class="register_form">
                     <div class="row">
                         <div class="label">用户名:</div>
                         <input type="text"class="input username padd3" id="username" placeholder="挑一个8个字符以内的用户名"/>
@@ -499,13 +520,13 @@
                         ∑(っ °Д °;)っ</br>请放心评价课程时不会显示你的私人信息</br>填写选填信息我们可以给你更加精确的推荐</br>并且可以参与评课活动，获得评课奖励
                     </div>
                      <div class="btns space">
-                        <div class="btn cancel va_item ">取消</div>
-                        <div class="btn va_item">确认</div>
+                        <div class="btn cancel va_item">取消</div>
+                        <div class="btn submit va_item">确认</div>
                      </div>
                 </form>
             </div>
       </script>
-    <script src="/static/x_m/bundle.js"></script>
+    <script src="/static/x_m/bundle.js?v=2333"></script>
 </body>
 
 </html>
