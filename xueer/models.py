@@ -9,6 +9,7 @@ from flask import current_app, url_for, g
 from xueer.exceptions import ValidationError
 from . import app
 import flask.ext.whooshalchemy as whooshalchemy
+import base64
 
 
 class Permission:
@@ -154,6 +155,7 @@ class User(UserMixin, db.Model):
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
+        base64.b64decode(password)
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expiration):
