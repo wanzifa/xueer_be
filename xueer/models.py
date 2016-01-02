@@ -474,7 +474,7 @@ class Comments(db.Model):
         查询当前用户是否点赞了这门课
         :return:
         """
-        if hasattr(g, 'current_user'):
+        if not isinstance(g.current_user, AnonymousUser):
             # 如果当前用户登录
             # 查看用户是否点赞
             # 匿名用户和未点赞用户返回False

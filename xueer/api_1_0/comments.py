@@ -21,6 +21,7 @@ from xueer.api_1_0.authentication import auth
 
 
 @api.route('/comments/<int:id>/', methods=['GET'])
+@auth.login_required
 def get_id_comment(id):
     """
     获取特定id的评论
