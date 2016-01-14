@@ -41,7 +41,7 @@ def get_search():
                             category_id=request.args.get('main_cat')
                         ).all()
                             course2 += course
-                    course0 = course1 + course2 + course3
+                    course0 = list(set(course1 + course2 + course3))
                     courses =sorted(course0,  key=lambda course : course.count, reverse=True)
                 else:
                     for search in searches:
@@ -49,7 +49,7 @@ def get_search():
                         tags = search.tags
                         for tag in tags:
                             course2 += tag.courses.fiter_by(category_id=request.args.get('main_cat')).all()
-                    course0 = course1 + course2 + course3
+                    course0 = list(set(course1 + course2 + course3))
                     courses =sorted(course0,  key=lambda course : course.count, reverse=True)
 
             else:
@@ -58,7 +58,7 @@ def get_search():
                     tags = search.tags
                     for tag in tags:
                         course2 += tag.courses.all()
-                    course0 = course1 + course2 + course3
+                    course0 = list(set(course1 + course2 + course3))
                     courses = sorted(course0,  key=lambda course : course.count, reverse=True)
 
         elif request.args.get('sort') == 'like':
@@ -75,7 +75,7 @@ def get_search():
                             category_id=request.args.get('main_cat')
                         ).all()
                             course2 += course
-                        course0 = course1 + course2 + course3
+                        course0 = list(set(course1 + course2 + course3))
                         courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
                 else:
                     for search in searches:
@@ -83,7 +83,7 @@ def get_search():
                         tags = search.tags
                         for tag in tags:
                             course2 += tag.courses.fiter_by(category_id=request.args.get('main_cat')).all()
-                    course0 = course1 + course2 + course3
+                    course0 = list(set(course1 + course2 + course3))
                     courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
             else:
                 for search in searches:
@@ -91,7 +91,7 @@ def get_search():
                     tags = search.tags
                     for tag in tags:
                         course2 += tag.courses.all()
-                course0 = course1 + course2 + course3
+                course0 = list(set(course1 + course2 + course3))
                 courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
         else:
             for search in searches:
