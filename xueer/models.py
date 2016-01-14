@@ -258,6 +258,7 @@ def load_user(user_id):
 
 
 class Courses(db.Model):
+    __searchable__ = ['teacher']
     __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
@@ -420,6 +421,8 @@ class Courses(db.Model):
     def __repr__(self):
         return '<Courses %r>' % self.name
 
+whooshalchemy.whoosh_index(app, Courses)
+
 
 # CourseCategories
 #   1     公共课
@@ -554,7 +557,6 @@ class Comments(db.Model):
 
 class Teachers(db.Model):
     __tablename__ = 'teachers'
-    __searchable__ = ['name']
     __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
@@ -562,7 +564,6 @@ class Teachers(db.Model):
     introduction = db.Column(db.Text)
     phone = db.Column(db.String(20))
     weibo = db.Column(db.String(150))
-    # courses = db.relationship("Courses", backref="teacher", lazy="dynamic")
 
     @staticmethod
     def generate_fake(count=100):
@@ -620,8 +621,6 @@ class Teachers(db.Model):
 
     def __repr__(self):
         return '<Teachers %r>' % self.name
-
-whooshalchemy.whoosh_index(app, Teachers)
 
 
 class Tags(db.Model):
