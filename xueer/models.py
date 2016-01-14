@@ -772,7 +772,7 @@ def save():
         str = '/'.join(seg_list)
         results = str.split('/')
         for result in results:
-            if(Search.query.filter_by(name=result).first() == null):
+            if(Search.query.filter_by(name=result).first() == None):
                 s = Search(name=result)
             elif(tag not in Search.query.filter_by(name=result).first().tags.all()):
                 s = Search.query.filter_by(name=result).first()
