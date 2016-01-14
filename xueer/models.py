@@ -761,6 +761,9 @@ def save():
         for result in results:
             if(Search.query.filter_by(name=result).first() == None):
                 s = Search(name=result)
+                s.courses.append(course)
+                db.session.add(s)
+                db.session.commit()
             elif(course not in Search.query.filter_by(name=result).first().courses.all()):
                 s = Search.query.filter_by(name=result).first()
                 s.courses.append(course)
@@ -774,6 +777,9 @@ def save():
         for result in results:
             if(Search.query.filter_by(name=result).first() == None):
                 s = Search(name=result)
+                s.tags.append(tag)
+                db.session.add(s)
+                db.session.commit()
             elif(tag not in Search.query.filter_by(name=result).first().tags.all()):
                 s = Search.query.filter_by(name=result).first()
                 s.tags.append(tag)
