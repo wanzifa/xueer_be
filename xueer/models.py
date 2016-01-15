@@ -10,6 +10,7 @@ from xueer.exceptions import ValidationError
 from . import app
 import flask.ext.whooshalchemy as whooshalchemy
 import base64
+import jieba
 
 
 class Permission:
@@ -88,6 +89,18 @@ CourseTag = db.Table(
     'courses_tags',
     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
     db.Column('course_id', db.Integer, db.ForeignKey('courses.id'))
+)
+
+CourseSearch =  db.Table(
+    'courses_search',
+    db.Column('course_id', db.Integer, db.ForeignKey('courses.id')),
+    db.Column('search_id', db.Integer, db.ForeignKey('search.id'))
+)
+
+TagSearch = db.Table(
+    'tags_search',
+    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
+    db.Column('search_id', db.Integer, db.ForeignKey('search.id'))
 )
 
 
@@ -245,7 +258,7 @@ def load_user(user_id):
 
 
 class Courses(db.Model):
-    __searchable__ = ['teacher', 'name']
+    __searchable__ = ['teacher']
     __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
@@ -282,6 +295,7 @@ class Courses(db.Model):
         backref=db.backref('courses', lazy="dynamic"),
         lazy='dynamic'
     )
+    #search定义和search表的多对多关系
 
     @staticmethod
     def generate_fake(count=100):
@@ -338,6 +352,7 @@ class Courses(db.Model):
             # 筛选排序
             hot_tag.append(tag.name)
         return hot_tag
+
 
     """@property
     def tags_list(self):
@@ -541,6 +556,7 @@ class Comments(db.Model):
 
 
 class Teachers(db.Model):
+    __tablename__ = 'teachers'
     __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
@@ -548,7 +564,6 @@ class Teachers(db.Model):
     introduction = db.Column(db.Text)
     phone = db.Column(db.String(20))
     weibo = db.Column(db.String(150))
-    # courses = db.relationship("Courses", backref="teacher", lazy="dynamic")
 
     @staticmethod
     def generate_fake(count=100):
@@ -609,7 +624,6 @@ class Teachers(db.Model):
 
 
 class Tags(db.Model):
-    __searchable__ = ['name']
     __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tags'
     # __table_args__ = {'mysql_charset':'utf8'}
@@ -632,8 +646,6 @@ class Tags(db.Model):
 
     def __repr__(self):
         return '<Tags %r>' % self.name
-
-whooshalchemy.whoosh_index(app, Tags)
 
 
 class Tips(db.Model):
@@ -714,4 +726,63 @@ class Tips(db.Model):
 
     def __repr__(self):
         return '<Tips %r>' % self.title
+
+
+class Search(db.Model):
+    __tablename__ = 'search'
+    __searchable__ = ['name']
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(280))
+    courses = db.relationship(
+        'Courses',
+        secondary = CourseSearch,
+        backref = db.backref('search', lazy='dynamic'),
+        lazy='dynamic'
+    )
+    tags = db.relationship(
+        'Tags',
+        secondary = TagSearch,
+        backref = db.backref('search', lazy='dynamic'),
+        lazy='dynamic'
+    )
+
+    def __repr__(self):
+        return '<Search %r>' % self.name
+
+
+whooshalchemy.whoosh_index(app, Search)
+
+
+def save():
+    for course in Courses.query.all():
+        seg_list = jieba.cut_for_search(course.name)
+        str = '/'.join(seg_list)
+        results = str.split('/')
+        for result in results:
+            if(Search.query.filter_by(name=result).first() == None):
+                s = Search(name=result)
+                s.courses.append(course)
+                db.session.add(s)
+                db.session.commit()
+            elif(course not in Search.query.filter_by(name=result).first().courses.all()):
+                s = Search.query.filter_by(name=result).first()
+                s.courses.append(course)
+                db.session.add(s)
+                db.session.commit()
+
+    for tag in Tags.query.all():
+        seg_list = jieba.cut_for_search(tag.name)
+        str = '/'.join(seg_list)
+        results = str.split('/')
+        for result in results:
+            if(Search.query.filter_by(name=result).first() == None):
+                s = Search(name=result)
+                s.tags.append(tag)
+                db.session.add(s)
+                db.session.commit()
+            elif(tag not in Search.query.filter_by(name=result).first().tags.all()):
+                s = Search.query.filter_by(name=result).first()
+                s.tags.append(tag)
+                db.session.add(s)
+                db.session.commit()
 
