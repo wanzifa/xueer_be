@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>flask学习过程中的问题和总结</title>
+<!-- Bootstrap -->
+<link href="../static/bootstrap.min.css" rel='stylesheet' type='text/css' />
+<link href="../static/bootstrap.css" rel='stylesheet' type='text/css' />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+ <!--[if lt IE 9]>
+     <script src="../static/html5shiv.js"></script>
+     <script src="../static/respond.min.js"></script>
+<![endif]-->
+
+<link href="../static/style.css" rel="stylesheet" type="text/css" media="all" />
+<!-- start plugins -->
+<script type="text/javascript" src="../static/jquery.min.js"></script>
+	<script>
+		$(function() {
+			var pull 		= $('#pull');
+				menu 		= $('nav ul');
+				menuHeight	= menu.height();
+			$(pull).on('click', function(e) {
+				e.preventDefault();
+				menu.slideToggle();
+			});
+			$(window).resize(function(){
+        		var w = $(window).width();
+        		if(w > 320 && menu.is(':hidden')) {
+        			menu.removeAttr('style');
+        		}
+    		});
+		});
+	</script>
+<!----font-Awesome----->
+   	<link rel="stylesheet" href="../static/font-awesome.min.css">
+<!----font-Awesome----->
+</head>
+<body>
+<div class="header_bg" id="home"><!-- start header -->
+<div class="container">
+	<div class="row header text-center specials">
+		<div class="h_logo">
+			<a href="index.html"><img src="../static/logo.png" alt="" class="responsive"/></a>
+		</div>
+		<nav class="top-nav">
+			<ul class="top-nav nav_list">
+			    <li class="page-scroll"><a href="/blog/"><u>🍺️blog❤️❤🍺️️</u></a></li>
+			</ul>
+			<a href="#" id="pull"><img src="images/nav-icon.png" title="menu" /></a>
+		</nav>
+		<div class="clearfix"></div>
+	</div>
+</div>
+</div>
+<div class="blog"><!-- start main -->
+	<div class="container">
+		<div class="main row">
+			<h2 class="style">flask学习过程中的问题和总结</h2>
+			<div class="details row">
+				<div class="col-md-6">
+					<img src="images/det_pic.jpg" alt="" class="img-responsive"/>
+				</div>
+
+                <p class="para"><p>flask学习过程中的一些问题和总结</p>
+<hr />
+<p>最近在读《Flask web开发》这本书，今天开始不定时的做些总结，主要是自己不理解的部分，或者对理解的不太确定的，或者觉得零碎容易忘的，都写上来做个记录。
+  　　</p>
+<ul>
+<li>request和session是永恒的主题。对request的理解，结合看过的林林总总的各种解释，自己的想法是：request是一个请求包，包里的东西是用户对页面进行的一些操作（比如提交表单的内容啊之类的）以及一些必要的参数，但是这个request只有在这个页面打开的时候存在，关了就不好使了。然后是这个session，虽然据说session和request内容上并没有什么区别，但是为啥request里会有个request.getsession() (如果内容是一样的，还需要交互吗？）。然后session的存在时间会长一些，它会一直从客户端与服务器建立开始到客户端与服务器断开结束都存在着。request是代理，session是存储。</li>
+<li>常见的几个请求方法：
+get方法：请求页面信息
+options： 允许客户端查看服务器的性能（先记下来，具体还没不知道怎么体现这个）
+post：允许提交表单
+head：只请求页面顶部</li>
+<li>状态码：
+ 400：请求无效
+200：服务器成功返回网页
+404：请求网页不存在
+503：服务器不可用
+304：加载缓存
+500：服务器内部错误（这个是不是更进一步分析错误的话情况会比较不确定？）</li>
+<li>关于response：
+ 书上给出的这个response.set_cookie('answer','42')，后者是持续秒数咩，sorry这个方法我在两个搜索引擎里面都没有查到写得很明白的。。。。5555不是很理解参数的意义和方法的用途</li>
+</ul>
+<p>未完待续~~~</p></p>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div><!-- end main -->
+<div class="footer1_bg"><!-- start footer1 -->
+	<div class="container">
+		<div class="row  footer">
+			<div class="copy text-center">
+				<p class="link"><span>Copyright @bootstrap 2016.wanzifa All rights reserved.</span></p>
+				<a href="#home" id="toTop" style="display: block;"><span id="toTopHover" style="opacity: 1;"> </span></a>
+			</div>
+		</div>
+		<script type="text/javascript">
+				$(function() {
+				  $('a[href*=#]:not([href=#])').click(function() {
+				    if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+			
+				      var target = $(this.hash);
+				      target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+				      if (target.length) {
+				        $('html,body').animate({
+				          scrollTop: target.offset().top
+				        }, 1000);
+				        return false;
+				      }
+				    }
+				  });
+				});
+		</script>
+		<!---- start-smoth-scrolling---->		
+	</div>
+</div>
+
+</body>
+</html>

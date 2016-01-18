@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>丸子发的博客</title>
+<!-- Bootstrap -->
+<link href="../static/bootstrap.min.css" rel='stylesheet' type='text/css' />
+<link href="../static/bootstrap.css" rel='stylesheet' type='text/css' />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+ <!--[if lt IE 9]>
+     <script src="../static/html5shiv.js"></script>
+     <script src="../static/respond.min.js"></script>
+<![endif]-->
+
+<link href="../static/style.css" rel="stylesheet" type="text/css" media="all" />
+<!-- start plugins -->
+<script type="text/javascript" src="../static/jquery.min.js"></script>
+	<script>
+		$(function() {
+			var pull 		= $('#pull');
+				menu 		= $('nav ul');
+				menuHeight	= menu.height();
+			$(pull).on('click', function(e) {
+				e.preventDefault();
+				menu.slideToggle();
+			});
+			$(window).resize(function(){
+        		var w = $(window).width();
+        		if(w > 320 && menu.is(':hidden')) {
+        			menu.removeAttr('style');
+        		}
+    		});
+		});
+	</script>
+<!----font-Awesome----->
+   	<link rel="stylesheet" href="../static/font-awesome.min.css">
+<!----font-Awesome----->
+</head>
+<body>
+<div class="header_bg" id="home"><!-- start header -->
+<div class="container">
+	<div class="row header text-center specials">
+		<div class="h_logo">
+			<a href="index.html"><img src="images/logo.png" alt="" class="responsive"/></a>
+		</div>
+		<nav class="top-nav">
+			<ul class="top-nav nav_list">
+
+			    <li class="page-scroll"><a href="{{url_for(".blog")}}"><u>🍺️blog❤️❤🍺️️</u></a></li>
+				<li class="page-scroll"><a href={{url_for("index")}}><u>🍺️about me ^_^❤️❤🍺️️</u></a></li>
+
+			</ul>
+			<a href="#" id="pull"><img src="images/nav-icon.png" title="menu" /></a>
+		</nav>
+		<div class="clearfix"></div>
+	</div>
+</div>
+</div>
+<div class="blog"><!-- start main -->
+	<div class="container">
+		<div class="main row">
+			<div class="col-md-8 blog_left">
+				<h2 class="style">My Recent Blogs</h2>
+				{% for page in pages %}
+
+				<div class="blog_main">
+					<a href="single-page.html"><img src="images/blog_pic1.jpg" alt="" class="blog_img img-responsive"/></a>
+					<h4><a href="single-page.html">{{ page.title }} </a></h4>
+						<div class="blog_list pull-left">
+							  <ul class="list-unstyled">
+								<li><i class="fa fa-calendar-o"></i><span>{{ page.date }}</span></li>
+							  </ul>
+						</div>
+
+					<br><p class="para">{{ page.html|safe }}</p>
+					<div class="read_more btm">
+						<a href={{ url_for(".page", path="%s"%page.title) }}>view more</a>
+					</div>
+					{% endfor %}
+
+				</div>
+			</div>
+
+				<!-- start social_network_likes -->
+					<div class="social_network_likes">
+				      		 <ul class="list-unstyled">
+				      			<div class="clear"> </div>
+				    		</ul>
+		          	</div>
+
+			</div>
+			<div class="clearfix"></div>
+		</div>
+	</div>
+</div><!-- end main -->
+<div class="footer_bg" id="contact"><!-- start footer -->
+
+</div>
+
+</body>
+</html>
