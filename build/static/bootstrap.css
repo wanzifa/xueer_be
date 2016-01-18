@@ -1101,7 +1101,7 @@ pre code {
     width: 75%;
   }
   .col-md-8 {
-    width: 66.66666667%;
+    width: 100%;
   }
   .col-md-7 {
     width: 58.33333333%;
@@ -1137,7 +1137,7 @@ pre code {
     right: 75%;
   }
   .col-md-pull-8 {
-    right: 66.66666667%;
+    right: 50%;
   }
   .col-md-pull-7 {
     right: 58.33333333%;

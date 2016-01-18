@@ -473,9 +473,11 @@ h2.style{
 	padding: 4%;
 }
 .para {
-	font-size: 13px;
 	line-height: 1.8em;
 	color: #323232;
+	overflow: hidden;
+	height: 20px;
+    width: 300px;
 }
 .blog_left{
 	display: block;
