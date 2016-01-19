@@ -1,0 +1,9 @@
+flask
+flask-login
+flask-sqlalchemy
+flask-migrate
+flask-admin
+flask-script
+flask-moment
+flask-wtf
+flask-httpauth
