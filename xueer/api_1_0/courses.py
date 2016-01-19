@@ -122,7 +122,8 @@ def new_course():
     创建一个新的课程
     :return:
     """
-    course = Courses.from_json(request.json)
+    # request.get_json.get('item', 'default')
+    course = Courses.from_json(request.get_json())
     db.session.add(course)
     db.session.commit()
     return jsonify(course.to_json()), 201, {

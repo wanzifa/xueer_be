@@ -269,8 +269,6 @@ class Courses(db.Model):
     type_id = db.Column(db.Integer, db.ForeignKey('type.id'))
     # credit记录学分
     credit = db.Column(db.Integer)
-    # teacher_id(外键)
-    # teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
     # just teacher's name
     teacher = db.Column(db.String(164))
     # introduction(课程介绍)
@@ -353,12 +351,6 @@ class Courses(db.Model):
             hot_tag.append(tag.name)
         return hot_tag
 
-
-    """@property
-    def tags_list(self):
-        return self.hot_tags
-    """
-
     def to_json(self):
         json_courses = {
             'id': self.id,
@@ -397,26 +389,23 @@ class Courses(db.Model):
         return json_courses2
 
     @staticmethod
-    def from_json(request_json):
-        name = request_json.get('name')
-        teacher_id = request_json.get('teacher_id')
-        introduction = request_json.get('introduction')
-        category_id = request_json.get('category_id')
-        comment = request_json.get('comment')
-        credit = request_json.get('credit')
-        tags = request_json.get('tags')
-        type_id = request_json.get('type_id')
+    def from_json(json_courses):
+        # request_json ==> request.get_json()
+        # use request.get_json to get user post data
+        # and create a new course
+        name = json_courses.get('name')
+        teacher = json_courses.get('teacher')
+        introduction = json_courses.get('introduction')
+        category_id = json_courses.get('category_id')
+        credit = json_courses.get('credit')
+        type_id = json_courses.get('type_id')
         return Courses(
-            # 原来创建是从后往前创建的
             name = name,
-            teacher_id = teacher_id,
+            teacher = teacher,
             introduction = introduction,
             category_id = category_id,
-            comment = comment,
             credit = credit,
-            tags = tags,
-            type_id = type_id,
-        )
+            type_id = type_id)
 
     def __repr__(self):
         return '<Courses %r>' % self.name
