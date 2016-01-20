@@ -265,6 +265,7 @@ class Courses(db.Model):
     name = db.Column(db.String(280))
     # 按专必公必分类 category_id(外键)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'))
     # 按文理艺体分类
     type_id = db.Column(db.Integer, db.ForeignKey('type.id'))
     # credit记录学分
@@ -354,24 +355,16 @@ class Courses(db.Model):
     def to_json(self):
         json_courses = {
             'id': self.id,
-            #'url': url_for('api.get_course_id', id=self.id, _external=True),
             'title': self.name,
-            # 'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
-            # 老师只返回姓名
-            # 'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
             'teacher': self.teacher,
-            #'introduction': self.introduction,
             'comment_url': url_for('api.get_courses_id_comments', id=self.id, _external=True),
             'hot_tags': self.hot_tags,
-            # 'category': self.category.name,
-            #'credit': self.credit,
             'likes': self.likes,  # 点赞的总数
             'like_url': url_for('api.new_courses_id_like', id=self.id, _external=True),  # 给一门课点赞
-            # 喜欢这门课的所有用户
-            #'like_users': url_for('api.get_like_courses_id_users', id=self.id, _external=True),
             'liked': self.liked,  # 查询的用户是否点赞了
-            # 'tags': url_for('api.get_courses_id_tags', id=self.id, _external=True),
-            'cat': CourseTypes.query.filter_by(id=self.type_id).first().name,
+            'main_category': CourseTypes.query.filter_by(id=self.category_id).first().name,
+            'sub_category': CoursesSubCategories.query.filter_by(id=self.subcategory_id).first().name,
+            'credit_category': CourseTypes.query.filter_by(id=self.type_id).first().name,
             'views': self.count  # 浏览量其实是评论数
         }
         return json_courses
@@ -383,8 +376,9 @@ class Courses(db.Model):
             'teacher': self.teacher,
             'views': self.count, # 浏览量其实是评论数
             'likes': self.likes,  # 点赞的总数
-            'main_cat': self.category.name,
-            'ts_cat': CourseTypes.query.filter_by(id=self.type_id).first().name
+            'main_category': CourseTypes.query.filter_by(id=self.category_id).first().name,
+            'sub_category': CoursesSubCategories.qury.filter_by(id=self.subcategory_id).first().name,
+            'credit_category': CourseTypes.query.filter_by(id=self.type_id).first().name,
         }
         return json_courses2
 
@@ -399,13 +393,14 @@ class Courses(db.Model):
         category_id = json_courses.get('category_id')
         credit = json_courses.get('credit')
         type_id = json_courses.get('type_id')
+        subcategory_id = json_courses.get('sub_category_id')
         return Courses(
-            name = name,
-            teacher = teacher,
-            introduction = introduction,
-            category_id = category_id,
-            credit = credit,
-            type_id = type_id)
+            name=name,
+            teacher=teacher,
+            category_id=category_id,
+            type_id=type_id,
+            subcategory_id=subcategory_id
+        )
 
     def __repr__(self):
         return '<Courses %r>' % self.name
@@ -427,6 +422,20 @@ class CourseCategories(db.Model):
 
     def __repr__(self):
         return '<CourseCategory %r>' % self.name
+
+
+# CoursesSubCategories
+# 1     通识核心课
+# 2     通识选修课
+class CoursesSubCategories(db.Model):
+    __table_args__ = {'mysql_charset': 'utf-8'}
+    __tablename__ = 'subcategory'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40))
+    courses = db.relationship('Courses', backref='subcategory', lazy='dynamic')
+
+    def __repr__(self):
+        return "<SubCategory %r> % self.name"
 
 
 # CourseTypes
