@@ -428,7 +428,7 @@ class CourseCategories(db.Model):
 # 1     通识核心课
 # 2     通识选修课
 class CoursesSubCategories(db.Model):
-    __table_args__ = {'mysql_charset': 'utf-8'}
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'subcategory'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40))
