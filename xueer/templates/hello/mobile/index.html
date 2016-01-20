@@ -219,6 +219,16 @@
         </g>
     </g>
         </symbol>
+         <symbol id="arrow_icon" viewBox="0 0 7 21">
+         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="课程详情底部" transform="translate(-313.000000, -543.000000)" stroke="#FFFFFF" fill="#FFFFFF">
+            <g id="bott" transform="translate(288.000000, 526.000000)">
+                <path d="M28.5,38.5 L28.5,17.5" id="Line"></path>
+                <path id="Line-decoration-1" d="M28.5,17.5 L25.5,28.3 L31.5,28.3 L28.5,17.5 Z"></path>
+            </g>
+        </g>
+    </g>
+         </symbol>
     </svg>
     <div class="viewport">
         <div id="nav"></div>
@@ -316,7 +326,7 @@
         </div>
     </script>
     <script type="text/template" id="search_template">
-        <div class="warpper">
+        <div class="warpper warpper_fadeIn warpper_fadeOut">
             <div class="container">
                 <div class="search_box space">
                     <input type="text" class="search_input" />
@@ -332,9 +342,9 @@
                 </div>
         </div>
         </div>
-        <div class="circle"></div>
+        <div class="circle circle_fadeIn"></div>
     </script>
-    <script type="text/template" id="course_template">
+    <script type="text/template" id="course_info_template">
         <div class="info" style="background-image:url('/static/x_m/course_bg.png')">
             <div class="overlay mask"></div>
             <div class="overlay top">
@@ -359,7 +369,7 @@
                     <span class="btn_text"><%= likes %></span>
                 </div>
                 <div class="btn w_comment space" id="w_comment">
-                	<svg viewBox="0 0 17 14">
+                    <svg viewBox="0 0 17 14">
                         <use xlink:href="#comments"></use>
                     </svg>
                     <span class="btn_text">写评价</span>
@@ -367,18 +377,21 @@
             </div>
             </div>
         </div>
-        <div class="comments_title">热门评论</div>
-        <div class="comments">
-        </div>
         <div class="comment_box_pop">
             <div class="comment_box" id="comment_box">
             </div>
         </div>
     </script>
+    <script type="text/template" id="course_template">
+    </script>
     <script type="text/template" id="comments_template">
+        <div class="comments_title">热门评论</div>
+        <div class="comments">
+            <div class="comments_view"></div>
+        </div>
     </script>
     <script type="text/template" id="comment_item_template">
-        <li class="space">
+        <div class="space" id="c_<%= id %>">
             <div class="avatar">
 				<img src="/static/x_m/avatar.png"></img>
             </div>
@@ -395,7 +408,7 @@
                     </div>
 				</div>
             </div>
-        </li>
+        </div>
     </script>
     <script type="text/template" id="tip_view_template">
     	<div><%= title %></div>
@@ -526,6 +539,11 @@
                 </form>
             </div>
       </script>
+      <script type="text/template" id="back_to_top_template">
+        <svg viewBox="0 0 7 21" class="arrow_icon">
+               <use xlink:href="#arrow_icon"></use>
+          </svg>
+     </script>
     <script src="/static/x_m/bundle.js?v=2333"></script>
 </body>
 
