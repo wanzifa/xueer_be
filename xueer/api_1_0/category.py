@@ -49,18 +49,33 @@ def update_category(id):
     })
 
 
-@api.route('/sub_category/')
+@api.route('/sub_category/', methods=["GET"])
 def sub_category():
-    sub_categories = CoursesSubCategories.query.all()
+    main_category_id = request.args.get('main_category_id')
+    sub_categories = CoursesSubCategories.query.filter_by(main_category_id=main_category_id).all()
     return jsonify({
         sub_category.name: sub_category.id for sub_category in sub_categories
     })
+
+
+@api.route('/sub_category/', methods=['GET', 'POST'])
+def new_sub_category():
+    sub_category = CoursesSubCategories(
+        name=request.get_json().get('name'),
+        main_category_id=request.get_json().get('main_category_id')
+    )
+    db.session.add(sub_category)
+    db.session.commit()
+    return jsonify({
+        sub_category.name: sub_category.id
+    }), 201
 
 
 @api.route('/sub_category/<int:id>/', methods=["GET", "PUT"])
 def update_sub_category(id):
     sub_category = CoursesSubCategories.query.get_or_404(id)
     sub_category.name = request.get_json().get('name')
+    sub_category.main_category_id = request.get_json().get('main_category_id')
     db.session.add(sub_category)
     db.session.commit()
     return jsonify({
