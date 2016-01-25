@@ -10,7 +10,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask import g
 from xueer import db, app
 from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseCategories, \
-    CourseTypes, Comments, Teachers, Tags, Tips
+    CourseTypes, Comments, Teachers, Tags, Tips, Search, save
 
 
 # 编码设置
@@ -44,7 +44,8 @@ def make_shell_context():
         Comments=Comments,
         Teachers=Teachers,
         Tags=Tags,
-        Tips=Tips
+        Tips=Tips,
+        Search=Search
     )
 
 
