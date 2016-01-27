@@ -136,32 +136,17 @@ def new_course():
 def put_course(id):
     """
     更新一门课
-    {
-            'id':1,
-            'title':"微生物与人类健康",
-            'teacher': "王大锤",
-            'hot_tags':"不点名 老师帅 作业少 很有趣"
-            'views':20,
-            'likes':30,
-            'liked':false,
-            'cat':'公共课'
-            'comment_url':'/1/comments/'
-            'like_url':'/api/courses/1/like'
-
-    }
     """
     course = Courses.query.get_or_404(id)
     if request.method == "PUT":
         data_dict = eval(request.data)
-        course.name = data_dict.get('title', course.name)
+        course.name = data_dict.get('name', course.name)
         course.teacher = data_dict.get('teacher', course.teacher)
-        # course.teacher_id = Teacher.query.filter_by(name=teacher).first().id
-        course.introduction = data_dict.get('introduction', course.introduction)
-        category = data_dict.get('cat')
-        course.category_id = CourseCategories.query.filter_by(name=category).first().id
-        # course.credit = data_dict.get('credit', course.credit)
-        # course.type_id = data_dict.get('type_id', course.type_id)
-        # update islike(liked) and likes will auto add(funny!)
+        course.category_id = data_dict.get('category_id', course.category_id)
+        if course.subcategory_id:
+            course.subcategory_id = data_dict.get('sub_category_id', course.subcategory_id)
+        if course.type_id:
+            course.type_id = data_dict.get('type_id', course.type_id)
         db.session.add(course)
         db.session.commit()
     return jsonify(course.to_json()), 200
