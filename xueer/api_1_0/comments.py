@@ -17,7 +17,7 @@ from . import api
 from .decorators import permission_required
 import json
 from xueer.api_1_0.authentication import auth
-
+from xueer.decorators import admin_required
 
 
 @api.route('/comments/<int:id>/', methods=['GET'])
@@ -35,7 +35,7 @@ def get_id_comment(id):
 
 
 @api.route('/courses/<int:id>/comments/', methods=['GET'])
-@auth.login_required
+# @auth.login_required
 def get_courses_id_comments(id):
     """
     获取特定id课程的评论
@@ -69,7 +69,7 @@ def get_courses_id_comments(id):
 
 
 @api.route('/courses/<int:id>/comments/hot/', methods=["GET"])
-@auth.login_required
+# @auth.login_required
 def get_hot_comments(id):
     """
     获取特定id课程的热门评论(以3作为热门鉴定)
@@ -87,7 +87,6 @@ def get_hot_comments(id):
 
 @api.route('/courses/<int:id>/comments/', methods=['POST', 'GET'])
 @auth.login_required
-# @permission_required(Permission.COMMENT)
 def new_comment(id):
     """
     向特定id的课程发布一个评论
@@ -113,7 +112,7 @@ def new_comment(id):
 
 
 @api.route('/comments/<int:id>/', methods=["GET", "DELETE"])
-@auth.login_required
+@admin_required
 def delete_comment(id):
     """
     删除一个评论
@@ -190,7 +189,7 @@ def new_tip_comment(id):
 
 
 @api.route('/tip/<int:id>/comments/', methods=['DELETE', 'GET'])
-@auth.login_required
+@admin_required
 def delete_tip_comment(id):
     """
     删除贴士下的一个评论

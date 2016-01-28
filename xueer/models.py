@@ -1,11 +1,11 @@
 # coding:utf-8
 
 from datetime import datetime
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin, current_user
-from . import  login_manager, app, db
+from . import login_manager, app, db
 from flask import current_app, url_for, g
+from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from xueer.exceptions import ValidationError
 from . import app
 import flask.ext.whooshalchemy as whooshalchemy
@@ -128,47 +128,17 @@ class User(UserMixin, db.Model):
             if self.username == 'neo1218':
                 self.role = Role.query.filter_by(permissions=0x04).first()
 
-    @staticmethod
-    def generate_fake(count=100):
-        """
-        生成虚拟数据
-        :param count: count 生成数据量
-        :return: None 提交到数据库的对象
-        """
-        from sqlalchemy.exc import IntegrityError
-        # IntegrityError: Wraps a DB-API IntegrityError.
-        from random import seed
-        import forgery_py
-
-        seed()
-        for i in range(count):
-            u = User(
-                username=forgery_py.name.full_name(),
-                email=forgery_py.internet.email_address(),
-                password=forgery_py.lorem_ipsum.word(),
-                qq='834597629',
-                phone='13007149711',
-                # major=u'软件工程',
-                major='CS',
-                # school=u'计算机'
-                school='CCNUCS'
-            )
-            db.session.add(u)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
 
     @password.setter
     def password(self, password):
-        password = base64.b64decode(password)
+        # password = base64.b64decode(password)
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
+        password = base64.b64decode(password)
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expiration):
@@ -212,6 +182,14 @@ class User(UserMixin, db.Model):
             'major': self.major,
             'phone': self.phone,
             'school': self.school,
+        }
+        return json_user
+
+    def to_json2(self):
+        json_user = {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email
         }
         return json_user
 
@@ -296,31 +274,6 @@ class Courses(db.Model):
     )
     #search定义和search表的多对多关系
 
-    @staticmethod
-    def generate_fake(count=100):
-        """
-        生成课程虚拟数据
-        :param count:  生成虚拟数据的个数
-        :return:  None 向数据库的一系列的添加
-        """
-        from sqlalchemy.exc import IntegrityError
-        from random import seed
-        import forgery_py
-
-        seed()  # 初始化
-        for i in range(count):
-
-            c = Courses(
-                name=forgery_py.name.full_name(),
-                credit=10,
-                introduction=forgery_py.lorem_ipsum.sentence()
-            )
-            db.session.add(c)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-
     @property
     def liked(self):
         """
@@ -400,9 +353,6 @@ class Courses(db.Model):
 
     @staticmethod
     def from_json(json_courses):
-        # request_json ==> request.get_json()
-        # use request.get_json to get user post data
-        # and create a new course
         name = json_courses.get('name')
         teacher = json_courses.get('teacher')
         introduction = json_courses.get('introduction')
@@ -520,31 +470,6 @@ class Comments(db.Model):
         else:
             return False
 
-    @staticmethod
-    def generate_fake(count=100):
-        """
-        自动生成评论虚拟数据
-        :param count: count 生成数据量
-        :return: None 提交到数据库的对象
-        """
-        from sqlalchemy.exc import IntegrityError
-        # IntegrityError: Wraps a DB-API IntegrityError.
-        from random import seed
-        import forgery_py
-
-        seed()
-        for i in range(count):
-            c = Comments(
-                course_id = 1,
-                user_id = 1,
-                body = u"我是一个很短的评论,评论,评论"
-            )
-            db.session.add(c)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-
     def to_json(self):
         json_comments = {
             'id': self.id,
@@ -582,32 +507,6 @@ class Teachers(db.Model):
     introduction = db.Column(db.Text)
     phone = db.Column(db.String(20))
     weibo = db.Column(db.String(150))
-
-    @staticmethod
-    def generate_fake(count=100):
-        """
-         生成教师虚拟数据
-        :param count:  100
-        :return: None
-        """
-        from sqlalchemy.exc import IntegrityError
-        from random import seed
-        import forgery_py
-
-        seed()
-        for i in range(count):
-            t = Teachers(
-                name=forgery_py.name.full_name(),
-                department=u'文学院',
-                introduction=forgery_py.lorem_ipsum.sentence(),
-                phone='13007145519',
-                weibo='neo1218'
-            )
-            db.session.add(t)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
 
     def to_json(self):
         json_teacher = {

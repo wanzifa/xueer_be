@@ -26,6 +26,7 @@ def verify_password(email_or_token, password):
     """
     根据邮箱或token获取用户信息
     同密码进行比对验证
+    这是一个回调函数
     """
     if email_or_token == '':
         g.current_user = AnonymousUser()

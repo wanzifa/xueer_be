@@ -1,6 +1,7 @@
 # coding: utf-8
 from . import api
 from xueer import db
+from xueer.decorators import admin_required
 from xueer.models import CourseCategories, CourseTypes, CoursesSubCategories
 from flask import jsonify, request
 
@@ -18,6 +19,7 @@ def category():
 
 
 @api.route('/main_category/', methods=['GET', 'POST'])
+@admin_required
 def new_category():
     """
     添加一个课程分类
@@ -35,6 +37,7 @@ def new_category():
 
 
 @api.route('/main_category/<int:id>/', methods=['GET', 'PUT'])
+@admin_required
 def update_category(id):
     """
     更新相应id的类别名
@@ -59,6 +62,7 @@ def sub_category():
 
 
 @api.route('/sub_category/', methods=['GET', 'POST'])
+@admin_required
 def new_sub_category():
     sub_category = CoursesSubCategories(
         name=request.get_json().get('name'),
@@ -72,6 +76,7 @@ def new_sub_category():
 
 
 @api.route('/sub_category/<int:id>/', methods=["GET", "PUT"])
+@admin_required
 def update_sub_category(id):
     sub_category = CoursesSubCategories.query.get_or_404(id)
     sub_category.name = request.get_json().get('name')

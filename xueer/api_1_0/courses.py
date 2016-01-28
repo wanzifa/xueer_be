@@ -1,20 +1,20 @@
 # coding: utf-8
 
 from flask import jsonify, url_for, request, current_app
-from flask_login import current_user
+# from flask_login import current_user
 from .authentication import auth
 from sqlalchemy import desc
-from ..models import Courses, User, Tags, CourseCategories, CourseTypes
+from ..models import Courses, User, Tags, CourseCategories, CourseTypes, Permission
 from . import api
 from xueer import db
 import json
+from xueer.decorators import admin_required
 
 
 @api.route('/courses/', methods=["GET"])  # ?string=sort&main_cat&ts_cat
 def get_courses():
     """
     获取全部课程
-    排序存在问题
     """
     global pagination
     page = request.args.get('page', 1, type=int)
@@ -104,7 +104,6 @@ def get_courses():
     ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
-
 @api.route('/courses/<int:id>/', methods=["GET"])
 def get_course_id(id):
     """
@@ -117,6 +116,7 @@ def get_course_id(id):
 
 
 @api.route('/courses/', methods=["GET", "POST"])
+@admin_required
 def new_course():
     """
     创建一个新的课程
@@ -132,7 +132,7 @@ def new_course():
 
 
 @api.route('/courses/<int:id>/', methods=["GET", "PUT"])
-@auth.login_required
+@admin_required
 def put_course(id):
     """
     更新一门课
@@ -153,6 +153,7 @@ def put_course(id):
 
 
 @api.route('/courses/<int:id>/', methods=['GET', 'DELETE'])
+@admin_required
 def delete_course(id):
     """
     删除一个课程
