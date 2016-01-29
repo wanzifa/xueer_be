@@ -26,7 +26,7 @@ def verify_password(email_or_token, password):
     """
     根据邮箱或token获取用户信息
     同密码进行比对验证
-    这是一个回调函数
+    这是一个回调函数(被auth.verify)
     """
     if email_or_token == '':
         g.current_user = AnonymousUser()
@@ -56,10 +56,11 @@ def before_request():
     pass
 
 
-@api.route('/token/', methods=['POST', 'GET'])
+@api.route('/token/', methods=['GET'])
 @auth.login_required  # 只有登录用户可以请求token
 def get_token():
     """
+    采用用户名和密码
     获取token /api/v1.0/token
     :return:  token & time
     """
@@ -96,3 +97,4 @@ def server_error_error():
     :return:
     """
     return server_error('Server error')
+

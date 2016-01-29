@@ -134,8 +134,8 @@ class User(UserMixin, db.Model):
 
     @password.setter
     def password(self, password):
-        password = base64.b64decode(password)
-        self.password_hash = generate_password_hash(password)
+        password_decode = base64.b64decode(password)
+        self.password_hash = generate_password_hash(password_decode)
 
     def verify_password(self, password):
         # password = base64.b64decode(password)

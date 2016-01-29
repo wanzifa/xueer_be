@@ -20,10 +20,8 @@ def permission_required(permission):
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        auth = request.authorization
-        if request.method != 'OPTIONS':
-            if auth:
-                token = auth.username
+        token = request.headers.get('authorization')
+        if token:
             g.current_user = User.verify_auth_token(token)
             if not g.current_user.is_administrator():
                 abort(403)

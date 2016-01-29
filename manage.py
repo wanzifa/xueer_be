@@ -3,6 +3,7 @@
 from getpass import getpass
 import sys
 import os
+import base64
 from flask.ext.script import Manager, Shell
 from flask.ext.migrate import Migrate, MigrateCommand
 # from flask.ext.admin import Admin
@@ -70,7 +71,7 @@ def adduser(username, email):
         u = User(
             email=email,
             username=username,
-            password=password
+            password=base64.b64encode(password)
         )
         db.session.add(u)
         db.session.commit()
