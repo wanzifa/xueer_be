@@ -198,6 +198,7 @@ class User(UserMixin, db.Model):
         username = json_user.get('username')
         password = json_user.get('password')
         email = json_user.get('email')
+        role_id = json_user.get('roleid')
         qq = json_user.get('qq')
         major = json_user.get('major')
         phone = json_user.get('phone')
@@ -208,7 +209,7 @@ class User(UserMixin, db.Model):
             raise ValidationError('请输入密码！')
         if email is None or email == '':
             raise ValidationError('请输入邮箱地址！')
-        return User(username=username, password=password, email=email)
+        return User(username=username, password=password, email=email, role_id=role_id)
 
     def __repr__(self):
         return '<User %r>' % self.username
