@@ -55,7 +55,7 @@ def get_user_id(id):
     :return:
     """
     user = User.query.get_or_404(id)
-    return jsonify(user.to_json())
+    return jsonify(user.to_json2())
 
 
 @api.route('/users/', methods=["GET", "POST"])
