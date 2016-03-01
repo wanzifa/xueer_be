@@ -462,7 +462,7 @@ class Comments(db.Model):
             token_8 = base64.b64decode(token_headers[6:])
             token = token_8[:-1]
             user = User.verify_auth_token(token)
-            if self in user.comments.all():
+            if user in self.user.all():
                 return True
             else:
                 return False
