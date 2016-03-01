@@ -469,6 +469,12 @@ class Comments(db.Model):
         else:
             return False
 
+    @staticmethod
+    def test_json():
+        json_test = {
+            'token_headers': request.headers.get('authorization', None)
+        }
+        return json_test
 
     def to_json(self):
         json_comments = {

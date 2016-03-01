@@ -35,7 +35,6 @@ def get_id_comment(id):
 
 
 @api.route('/courses/<int:id>/comments/', methods=['GET'])
-# @auth.login_required
 def get_courses_id_comments(id):
     """
     获取特定id课程的评论
