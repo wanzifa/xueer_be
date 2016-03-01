@@ -3,7 +3,7 @@
 from datetime import datetime
 from flask_login import UserMixin, AnonymousUserMixin, current_user
 from . import login_manager, app, db
-from flask import current_app, url_for, g
+from flask import current_app, url_for, g, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from xueer.exceptions import ValidationError
@@ -455,22 +455,32 @@ class Comments(db.Model):
         time = time_str[0:10]
         return time
 
+    # @property
+    # def liked(self):
+    #     """
+    #     查询当前用户是否点赞了这个评论
+    #     :return:
+    #     """
+    #     if hasattr(g, 'current_user'):
+    #         if self in g.current_user.comments.all():
+    #             return True
+    #         else:
+    #             return False
+    #     else:
+    #         return False
     @property
     def liked(self):
-        """
-        查询当前用户是否点赞了这门课
-        :return:
-        """
-        if not isinstance(g.current_user, AnonymousUser):
-            # 如果当前用户登录
-            # 查看用户是否点赞
-            # 匿名用户和未点赞用户返回False
-            if self in g.current_user.comment.all():
+        token_headers = request.headers.get('authorization', None)
+        if token_headers:
+            token = base64.b64decode(token_headers[6:])
+            user = User.verify_auth_token(token)
+            if self in user.comments.all():
                 return True
             else:
                 return False
         else:
             return False
+
 
     def to_json(self):
         json_comments = {
@@ -704,4 +714,5 @@ def save():
                 s.tags.append(tag)
                 db.session.add(s)
                 db.session.commit()
+
 

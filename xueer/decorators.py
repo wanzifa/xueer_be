@@ -4,6 +4,7 @@ from functools import wraps
 from flask import abort, request, g
 from flask_login import current_user
 from xueer.models import User
+import base64
 
 
 def permission_required(permission):
@@ -23,7 +24,7 @@ def admin_required(f):
         token_header = request.headers['authorization']
         token = token_header[6:]
         if token:
-            g.current_user = User.verify_auth_token(token)
+            g.current_user = User.verify_auth_token(base64.b64decode(token))
             if not g.current_user.is_administrator():
                 abort(403)
             return f(*args, **kwargs)
