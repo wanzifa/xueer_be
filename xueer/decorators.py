@@ -21,10 +21,12 @@ def permission_required(permission):
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        token_header = request.headers['authorization']
-        token = token_header[6:]
-        if token:
-            g.current_user = User.verify_auth_token(base64.b64decode(token))
+        token_header = request.headers.get('authorization', None)
+        if token_header:
+            token_hash = token_header[6:]
+            token_8 = base64.b64decode(token_hash)
+            token = token_8[:-1]
+            g.current_user = User.verify_auth_token(token)
             if not g.current_user.is_administrator():
                 abort(403)
             return f(*args, **kwargs)

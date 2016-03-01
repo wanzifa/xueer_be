@@ -278,15 +278,12 @@ class Courses(db.Model):
 
     @property
     def liked(self):
-        """
-        查询当前用户是否点赞了这门课
-        :return:
-        """
-        if hasattr(g, 'current_user'):
-            # 如果当前用户登录
-            # 查看用户是否点赞
-            # 匿名用户和未点赞用户返回False
-            if self in g.current_user.courses.all():
+        token_headers = request.headers.get('authorization', None)
+        if token_headers:
+            token_8 = base64.b64decode(token_headers[6:])
+            token = token_8[:-1]
+            user = User.verify_auth_token(token)
+            if user in self.users.all():
                 return True
             else:
                 return False
@@ -598,15 +595,12 @@ class Tips(db.Model):
 
     @property
     def liked(self):
-        """
-        查询当前用户是否点赞了这个贴士
-        :return:
-        """
-        if hasattr(g, 'current_user'):
-            # 如果当前用户登录
-            # 查看用户是否点赞
-            # 匿名用户和未点赞用户返回False
-            if self in g.current_user.tips.all():
+        token_headers = request.headers.get('authorization', None)
+        if token_headers:
+            token_8 = base64.b64decode(token_headers[6:])
+            token = token_8[:-1]
+            user = User.verify_auth_token(token)
+            if user in self.users.all():
                 return True
             else:
                 return False
