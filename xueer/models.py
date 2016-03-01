@@ -455,24 +455,12 @@ class Comments(db.Model):
         time = time_str[0:10]
         return time
 
-    # @property
-    # def liked(self):
-    #     """
-    #     查询当前用户是否点赞了这个评论
-    #     :return:
-    #     """
-    #     if hasattr(g, 'current_user'):
-    #         if self in g.current_user.comments.all():
-    #             return True
-    #         else:
-    #             return False
-    #     else:
-    #         return False
     @property
     def liked(self):
         token_headers = request.headers.get('authorization', None)
         if token_headers:
-            token = base64.b64decode(token_headers[6:])
+            token_8 = base64.b64decode(token_headers[6:])
+            token = token_8[:-1]
             user = User.verify_auth_token(token)
             if self in user.comments.all():
                 return True
@@ -485,11 +473,8 @@ class Comments(db.Model):
     def to_json(self):
         json_comments = {
             'id': self.id,
-            # 'url': url_for('api.get_courses_id_comments', id=self.course_id, _external=True),
-            # 'user': url_for('api.get_comments_id_users', id=self.id, _external=True),
             'user_name': User.query.filter_by(id=self.user_id).first().username,
             'avatar' : 'http://7xj431.com1.z0.glb.clouddn.com/1-140G2160520962.jpg', # 占位
-            # 'course': url_for('api.get_course_id', id=self.course_id, _external=True),
             'date': self.time,
             'body': self.body,
             'is_useful': self.is_useful,
