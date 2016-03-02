@@ -17,10 +17,10 @@ from config import config
 
 
 app = Flask(__name__)
-app.config.from_object(config['default'])
-config['default'].init_app(app)
-# app.config.from_object(config['testing'])
-# config['testing'].init_app(app)
+# app.config.from_object(config['default'])
+# config['default'].init_app(app)
+app.config.from_object(config['testing'])
+config['testing'].init_app(app)
 
 
 db = SQLAlchemy(app)
