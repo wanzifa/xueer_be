@@ -298,13 +298,15 @@ class Courses(db.Model):
         """
         返回热门的4个标签
         用空格隔开、组成4个字符串
-        :return:
         """
-        hot_tag = []
-        tags = self.tags.all()
-        for tag in tags:
-            pass
-        return hot_tag
+        # 查询记录
+
+        s = ""
+        ct = CourseTag.query.filter_by(course_id=self.id).all()
+        sct = sorted(ct, lambda x, y: cmp(y.count, x.count))
+        for link in sct[:4]:
+            s = s + link.tags.name + " "
+        return s[:-1]
 
     def to_json(self):
         if CourseTypes.query.filter_by(id=self.type_id).first() is None:
