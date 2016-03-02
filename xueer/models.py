@@ -85,11 +85,19 @@ UTLike = db.Table(
 )
 
 # a secondary table
-CourseTag = db.Table(
-    'courses_tags',
-    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
-    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'))
-)
+# CourseTag = db.Table(
+#     'courses_tags',
+#     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
+#     db.Column('course_id', db.Integer, db.ForeignKey('courses.id')),
+#     db.Column('count', db.Integer, db.ForeignKey('counts.id'))
+# )
+class CourseTag(db.Model):
+    __tablename__ = 'courses_tags'
+    id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'))
+    count = db.Column(db.Integer)
+    counts = db.Column(db.Integer)
 
 CourseSearch =  db.Table(
     'courses_search',
@@ -262,12 +270,7 @@ class Courses(db.Model):
     # likes: 课程对应的点赞数
     likes = db.Column(db.Integer)
     # 定义与标签的多对多关系
-    tags = db.relationship(
-        "Tags",
-        secondary=CourseTag,
-        backref=db.backref('courses', lazy="dynamic"),
-        lazy="dynamic"
-    )
+    tags = db.relationship("CourseTag", backref="courses", lazy="dynamic")
     users = db.relationship(
         "User",
         secondary=UCLike,
@@ -298,10 +301,9 @@ class Courses(db.Model):
         :return:
         """
         hot_tag = []
-        tags = self.tags
+        tags = self.tags.all()
         for tag in tags:
-            # 筛选排序
-            hot_tag.append(tag.name)
+            pass
         return hot_tag
 
     def to_json(self):
@@ -543,10 +545,10 @@ class Teachers(db.Model):
 class Tags(db.Model):
     __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tags'
-    # __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     count = db.Column(db.Integer)
+    courses = db.relationship("CourseTag", backref="tags", lazy="dynamic")
 
     def to_json(self):
         json_tag = {
@@ -699,5 +701,4 @@ def save():
                 s.tags.append(tag)
                 db.session.add(s)
                 db.session.commit()
-
 

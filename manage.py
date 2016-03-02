@@ -9,7 +9,7 @@ from flask.ext.migrate import Migrate, MigrateCommand
 # from flask.ext.admin import Admin
 # from flask.ext.admin.contrib.sqla import ModelView
 from flask import g
-from xueer import db, app
+from xueer import db, app, con
 from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseCategories, \
     CourseTypes, Comments, Teachers, Tags, Tips
 
@@ -35,6 +35,7 @@ def make_shell_context():
         g=g,
         app=app,
         db=db,
+        con=con,
         Permission=Permission,
         Role=Role,
         User=User,

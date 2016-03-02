@@ -9,10 +9,11 @@
          用户 ---> 评论 ---> 课程
 """
 from flask import request, jsonify, url_for, current_app, g
-from .. import db
+from .. import db, con
 from flask_login import current_user
 from sqlalchemy import desc
 from ..models import Comments, Courses, User, Permission, Tips
+from xueer.models import Tags, CourseTag
 from . import api
 from .decorators import permission_required
 import json
@@ -101,6 +102,39 @@ def new_comment(id):
     course.count = len(course.comment.all())
     db.session.add(course)
     db.session.commit()
+    # add tags
+    tags = request.json.get("tags").split()  # ["tag1", "tag2"]
+    for tag in tags:
+        tag_in_db = Tags.query.filter_by(name=tag).first()
+        if tag_in_db:
+            tag_in_db.count += 1
+            db.session.add(tag_in_db)
+            db.session.commit()
+        else:
+            add_tag = Tags(name=tag, count=1)
+            db.session.add(add_tag)
+            db.session.commit()
+    # add course & tag
+    for tag in tags:
+        get_tag = Tags.query.filter_by(name=tag).first()
+        course_tags = [tag.tags for tag in course.tags.all()]
+        if get_tag in course_tags:
+            course_tag = CourseTag.query.filter_by(
+                tag_id=get_tag.id,
+                course_id=id,
+            ).first()
+            course_tag.count += 1
+            db.session.add(course_tag)
+            db.session.commit()
+        else:
+            course_tag = CourseTag(
+                tag_id = get_tag.id,
+                course_id = id,
+                count = 1
+            )
+            db.session.add(course_tag)
+            db.session.commit()
+
     return jsonify(
         comment.to_json()), 201, {
                'Location': url_for(
@@ -205,3 +239,4 @@ def delete_tip_comment(id):
     return jsonify({
         'message': '该评论已经被删除'
     })
+
