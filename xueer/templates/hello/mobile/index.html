@@ -377,6 +377,18 @@
             </div>
             </div>
         </div>
+        <div class="tags space"> 
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+            <span class="tags_item">sss</span>
+        </div>
         <div class="comment_box_pop">
             <div class="comment_box" id="comment_box">
             </div>
@@ -387,7 +399,9 @@
     <script type="text/template" id="comments_template">
         <div class="comments_title">热门评论</div>
         <div class="comments">
-            <div class="comments_view"></div>
+            <div class="comments_view">
+                <div class="prev_comments"></div>
+            </div>
         </div>
     </script>
     <script type="text/template" id="comment_item_template">
@@ -395,10 +409,16 @@
             <div class="avatar">
 				<img src="/static/x_m/avatar.png"></img>
             </div>
-            <div class="content">
+            <div class="content <% if (fold){ %>content_fold<% } %>">
                 <div class="name"><%= user_name %></div>
                 <div class="time"></div>
-                <div class="body"><%= body %></div>
+                <div class="body">
+                 <% if (fold){ %> 
+                    <%= body_short %> 
+                 <% } else { %>
+                    <%= body %> 
+                 <% } %>
+                </div>
                 <div class="like">
                     <div class="touch_area">
                         <svg class="like_icon <% if (liked){ %>liked<% } %>">
@@ -409,6 +429,9 @@
 				</div>
             </div>
         </div>
+        <% if (fold) { %>
+            <div class="more">查看全文</div>
+        <% } %>
     </script>
     <script type="text/template" id="tip_view_template">
     	<div><%= title %></div>
@@ -434,7 +457,7 @@
     </script>
      <script type="text/template" id="courses_list_item_template">
         <div class="course space">
-            <div class="avatar"><%= main_cat.slice(0,1) %></div>
+            <div class="avatar"><%= main_category.slice(0,1) %></div>
             <div class="content">
                 <div data-id=<%= id %> class="title c_link"><%= title %></div>
                 <div class="info space">

@@ -92,10 +92,11 @@ UTLike = db.Table(
 #     db.Column('count', db.Integer, db.ForeignKey('counts.id'))
 # )
 class CourseTag(db.Model):
+    __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses_tags'
-    id = db.Column(db.Integer, primary_key=True)
-    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
-    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'))
+    # id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
     count = db.Column(db.Integer)
     counts = db.Column(db.Integer)
 
