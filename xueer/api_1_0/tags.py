@@ -59,11 +59,7 @@ def new_tag(id):
     tag.course_id = id
     db.session.add(tag)
     db.session.commit()
-    """course = Courses.query.get_or_404(id)
-    course.tags_list
-    db.session.add(course)
-    db.session.commit()"""
-    return jsonify(tag.to_json()), 201, {
+    return jsonify({'id': tag.id}), 201, {
         # location 会自动写在头部
         'location': url_for('api.get_tags_id', id=tag.id, _external=True)
     }

@@ -68,7 +68,7 @@ def new_user():
     user = User.from_json(request.json)
     db.session.add(user)
     db.session.commit()
-    return jsonify(user.to_json()), 201, {
+    return jsonify({'id': user.id}), 201, {
         'location': url_for('api.get_user_id', id=user.id, _external=True)
     }
 
@@ -92,7 +92,7 @@ def update_user(id):
         user.major = data_dict.get('major', user.major)
         db.session.add(user)
         db.session.commit()
-    return jsonify(user.to_json()), 200, {
+    return jsonify({'update': id}), 200, {
         'location': url_for('api.get_user_id', id=id, _external=True)
     }
 

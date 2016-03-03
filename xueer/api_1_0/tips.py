@@ -77,8 +77,7 @@ def new_tip(id):
     tip = Tips.from_json(request.json)
     db.session.add(tip)
     db.session.commit()
-    return jsonify(
-        tip.to_json()), 201, {
+    return jsonify({'id': tip.id}), 201, {
                'Location': url_for(
                     'api.get_tip_id',
                     id=tip.id, _external=True
