@@ -18,12 +18,11 @@ def get_courses():
     """
     global pagination
     page = request.args.get('page', 1, type=int)
-    if request.args.get('num'):
-        pagination = Courses.query.paginate(
-            1,
-            per_page = int(request.args.get('num')),
-            error_out = False
-        )
+    num = request.args.get('num', type=int)
+    if num:
+        current_app.config['XUEER_COURSES_PER_PAGE'] = num
+    else:
+        current_app.config['XUEER_COURSES_PER_PAGE'] = 20
     if request.args.get('teacher'):
         # /api/v1.0/courses/?teacher=1
         # 获取id为1的老师教学的所有课
@@ -132,6 +131,9 @@ def new_course():
     course = Courses.from_json(request.get_json())
     db.session.add(course)
     db.session.commit()
+    return jsonify({
+        'id': course.id
+    }), 201
 
 
 @api.route('/courses/<int:id>/', methods=["GET", "PUT"])
@@ -152,7 +154,7 @@ def put_course(id):
             course.type_id = data_dict.get('type_id', course.type_id)
         db.session.add(course)
         db.session.commit()
-    return jsonify(course.to_json()), 200
+    return jsonify({'update': id}), 200
 
 
 @api.route('/courses/<int:id>/', methods=['GET', 'DELETE'])
