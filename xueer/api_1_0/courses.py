@@ -18,6 +18,12 @@ def get_courses():
     """
     global pagination
     page = request.args.get('page', 1, type=int)
+    if request.args.get('num'):
+        pagination = Courses.query.paginate(
+            1,
+            per_page = int(request.args.get('num')),
+            error_out = False
+        )
     if request.args.get('teacher'):
         # /api/v1.0/courses/?teacher=1
         # 获取id为1的老师教学的所有课
