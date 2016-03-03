@@ -121,7 +121,7 @@ def get_course_id(id):
     return jsonify(course.to_json())
 
 
-@api.route('/courses/', methods=["GET", "POST"])
+@api.route('/courses/', methods=["POST"])
 @admin_required
 def new_course():
     """
@@ -132,9 +132,6 @@ def new_course():
     course = Courses.from_json(request.get_json())
     db.session.add(course)
     db.session.commit()
-    return jsonify(course.to_json()), 201, {
-        'location': url_for('api.get_course_id', id=course.id, _external=True)
-    }
 
 
 @api.route('/courses/<int:id>/', methods=["GET", "PUT"])
