@@ -174,7 +174,8 @@ class User(UserMixin, db.Model):
                (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
-        return self.can(Permission.ADMINISTER)
+        # return self.can(Permission.ADMINISTER)
+        return (self.role_id == 2)
 
     def ping(self):
         self.last_seen = datetime.utcnow()
@@ -576,15 +577,13 @@ class Tips(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     body = db.Column(db.Text)
-    img = db.Column(db.String(164))
-    # author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    img_url = db.Column(db.String(164))
     author = db.Column(db.String(100))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     # likes number
     likes = db.Column(db.Integer, default=0)
-    comment = db.relationship('Comments', backref="tips", lazy="dynamic")
-    # comments number
-    count = db.Column(db.Integer, default=0)
+    # views counts
+    views = db.Column(db.Integer, default=0)
     users = db.relationship(
         "User",
         secondary=UTLike,
@@ -618,10 +617,10 @@ class Tips(db.Model):
             'title': self.title,
             'body': self.body,
             'url': url_for('api.get_tip_id', id=self.id, _external=True),
-            'views': self.count,
+            'views': self.views,
             'likes': self.likes,
             'date': self.time,
-            'img_url': self.img
+            'img_url': self.img_url
         }
         return json_tips
 
@@ -638,10 +637,16 @@ class Tips(db.Model):
 
     @staticmethod
     def from_json(json_tips):
+        title = json_tips.get('title')
+        img_url = json_tips.get('img_url')
         body = json_tips.get('body')
-        if body is None or body == '':
-            raise ValidationError('小贴士没有内容哦!')
-        return Tips(body=body)
+        author = json_tips.get('author')
+        return Tips(
+            title=title,
+            body=body,
+            img_url=img_url,
+            author=author
+        )
 
     def __repr__(self):
         return '<Tips %r>' % self.title
