@@ -135,12 +135,7 @@ def new_comment(id):
             db.session.add(course_tag)
             db.session.commit()
 
-    return jsonify({'id': comment.id}), 201, {
-               'Location': url_for(
-                    'api.get_id_comment',
-                     _external=True
-               )
-           }
+    return jsonify({'id': comment.id}), 201
 
 
 @api.route('/comments/<int:id>/', methods=["GET", "DELETE"])
@@ -211,12 +206,7 @@ def new_tip_comment(id):
     tip.count = len(tip.comment.all())
     db.session.add(tip)
     db.session.commit()
-    return jsonify({'id': comment.id}), 201, {
-               'Location': url_for(
-                    'api.get_id_comment',
-                    _external=True
-               )
-           }
+    return jsonify({'id': comment.id}), 201
 
 
 @api.route('/tip/<int:id>/comments/', methods=['DELETE', 'GET'])

@@ -247,12 +247,15 @@ svg g {
     /*px*/
     text-align: center; }
   .course_view .info .btn_text {
+    opacity: 1;
     font-size: 14px;
     /*px*/
     display: inline-block;
-    vertical-align: middle; }
+    vertical-align: middle;
+    transition: all 3s; }
   .course_view .info .like {
-    margin-right: 19.5px; }
+    margin-right: 19.5px;
+    overflow: hidden; }
   .course_view .info .w_comment svg, .course_view .info .like svg {
     display: inline-block;
     vertical-align: middle;
@@ -266,6 +269,32 @@ svg g {
     fill: none; }
   .course_view .info g#outline {
     stroke: #ffffff; }
+  .course_view .info .heart_icon_filled {
+    transform: translateX(-200px); }
+  .course_view .info .heart_icon_filled use {
+    fill: #fff; }
+  .course_view .info .animating .btn_text {
+    opacity: 0; }
+  .course_view .info .animating .heart_icon {
+    transform: translateX(-200px);
+    animation: heart_scroll linear 2s; }
+  .course_view .info .animating .heart_icon_filled {
+    transform: translateX(0px);
+    animation: heart_scroll_filled linear 4s; }
+
+@keyframes heart_scroll {
+  0% {
+    transform: translateX(0px) rotate(0deg); }
+  100% {
+    transform: translateX(200px) rotate(720deg); } }
+
+@keyframes heart_scroll_filled {
+  0% {
+    transform: translateX(-200px) rotate(720deg); }
+  50% {
+    transform: translateX(-200px) rotate(720deg); }
+  100% {
+    transform: translateX(0px) rotate(0deg); } }
 
 .course_view .tags {
   margin: 21px 27px 1px 33px; }
@@ -314,7 +343,25 @@ svg g {
   .course_view .comments .more {
     text-align: center;
     margin-top: 4px;
-    margin-bottom: 9px; }
+    margin-bottom: 9px;
+    line-height: 14px;
+    /*px*/
+    color: #999999; }
+  .course_view .comments .more_icon {
+    margin-right: 6px;
+    display: inline-block;
+    width: 14px;
+    /*px*/
+    height: 5px;
+    /*px*/
+    vertical-align: middle; }
+  .course_view .comments .more_icon use {
+    fill: #999999; }
+  .course_view .comments .more_text {
+    font-size: 14px;
+    /*px*/
+    display: inline-block;
+    vertical-align: middle; }
   .course_view .comments .avatar {
     display: inline-block;
     height: 40px;
@@ -567,6 +614,11 @@ svg g {
     overflow: hidden;
     background-color: #EEAB5D;
     text-align: center; }
+  .list .hint {
+    text-align: center;
+    color: #999999;
+    margin-top: 16px;
+    margin-bottom: 34px; }
   .list .content {
     width: 277px; }
     .list .content .title {
@@ -934,25 +986,19 @@ svg g {
  */
 .back_to_top {
   display: none;
-  height: 56px;
-  width: 56px;
-  background-color: #2BBB8F;
+  height: 40px;
+  width: 40px;
   position: fixed;
   bottom: 58px;
   right: 16px;
-  opacity: .5;
-  border-radius: 50%;
-  z-index: 8;
-  text-align: center;
-  line-height: 56px; }
+  z-index: 8; }
 
 .arrow_icon {
-  display: inline-block;
-  height: 21px;
-  vertical-align: middle; }
+  display: block;
+  width: 100%; }
 
 .arrow_icon use {
-  fill: #fff; }
+  fill: #2BBB8F; }
 
 /** css reset **/
 body {

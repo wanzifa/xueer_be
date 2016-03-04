@@ -84,7 +84,7 @@ def new_comments_id_like(id):
             db.session.commit()
             comment = Comments.query.get_or_404(id)
             return jsonify({
-                'id': comment.id
+              'likes': comment.likes
             }), 201
     elif request.method == "DELETE":
         """
