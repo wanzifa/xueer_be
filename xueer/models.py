@@ -1,11 +1,11 @@
 # coding:utf-8
 
 from datetime import datetime
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, AnonymousUserMixin, current_user
-from . import  login_manager, app, db
-from flask import current_app, url_for, g
+from . import login_manager, app, db
+from flask import current_app, url_for, g, request
+from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from xueer.exceptions import ValidationError
 from . import app
 import flask.ext.whooshalchemy as whooshalchemy
@@ -85,11 +85,20 @@ UTLike = db.Table(
 )
 
 # a secondary table
-CourseTag = db.Table(
-    'courses_tags',
-    db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
-    db.Column('course_id', db.Integer, db.ForeignKey('courses.id'))
-)
+# CourseTag = db.Table(
+#     'courses_tags',
+#     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
+#     db.Column('course_id', db.Integer, db.ForeignKey('courses.id')),
+#     db.Column('count', db.Integer, db.ForeignKey('counts.id'))
+# )
+class CourseTag(db.Model):
+    __table_args__ = {'mysql_charset': 'utf8'}
+    __tablename__ = 'courses_tags'
+    # id = db.Column(db.Integer, primary_key=True)
+    course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), primary_key=True)
+    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
+    count = db.Column(db.Integer)
+    counts = db.Column(db.Integer)
 
 CourseSearch =  db.Table(
     'courses_search',
@@ -128,47 +137,17 @@ class User(UserMixin, db.Model):
             if self.username == 'neo1218':
                 self.role = Role.query.filter_by(permissions=0x04).first()
 
-    @staticmethod
-    def generate_fake(count=100):
-        """
-        生成虚拟数据
-        :param count: count 生成数据量
-        :return: None 提交到数据库的对象
-        """
-        from sqlalchemy.exc import IntegrityError
-        # IntegrityError: Wraps a DB-API IntegrityError.
-        from random import seed
-        import forgery_py
-
-        seed()
-        for i in range(count):
-            u = User(
-                username=forgery_py.name.full_name(),
-                email=forgery_py.internet.email_address(),
-                password=forgery_py.lorem_ipsum.word(),
-                qq='834597629',
-                phone='13007149711',
-                # major=u'软件工程',
-                major='CS',
-                # school=u'计算机'
-                school='CCNUCS'
-            )
-            db.session.add(u)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-
     @property
     def password(self):
         raise AttributeError('password is not a readable attribute')
 
     @password.setter
     def password(self, password):
-        password = base64.b64decode(password)
-        self.password_hash = generate_password_hash(password)
+        password_decode = base64.b64decode(password)
+        self.password_hash = generate_password_hash(password_decode)
 
     def verify_password(self, password):
+        # password = base64.b64decode(password)
         return check_password_hash(self.password_hash, password)
 
     def generate_auth_token(self, expiration):
@@ -195,7 +174,8 @@ class User(UserMixin, db.Model):
                (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
-        return self.can(Permission.ADMINISTER)
+        # return self.can(Permission.ADMINISTER)
+        return (self.role_id == 2)
 
     def ping(self):
         self.last_seen = datetime.utcnow()
@@ -203,6 +183,7 @@ class User(UserMixin, db.Model):
 
     def to_json(self):
         json_user = {
+            'id': self.id,
             'url': url_for('api.get_user_id', id=self.id, _external=True),
             'username': self.username,
             # 'like_courses': url_for('api.get_user_like_courses', id=self.id, _external=True),
@@ -215,11 +196,20 @@ class User(UserMixin, db.Model):
         }
         return json_user
 
+    def to_json2(self):
+        json_user = {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email
+        }
+        return json_user
+
     @staticmethod
     def from_json(json_user):
         username = json_user.get('username')
         password = json_user.get('password')
         email = json_user.get('email')
+        role_id = json_user.get('roleid')
         qq = json_user.get('qq')
         major = json_user.get('major')
         phone = json_user.get('phone')
@@ -230,7 +220,7 @@ class User(UserMixin, db.Model):
             raise ValidationError('请输入密码！')
         if email is None or email == '':
             raise ValidationError('请输入邮箱地址！')
-        return User(username=username, password=password, email=email)
+        return User(username=username, password=password, email=email, role_id=role_id)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -265,12 +255,11 @@ class Courses(db.Model):
     name = db.Column(db.String(280))
     # 按专必公必分类 category_id(外键)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    subcategory_id = db.Column(db.Integer, db.ForeignKey('subcategory.id'))
     # 按文理艺体分类
     type_id = db.Column(db.Integer, db.ForeignKey('type.id'))
     # credit记录学分
     credit = db.Column(db.Integer)
-    # teacher_id(外键)
-    # teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'))
     # just teacher's name
     teacher = db.Column(db.String(164))
     # introduction(课程介绍)
@@ -283,12 +272,7 @@ class Courses(db.Model):
     # likes: 课程对应的点赞数
     likes = db.Column(db.Integer)
     # 定义与标签的多对多关系
-    tags = db.relationship(
-        "Tags",
-        secondary=CourseTag,
-        backref=db.backref('courses', lazy="dynamic"),
-        lazy="dynamic"
-    )
+    tags = db.relationship("CourseTag", backref="courses", lazy="dynamic")
     users = db.relationship(
         "User",
         secondary=UCLike,
@@ -297,42 +281,14 @@ class Courses(db.Model):
     )
     #search定义和search表的多对多关系
 
-    @staticmethod
-    def generate_fake(count=100):
-        """
-        生成课程虚拟数据
-        :param count:  生成虚拟数据的个数
-        :return:  None 向数据库的一系列的添加
-        """
-        from sqlalchemy.exc import IntegrityError
-        from random import seed
-        import forgery_py
-
-        seed()  # 初始化
-        for i in range(count):
-
-            c = Courses(
-                name=forgery_py.name.full_name(),
-                credit=10,
-                introduction=forgery_py.lorem_ipsum.sentence()
-            )
-            db.session.add(c)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
-
     @property
     def liked(self):
-        """
-        查询当前用户是否点赞了这门课
-        :return:
-        """
-        if hasattr(g, 'current_user'):
-            # 如果当前用户登录
-            # 查看用户是否点赞
-            # 匿名用户和未点赞用户返回False
-            if self in g.current_user.courses.all():
+        token_headers = request.headers.get('authorization', None)
+        if token_headers:
+            token_8 = base64.b64decode(token_headers[6:])
+            token = token_8[:-1]
+            user = User.verify_auth_token(token)
+            if user in self.users.all():
                 return True
             else:
                 return False
@@ -344,78 +300,78 @@ class Courses(db.Model):
         """
         返回热门的4个标签
         用空格隔开、组成4个字符串
-        :return:
         """
-        hot_tag = []
-        tags = self.tags
-        for tag in tags:
-            # 筛选排序
-            hot_tag.append(tag.name)
-        return hot_tag
+        # 查询记录
 
-
-    """@property
-    def tags_list(self):
-        return self.hot_tags
-    """
+        s = ""
+        ct = CourseTag.query.filter_by(course_id=self.id).all()
+        sct = sorted(ct, lambda x, y: cmp(y.count, x.count))
+        for link in sct[:4]:
+            s = s + link.tags.name + " "
+        return s[:-1]
 
     def to_json(self):
+        if CourseTypes.query.filter_by(id=self.type_id).first() is None:
+            credit_category = "无分类"
+        else:
+            credit_category = CourseTypes.query.filter_by(id=self.type_id).first().name
+        if CoursesSubCategories.query.filter_by(id=self.subcategory_id).first() is None:
+            sub_category = "无分类"
+        else:
+            sub_category = CoursesSubCategories.query.filter_by(id=self.subcategory_id).first().name
         json_courses = {
             'id': self.id,
-            #'url': url_for('api.get_course_id', id=self.id, _external=True),
             'title': self.name,
-            # 'teacher': url_for('api.get_teacher_id', id=self.teacher_id, _external=True),
-            # 老师只返回姓名
-            # 'teacher': Teachers.query.filter_by(id=self.teacher_id).first().name,
             'teacher': self.teacher,
-            #'introduction': self.introduction,
             'comment_url': url_for('api.get_courses_id_comments', id=self.id, _external=True),
             'hot_tags': self.hot_tags,
-            # 'category': self.category.name,
-            #'credit': self.credit,
             'likes': self.likes,  # 点赞的总数
             'like_url': url_for('api.new_courses_id_like', id=self.id, _external=True),  # 给一门课点赞
-            # 喜欢这门课的所有用户
-            #'like_users': url_for('api.get_like_courses_id_users', id=self.id, _external=True),
             'liked': self.liked,  # 查询的用户是否点赞了
-            # 'tags': url_for('api.get_courses_id_tags', id=self.id, _external=True),
-            'cat': CourseTypes.query.filter_by(id=self.type_id).first().name,
+            'main_category': CourseCategories.query.filter_by(id=self.category_id).first().name,
+            'sub_category': sub_category,
+            'credit_category': credit_category,
             'views': self.count  # 浏览量其实是评论数
         }
         return json_courses
 
     def to_json2(self):
+        if CourseTypes.query.filter_by(id=self.type_id).first() is None:
+            credit_category = "无分类"
+        else:
+            credit_category = CourseTypes.query.filter_by(id=self.type_id).first().name
+        if CoursesSubCategories.query.filter_by(id=self.subcategory_id).first() is None:
+            sub_category = "无分类"
+        else:
+            sub_category = CoursesSubCategories.query.filter_by(id=self.subcategory_id).first().name
         json_courses2 = {
             'id': self.id,
             'title': self.name,
             'teacher': self.teacher,
             'views': self.count, # 浏览量其实是评论数
             'likes': self.likes,  # 点赞的总数
-            'main_cat': self.category.name,
-            'ts_cat': CourseTypes.query.filter_by(id=self.type_id).first().name
+            'main_category': CourseCategories.query.filter_by(id=self.category_id).first().name,
+            'sub_category': sub_category,
+            'credit_category': credit_category
         }
         return json_courses2
 
     @staticmethod
-    def from_json(request_json):
-        name = request_json.get('name')
-        teacher_id = request_json.get('teacher_id')
-        introduction = request_json.get('introduction')
-        category_id = request_json.get('category_id')
-        comment = request_json.get('comment')
-        credit = request_json.get('credit')
-        tags = request_json.get('tags')
-        type_id = request_json.get('type_id')
+    def from_json(json_courses):
+        name = json_courses.get('name')
+        teacher = json_courses.get('teacher')
+        introduction = json_courses.get('introduction')
+        category_id = json_courses.get('category_id')
+        credit = json_courses.get('credit')
+        # 二级课程分类和学分分类可选
+        type_id = json_courses.get('type_id', 0)
+        subcategory_id = json_courses.get('sub_category_id', 0)
         return Courses(
-            # 原来创建是从后往前创建的
-            name = name,
-            teacher_id = teacher_id,
-            introduction = introduction,
-            category_id = category_id,
-            comment = comment,
-            credit = credit,
-            tags = tags,
-            type_id = type_id,
+            name=name,
+            teacher=teacher,
+            category_id=category_id,
+            type_id=type_id,
+            subcategory_id=subcategory_id
         )
 
     def __repr__(self):
@@ -435,9 +391,26 @@ class CourseCategories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
     courses = db.relationship("Courses", backref="category", lazy="dynamic")
+    subcategories = db.relationship("CoursesSubCategories", backref="category", lazy="dynamic")
+
 
     def __repr__(self):
         return '<CourseCategory %r>' % self.name
+
+
+# CoursesSubCategories
+# 1     通识核心课
+# 2     通识选修课
+class CoursesSubCategories(db.Model):
+    __table_args__ = {'mysql_charset': 'utf8'}
+    __tablename__ = 'subcategory'
+    id = db.Column(db.Integer, primary_key=True)
+    main_category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
+    name = db.Column(db.String(40))
+    courses = db.relationship('Courses', backref='subcategory', lazy='dynamic')
+
+    def __repr__(self):
+        return "<SubCategory %r> % self.name"
 
 
 # CourseTypes
@@ -487,15 +460,12 @@ class Comments(db.Model):
 
     @property
     def liked(self):
-        """
-        查询当前用户是否点赞了这门课
-        :return:
-        """
-        if not isinstance(g.current_user, AnonymousUser):
-            # 如果当前用户登录
-            # 查看用户是否点赞
-            # 匿名用户和未点赞用户返回False
-            if self in g.current_user.comment.all():
+        token_headers = request.headers.get('authorization', None)
+        if token_headers:
+            token_8 = base64.b64decode(token_headers[6:])
+            token = token_8[:-1]
+            user = User.verify_auth_token(token)
+            if user in self.user.all():
                 return True
             else:
                 return False
@@ -503,38 +473,17 @@ class Comments(db.Model):
             return False
 
     @staticmethod
-    def generate_fake(count=100):
-        """
-        自动生成评论虚拟数据
-        :param count: count 生成数据量
-        :return: None 提交到数据库的对象
-        """
-        from sqlalchemy.exc import IntegrityError
-        # IntegrityError: Wraps a DB-API IntegrityError.
-        from random import seed
-        import forgery_py
-
-        seed()
-        for i in range(count):
-            c = Comments(
-                course_id = 1,
-                user_id = 1,
-                body = u"我是一个很短的评论,评论,评论"
-            )
-            db.session.add(c)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
+    def test_json():
+        json_test = {
+            'token_headers': request.headers.get('authorization', None)
+        }
+        return json_test
 
     def to_json(self):
         json_comments = {
             'id': self.id,
-            # 'url': url_for('api.get_courses_id_comments', id=self.course_id, _external=True),
-            # 'user': url_for('api.get_comments_id_users', id=self.id, _external=True),
             'user_name': User.query.filter_by(id=self.user_id).first().username,
             'avatar' : 'http://7xj431.com1.z0.glb.clouddn.com/1-140G2160520962.jpg', # 占位
-            # 'course': url_for('api.get_course_id', id=self.course_id, _external=True),
             'date': self.time,
             'body': self.body,
             'is_useful': self.is_useful,
@@ -564,32 +513,6 @@ class Teachers(db.Model):
     introduction = db.Column(db.Text)
     phone = db.Column(db.String(20))
     weibo = db.Column(db.String(150))
-
-    @staticmethod
-    def generate_fake(count=100):
-        """
-         生成教师虚拟数据
-        :param count:  100
-        :return: None
-        """
-        from sqlalchemy.exc import IntegrityError
-        from random import seed
-        import forgery_py
-
-        seed()
-        for i in range(count):
-            t = Teachers(
-                name=forgery_py.name.full_name(),
-                department=u'文学院',
-                introduction=forgery_py.lorem_ipsum.sentence(),
-                phone='13007145519',
-                weibo='neo1218'
-            )
-            db.session.add(t)
-            try:
-                db.session.commit()
-            except IntegrityError:
-                db.session.rollback()
 
     def to_json(self):
         json_teacher = {
@@ -626,10 +549,10 @@ class Teachers(db.Model):
 class Tags(db.Model):
     __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tags'
-    # __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     count = db.Column(db.Integer)
+    courses = db.relationship("CourseTag", backref="tags", lazy="dynamic")
 
     def to_json(self):
         json_tag = {
@@ -654,15 +577,13 @@ class Tips(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)
     body = db.Column(db.Text)
-    img = db.Column(db.String(164))
-    # author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    img_url = db.Column(db.String(164))
     author = db.Column(db.String(100))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     # likes number
     likes = db.Column(db.Integer, default=0)
-    comment = db.relationship('Comments', backref="tips", lazy="dynamic")
-    # comments number
-    count = db.Column(db.Integer, default=0)
+    # views counts
+    views = db.Column(db.Integer, default=0)
     users = db.relationship(
         "User",
         secondary=UTLike,
@@ -678,15 +599,12 @@ class Tips(db.Model):
 
     @property
     def liked(self):
-        """
-        查询当前用户是否点赞了这个贴士
-        :return:
-        """
-        if hasattr(g, 'current_user'):
-            # 如果当前用户登录
-            # 查看用户是否点赞
-            # 匿名用户和未点赞用户返回False
-            if self in g.current_user.tips.all():
+        token_headers = request.headers.get('authorization', None)
+        if token_headers:
+            token_8 = base64.b64decode(token_headers[6:])
+            token = token_8[:-1]
+            user = User.verify_auth_token(token)
+            if user in self.users.all():
                 return True
             else:
                 return False
@@ -699,10 +617,10 @@ class Tips(db.Model):
             'title': self.title,
             'body': self.body,
             'url': url_for('api.get_tip_id', id=self.id, _external=True),
-            'views': self.count,
+            'views': self.views,
             'likes': self.likes,
             'date': self.time,
-            'img_url': self.img
+            'img_url': self.img_url
         }
         return json_tips
 
@@ -719,10 +637,16 @@ class Tips(db.Model):
 
     @staticmethod
     def from_json(json_tips):
+        title = json_tips.get('title')
+        img_url = json_tips.get('img_url')
         body = json_tips.get('body')
-        if body is None or body == '':
-            raise ValidationError('小贴士没有内容哦!')
-        return Tips(body=body)
+        author = json_tips.get('author')
+        return Tips(
+            title=title,
+            body=body,
+            img_url=img_url,
+            author=author
+        )
 
     def __repr__(self):
         return '<Tips %r>' % self.title

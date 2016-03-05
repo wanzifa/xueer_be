@@ -12,7 +12,7 @@ from xueer.models import Courses, Comments
 
 
 # 需要登录
-@api.route('/courses/<int:id>/like/', methods=["GET", "PUT", "DELETE"])
+@api.route('/courses/<int:id>/like/', methods=["GET", "POST", "DELETE"])
 @auth.login_required
 def new_courses_id_like(id):
     """
@@ -21,7 +21,7 @@ def new_courses_id_like(id):
     :return:
     """
     course = Courses.query.get_or_404(id)
-    if request.method == "PUT":
+    if request.method == "POST":
         if course.liked:
             return jsonify({
                 'error': '你已经点赞过该课程'
@@ -34,9 +34,9 @@ def new_courses_id_like(id):
             db.session.add(course)
             db.session.commit()
             course = Courses.query.get_or_404(id)
-        return jsonify(
-            course.to_json()
-        ), 201
+        return jsonify({
+            "likes": course.likes
+        }), 201
 
     elif request.method == "DELETE":
         """
@@ -83,9 +83,9 @@ def new_comments_id_like(id):
             db.session.add(comment)
             db.session.commit()
             comment = Comments.query.get_or_404(id)
-            return jsonify(
-                comment.to_json()
-            ), 201
+            return jsonify({
+              'likes': comment.likes
+            }), 201
     elif request.method == "DELETE":
         """
         删除特定id的评论点赞
@@ -109,7 +109,7 @@ def new_comments_id_like(id):
             }), 403
 
 
-@api.route('/tip/<int:id>/like/', methods=["GET", "PUT", "DELETE"])
+@api.route('/tip/<int:id>/like/', methods=["GET", "POST", "DELETE"])
 @auth.login_required
 def new_tips_id_like(id):
     """
@@ -118,7 +118,7 @@ def new_tips_id_like(id):
     :return:
     """
     tip = Tips.query.get_or_404(id)
-    if request.method == "PUT":
+    if request.method == "POST":
         if tip.liked:
             return jsonify({
                 'error': '你已经点赞过该贴士'
@@ -131,9 +131,9 @@ def new_tips_id_like(id):
             db.session.add(tip)
             db.session.commit()
             tip = Tips.query.get_or_404(id)
-            return jsonify(
-                tip.to_json()
-            ), 201
+            return jsonify({
+                'likes': tip.likes
+            }), 201
     elif request.method == "DELETE":
         """
         删除特定id的贴士点赞

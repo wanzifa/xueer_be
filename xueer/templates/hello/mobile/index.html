@@ -219,6 +219,33 @@
         </g>
     </g>
         </symbol>
+         <symbol id="arrow_icon" viewBox="0 0 7 21">
+         <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+        <g id="课程详情底部" transform="translate(-313.000000, -543.000000)" stroke="#FFFFFF" fill="#FFFFFF">
+            <g id="bott" transform="translate(288.000000, 526.000000)">
+                <path d="M28.5,38.5 L28.5,17.5" id="Line"></path>
+                <path id="Line-decoration-1" d="M28.5,17.5 L25.5,28.3 L31.5,28.3 L28.5,17.5 Z"></path>
+            </g>
+        </g>
+    </g>
+         </symbol>
+         <symbol id="back_to_top" viewBox="0 0 40 40">
+             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.5">
+             <g id="课程详情" transform="translate(-304.000000, -532.000000)" fill="#2BBB8F">
+                <g id="Group-2" transform="translate(304.000000, 532.000000)">
+                    <path d="M20,40 C31.045695,40 40,31.045695 40,20 C40,8.954305 31.045695,0 20,0 C8.954305,0 0,8.954305 0,20 C0,31.045695 8.954305,40 20,40 Z M20.7142857,17 L24.7142857,21 L25.7142857,20 L20,14.2857143 L14.2857143,20 L15.2857143,21 L19.2857143,17 L19.2857143,25.7142857 L20.7142857,25.7142857 L20.7142857,17 Z" id="Oval-2"></path>
+                </g>
+            </g>
+            </g>
+         </symbol>
+         <symbol id="arrow_down" viewBox="0 0 14 5">
+             <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="课程详情底部" transform="translate(-141.000000, -196.000000)" fill="#999999">
+                    <path d="M141,196 L155,196 L148,201 L141,196 Z" id="Path-259">
+                    </path>
+                </g>
+            </g>
+         </symbol>
     </svg>
     <div class="viewport">
         <div id="nav"></div>
@@ -276,7 +303,7 @@
             <span data-link="course/1" class="tab_text">推荐课程</span>
         </div>
         <div class="tab tab_all va_item">
-            <span data-link="courses" class="tab_text">所有课程</span>
+            <span data-link="courses?page=1&sort=like" class="tab_text">所有课程</span>
         </div>
     </script>
     <script type="text/template" id="main_template">
@@ -316,7 +343,7 @@
         </div>
     </script>
     <script type="text/template" id="search_template">
-        <div class="warpper">
+        <div class="warpper warpper_fadeIn warpper_fadeOut">
             <div class="container">
                 <div class="search_box space">
                     <input type="text" class="search_input" />
@@ -332,9 +359,9 @@
                 </div>
         </div>
         </div>
-        <div class="circle"></div>
+        <div class="circle circle_fadeIn"></div>
     </script>
-    <script type="text/template" id="course_template">
+    <script type="text/template" id="course_info_template">
         <div class="info" style="background-image:url('/static/x_m/course_bg.png')">
             <div class="overlay mask"></div>
             <div class="overlay top">
@@ -346,20 +373,20 @@
                     <p>
                         <%= teacher %>
                     </p>
-                    <p>
-                        
-                    </p>
                 </div>
             </div>
             <div class="btns space">
                 <div class="btn like space" id="course_like">
-                   <svg viewBox="0 0 17 15">
+                    <svg viewBox="0 0 17 15" class="heart_icon_filled">
+                        <use xlink:href="#heart_s"></use>
+                    </svg>
+                   <svg viewBox="0 0 17 15" class="heart_icon">
                         <use xlink:href="#heart_s"></use>
                     </svg>
                     <span class="btn_text"><%= likes %></span>
                 </div>
                 <div class="btn w_comment space" id="w_comment">
-                	<svg viewBox="0 0 17 14">
+                    <svg viewBox="0 0 17 14">
                         <use xlink:href="#comments"></use>
                     </svg>
                     <span class="btn_text">写评价</span>
@@ -367,25 +394,42 @@
             </div>
             </div>
         </div>
-        <div class="comments_title">热门评论</div>
-        <div class="comments">
+        <div class="tags space"> 
+            <span class="tags_item"><%= main_category %></span>
+            <% _.each(hot_tags.split(" "), function(i) { %>
+            <span class="tags_item"><%= i %></span>
+            <% }); %>
         </div>
         <div class="comment_box_pop">
             <div class="comment_box" id="comment_box">
             </div>
         </div>
     </script>
+    <script type="text/template" id="course_template">
+    </script>
     <script type="text/template" id="comments_template">
+        <div class="comments_title">热门评论</div>
+        <div class="comments">
+            <div class="comments_view">
+                <div class="prev_comments"></div>
+            </div>
+        </div>
     </script>
     <script type="text/template" id="comment_item_template">
-        <li class="space">
+        <div class="space" id="c_<%= id %>">
             <div class="avatar">
 				<img src="/static/x_m/avatar.png"></img>
             </div>
-            <div class="content">
+            <div class="content <% if (fold){ %>content_fold<% } %>">
                 <div class="name"><%= user_name %></div>
                 <div class="time"></div>
-                <div class="body"><%= body %></div>
+                <div class="body">
+                 <% if (fold){ %> 
+                    <%= body_short %> 
+                 <% } else { %>
+                    <%= body %> 
+                 <% } %>
+                </div>
                 <div class="like">
                     <div class="touch_area">
                         <svg class="like_icon <% if (liked){ %>liked<% } %>">
@@ -395,7 +439,15 @@
                     </div>
 				</div>
             </div>
-        </li>
+        </div>
+        <% if (fold) { %>
+            <div class="more space">
+                <svg class="more_icon">
+                    <use xlink:href="#arrow_down"></use>
+                </svg>
+                <span class="more_text">查看全文</span>
+            </div>
+        <% } %>
     </script>
     <script type="text/template" id="tip_view_template">
     	<div><%= title %></div>
@@ -414,14 +466,11 @@
             <div class="filter">筛选</div>
         </div>
         <div class="list"></div>
-        <div class="paginator">
-            <span data-dir=-1 class="p_item prev">上一页</span>
-            <span data-dir=1 class="p_item next">下一页</span>
-        </div>
+        <div class="hint"></div>
     </script>
      <script type="text/template" id="courses_list_item_template">
         <div class="course space">
-            <div class="avatar"><%= main_cat.slice(0,1) %></div>
+            <div class="avatar"><%= main_category.slice(0,1) %></div>
             <div class="content">
                 <div data-id=<%= id %> class="title c_link"><%= title %></div>
                 <div class="info space">
@@ -526,6 +575,11 @@
                 </form>
             </div>
       </script>
+      <script type="text/template" id="back_to_top_template">
+        <svg class="arrow_icon">
+               <use xlink:href="#back_to_top"></use>
+        </svg>   
+     </script>
     <script src="/static/x_m/bundle.js?v=2333"></script>
 </body>
 

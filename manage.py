@@ -3,12 +3,13 @@
 from getpass import getpass
 import sys
 import os
-from flask_script import Manager, Shell
-from flask_migrate import Migrate, MigrateCommand
+import base64
+from flask.ext.script import Manager, Shell
+from flask.ext.migrate import Migrate, MigrateCommand
 # from flask.ext.admin import Admin
 # from flask.ext.admin.contrib.sqla import ModelView
 from flask import g
-from xueer import db, app
+from xueer import db, app, con
 from xueer.models import Permission, Role, User, AnonymousUser, Courses, CourseCategories, \
     CourseTypes, Comments, Teachers, Tags, Tips, Search, save
 
@@ -34,6 +35,7 @@ def make_shell_context():
         g=g,
         app=app,
         db=db,
+        con=con,
         Permission=Permission,
         Role=Role,
         User=User,
@@ -71,7 +73,7 @@ def adduser(username, email):
         u = User(
             email=email,
             username=username,
-            password=password
+            password=base64.b64encode(password)
         )
         db.session.add(u)
         db.session.commit()

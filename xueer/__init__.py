@@ -12,6 +12,7 @@ from flask import Flask
 from flask_moment import Moment
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 from config import config
 
 
@@ -23,6 +24,9 @@ config['default'].init_app(app)
 
 
 db = SQLAlchemy(app)
+engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],\
+        convert_unicode=True)
+con = engine.connect()
 login_manager = LoginManager(app)
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
@@ -37,3 +41,4 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
 from api_1_0 import api as api_1_0_blueprint
 app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
+

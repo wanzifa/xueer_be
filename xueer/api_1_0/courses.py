@@ -1,23 +1,28 @@
 # coding: utf-8
 
 from flask import jsonify, url_for, request, current_app
-from flask_login import current_user
+# from flask_login import current_user
 from .authentication import auth
 from sqlalchemy import desc
-from ..models import Courses, User, Tags, CourseCategories, CourseTypes
+from ..models import Courses, User, Tags, CourseCategories, CourseTypes, Permission
 from . import api
 from xueer import db
 import json
+from xueer.decorators import admin_required
 
 
 @api.route('/courses/', methods=["GET"])  # ?string=sort&main_cat&ts_cat
 def get_courses():
     """
     获取全部课程
-    排序存在问题
     """
     global pagination
     page = request.args.get('page', 1, type=int)
+    num = request.args.get('num', type=int)
+    if num:
+        current_app.config['XUEER_COURSES_PER_PAGE'] = num
+    else:
+        current_app.config['XUEER_COURSES_PER_PAGE'] = 20
     if request.args.get('teacher'):
         # /api/v1.0/courses/?teacher=1
         # 获取id为1的老师教学的所有课
@@ -104,7 +109,6 @@ def get_courses():
     ), 200, {'link': '<%s>; rel="next", <%s>; rel="last"' % (next, last)}
 
 
-
 @api.route('/courses/<int:id>/', methods=["GET"])
 def get_course_id(id):
     """
@@ -116,57 +120,45 @@ def get_course_id(id):
     return jsonify(course.to_json())
 
 
-@api.route('/courses/', methods=["GET", "POST"])
+@api.route('/courses/', methods=["POST"])
+@admin_required
 def new_course():
     """
     创建一个新的课程
     :return:
     """
-    course = Courses.from_json(request.json)
+    # request.get_json.get('item', 'default')
+    course = Courses.from_json(request.get_json())
     db.session.add(course)
     db.session.commit()
-    return jsonify(course.to_json()), 201, {
-        'location': url_for('api.get_course_id', id=course.id, _external=True)
-    }
+    return jsonify({
+        'id': course.id
+    }), 201
 
 
 @api.route('/courses/<int:id>/', methods=["GET", "PUT"])
-@auth.login_required
+@admin_required
 def put_course(id):
     """
     更新一门课
-    {
-            'id':1,
-            'title':"微生物与人类健康",
-            'teacher': "王大锤",
-            'hot_tags':"不点名 老师帅 作业少 很有趣"
-            'views':20,
-            'likes':30,
-            'liked':false,
-            'cat':'公共课'
-            'comment_url':'/1/comments/'
-            'like_url':'/api/courses/1/like'
-
-    }
     """
     course = Courses.query.get_or_404(id)
     if request.method == "PUT":
         data_dict = eval(request.data)
-        course.name = data_dict.get('title', course.name)
+        course.name = data_dict.get('name', course.name)
         course.teacher = data_dict.get('teacher', course.teacher)
-        # course.teacher_id = Teacher.query.filter_by(name=teacher).first().id
-        course.introduction = data_dict.get('introduction', course.introduction)
-        category = data_dict.get('cat')
-        course.category_id = CourseCategories.query.filter_by(name=category).first().id
-        # course.credit = data_dict.get('credit', course.credit)
-        # course.type_id = data_dict.get('type_id', course.type_id)
-        # update islike(liked) and likes will auto add(funny!)
+        course.category_id = data_dict.get('category_id', course.category_id)
+        if course.subcategory_id:
+            course.subcategory_id = data_dict.get('sub_category_id', course.subcategory_id)
+        if course.type_id:
+            course.type_id = data_dict.get('type_id', course.type_id)
         db.session.add(course)
         db.session.commit()
-    return jsonify(course.to_json()), 200
+    return jsonify({'update': id}), 200
 
 
 @api.route('/courses/<int:id>/', methods=['GET', 'DELETE'])
+@admin_required
 def delete_course(id):
     """
     删除一个课程

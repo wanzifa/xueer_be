@@ -27,7 +27,7 @@ def new_teacher():
     teacher = Teachers.from_json(request.json)
     db.session.add(teacher)
     db.session.commit()
-    return jsonify(teacher.to_json()), 201, {
+    return jsonify({'id': teacher.id}), 201, {
         'location': url_for('api.get_teacher_id', id=teacher.id, _external=True)
     }
 
