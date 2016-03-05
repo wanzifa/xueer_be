@@ -155,3 +155,4 @@ def new_tips_id_like(id):
             return jsonify({
                 "error": "你还没有点赞这个贴士哦!"
             }), 403
+
