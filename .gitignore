@@ -5,6 +5,6 @@ xueer.sock
 .idea/
 venv/
 migrations/
+whoosh_index/
 xueer_test.sqlite
 xueer_dev.sqlite
-.idea/

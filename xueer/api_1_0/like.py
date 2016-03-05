@@ -8,7 +8,7 @@ from . import api
 from flask import g, jsonify, request
 from xueer import db
 from xueer.api_1_0.authentication import auth
-from xueer.models import Courses, Comments
+from xueer.models import Courses, Comments, Tips
 
 
 # 需要登录
