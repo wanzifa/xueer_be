@@ -6,7 +6,7 @@ from . import login_manager, app, db
 from flask import current_app, url_for, g, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from xueer.exceptions import ValidationError
+from .exceptions import ValidationError
 from . import app
 import flask.ext.whooshalchemy as whooshalchemy
 import base64
