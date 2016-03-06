@@ -682,6 +682,7 @@ def save():
         seg_list = jieba.cut_for_search(course.name)
         str = '/'.join(seg_list)
         results = str.split('/')
+        results.append(course.name)
         for result in results:
             if(Search.query.filter_by(name=result).first() == None):
                 s = Search(name=result)
@@ -698,6 +699,7 @@ def save():
         seg_list = jieba.cut_for_search(tag.name)
         str = '/'.join(seg_list)
         results = str.split('/')
+        results.append(tag.name)
         for result in results:
             if(Search.query.filter_by(name=result).first() == None):
                 s = Search(name=result)
