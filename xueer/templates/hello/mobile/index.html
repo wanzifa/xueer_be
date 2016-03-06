@@ -187,11 +187,20 @@
         </symbol>
         <symbol id="heart_s">
         	<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="课程详情" transform="translate(-57.000000, -236.000000)" stroke="#FFFFFF">
+        <g id="课程详情" transform="translate(-57.000000, -236.000000)" stroke="#000">
             <g id="Group" transform="translate(0.000000, 80.272000)">
                 <g id="喜欢-+-Shape-Copy-3" transform="translate(58.000000, 155.000000)">
                     <path d="M7.5,4.4375 C6.94166667,3.03025 5.3775,2 3.75,2 C1.63083333,2 0,3.56975 0,5.65625 C0,8.5235625 3.16083333,10.740875 7.5,15 C11.8391667,10.740875 15,8.5235625 15,5.65625 C15,3.56975 13.3691667,2 11.25,2 C9.62083333,2 8.05833333,3.03025 7.5,4.4375 Z" id="Shape-Copy-3"></path>
                 </g>
+            </g>
+        </g>
+    </g>
+        </symbol>
+        <symbol id="heart_s_orange" viewBox="0 0 16 15">
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="专题页面上滑" transform="translate(-57.000000, -475.000000)" stroke="#EEAB5D">
+            <g id="喜欢-+-Shape-Copy-3" transform="translate(57.000000, 476.000000)">
+                <path d="M8,2.60416667 C7.44166667,1.19691667 5.8775,0.166666667 4.25,0.166666667 C2.13083333,0.166666667 0.5,1.73641667 0.5,3.82291667 C0.5,6.69022917 3.66083333,8.90754167 8,13.1666667 C12.3391667,8.90754167 15.5,6.69022917 15.5,3.82291667 C15.5,1.73641667 13.8691667,0.166666667 11.75,0.166666667 C10.1208333,0.166666667 8.55833333,1.19691667 8,2.60416667 Z" id="Shape-Copy-3"></path>
             </g>
         </g>
     </g>
@@ -303,7 +312,7 @@
             <span data-link="course/1" class="tab_text">推荐课程</span>
         </div>
         <div class="tab tab_all va_item">
-            <span data-link="courses?page=1&sort=like" class="tab_text">所有课程</span>
+            <span data-link="courses?type=courses&page=1&sort=like&&keywords=数据结构" class="tab_text">所有课程</span>
         </div>
     </script>
     <script type="text/template" id="main_template">
@@ -313,11 +322,11 @@
     </script>
     <script type="text/template" id="main_tip_item_template">
         <div class="img">
-            <img class="tip_link" data-link="<%= url %>" src="<%= img_url %>" />
+            <img class="tip_link" data-link="<%= id %>" src="<%= img_url %>" />
         </div>
         <div class="info">
             <div class="title">
-                <div class="tip_link" data-link="<%= url %>">
+                <div class="tip_link" data-link="<%= id %>">
                     <%= title %>
                 </div>
             </div>
@@ -362,8 +371,7 @@
         <div class="circle circle_fadeIn"></div>
     </script>
     <script type="text/template" id="course_info_template">
-        <div class="info" style="background-image:url('/static/x_m/course_bg.png')">
-            <div class="overlay mask"></div>
+        <div class="info" style="background-image:url('http://7oxh2b.com1.z0.glb.clouddn.com/xueer_bg_<%= Math.floor(Math.random()*4) + 1  %>.png')">
             <div class="overlay top">
             <div class="basic">
                 <div class="title">
@@ -396,9 +404,11 @@
         </div>
         <div class="tags space"> 
             <span class="tags_item"><%= main_category %></span>
-            <% _.each(hot_tags.split(" "), function(i) { %>
-            <span class="tags_item"><%= i %></span>
-            <% }); %>
+            <% if(hot_tags.length > 0) { %>
+                <% _.each(hot_tags.split(" "), function(i) { %>
+                <span class="tags_item"><%= i %></span>
+                <% }); %>  
+             <% } %>
         </div>
         <div class="comment_box_pop">
             <div class="comment_box" id="comment_box">
@@ -422,7 +432,7 @@
             </div>
             <div class="content <% if (fold){ %>content_fold<% } %>">
                 <div class="name"><%= user_name %></div>
-                <div class="time"></div>
+                <div class="time"><%= date %></div>
                 <div class="body">
                  <% if (fold){ %> 
                     <%= body_short %> 
@@ -441,7 +451,7 @@
             </div>
         </div>
         <% if (fold) { %>
-            <div class="more space">
+            <div class= "more space">
                 <svg class="more_icon">
                     <use xlink:href="#arrow_down"></use>
                 </svg>
@@ -450,11 +460,21 @@
         <% } %>
     </script>
     <script type="text/template" id="tip_view_template">
-    	<div><%= title %></div>
-		<div><%= author %></div>
-		<div><%= date %></div>
-		<div><%= body %></div>
-		<div><%= likes %></div>
+    	<div class="tip_title"><%= title %></div>
+		<div class="tip_info space">
+            <span class="tip_info_item tip_info_author"><%= author %></span>
+            <span class="tip_info_item tip_info_date"><%= date %></span>
+        </div>
+		<div class="tip_content"><%= body %></div>
+		<div class="tip_btns space">
+            <div class="tip_btn tip_btn_like">
+                <svg class="tip_btn--icon">
+                    <use xlink:href="#heart_s_orange"></use>
+                </svg>
+                <%= likes %>
+            </div>
+            <div class="tip_btn">返回首页</div>
+        </div>
     </script>
     <script type="text/template" id="courses_list_template">
         <div class="menu space">
@@ -579,6 +599,16 @@
         <svg class="arrow_icon">
                <use xlink:href="#back_to_top"></use>
         </svg>   
+     </script>
+     <script type="text/template" id="dialog_template">
+        <div class="dialog_top">
+            <div class="dialog_img"></div>
+            <div class="dialog_text">请登录后操作</div>
+        </div> 
+        <div class="dialog_btns space">
+            <div class="dialog_btn dialog_btn_cancel">等会再说</div>
+            <div class="dialog_btn dialog_btn_login">去登录</div>
+        </div> 
      </script>
     <script src="/static/x_m/bundle.js?v=2333"></script>
 </body>

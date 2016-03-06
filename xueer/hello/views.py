@@ -7,15 +7,13 @@ from jinja2 import Environment
 from . import hello
 
 
-# hello.jinja_env.add_extension('jinja2.ext.loopcontrols')
-
-
 def is_mobie():
     platform = request.user_agent.platform
     if platform in ["android", "iphone", "ipad"]:
         return True
     else:
         return False
+
 
 @hello.route('/')
 def index():
@@ -24,11 +22,3 @@ def index():
         return render_template("hello/mobile/index.html")
     else:
         return render_template("hello/desktop/index.html")
-
-
-# @hello.route('/course')
-# Def course():
-#     with hello.open_resource('mock/course.json') as f:
-#         data = f.read()
-#         json_dict = json.loads(data)
-#     return render_template("pages/course.html",info=json_dict['info'],hot_comments=json_dict['hot_comments'])
