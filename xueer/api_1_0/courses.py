@@ -166,11 +166,12 @@ def delete_course(id):
     :return:
     """
     course = Courses.query.get_or_404(id)
-    db.session.delete(course)
-    db.session.commit()
-    return jsonify({
-        'message': '该课程已被删除'
-    })
+    if request.method == "DELETE":
+        db.session.delete(course)
+        db.session.commit()
+        return jsonify({
+            'message': '该课程已被删除'
+        })
 
 
 @api.route('/tags/<int:id>/courses/')

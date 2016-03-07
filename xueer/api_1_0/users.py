@@ -106,11 +106,12 @@ def delete_user(id):
     :return:
     """
     user = User.query.filter_by(id=id).first()
-    db.session.delete(user)
-    db.session.commit()
-    return jsonify({
-        'message': '该用户已经被移除'
-    })
+    if request.method == "DELETE":
+        db.session.delete(user)
+        db.session.commit()
+        return jsonify({
+            'message': '该用户已经被移除'
+        })
 
 
 @api.route('/courses/<int:id>/users/', methods=["GET"])

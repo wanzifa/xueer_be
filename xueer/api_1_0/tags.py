@@ -68,11 +68,12 @@ def new_tag(id):
 @api.route('/tags/<int:id>', methods=["GET", "DELETE"])
 def delete_tags(id):
     tag = Tags.query.get_or_404(id)
-    db.session.delete(tag)
-    db.session.commit()
-    return jsonify({
-       'message': '该标签已移除'
-    })
+    if request.method == "DELETE":
+        db.session.delete(tag)
+        db.session.commit()
+        return jsonify({
+            'message': '该标签已移除'
+        })
 
 
 @api.route('/courses/<int:id>/tags/')

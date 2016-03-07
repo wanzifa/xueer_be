@@ -148,14 +148,15 @@ def delete_comment(id):
     """
     comment = Comments.query.get_or_404(id)
     course = Courses.query.get_or_404(comment.course_id)
-    db.session.delete(comment)
-    db.session.commit()
-    course.count = len(course.comment.all())
-    db.session.add(course)
-    db.session.commit()
-    return jsonify({
-        'message': '该评论已经被删除'
-    })
+    if request.method == "DELETE":
+        db.session.delete(comment)
+        db.session.commit()
+        course.count = len(course.comment.all())
+        db.session.add(course)
+        db.session.commit()
+        return jsonify({
+            'message': '该评论已经被删除'
+        })
 
 
 @api.route('/tip/<int:id>/comments/', methods=['GET'])

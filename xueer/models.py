@@ -5,7 +5,8 @@ from flask_login import UserMixin, AnonymousUserMixin, current_user
 from . import login_manager, app, db
 from flask import current_app, url_for, g, request
 from werkzeug.security import generate_password_hash, check_password_hash
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+# from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from itsdangerous import URLSafeSerializer as Serializer
 from .exceptions import ValidationError
 from . import app
 import flask.ext.whooshalchemy as whooshalchemy
@@ -150,11 +151,11 @@ class User(UserMixin, db.Model):
         # password = base64.b64decode(password)
         return check_password_hash(self.password_hash, password)
 
-    def generate_auth_token(self, expiration):
+    def generate_auth_token(self):
         """generate a token"""
         s = Serializer(
-            current_app.config['SECRET_KEY'],
-            expiration
+            current_app.config['SECRET_KEY']
+            # expiration
         )
         return s.dumps({'id': self.id})
 

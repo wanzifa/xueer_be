@@ -63,8 +63,10 @@ def delete_teacher(id):
     :return:
     """
     teacher = Teachers.query.get_or_404(id)
-    db.session.delete(teacher)
-    db.session.commit()
-    return jsonify({
-        'message': '这个老师已经被删了'
-    })
+    if request.method == "DELETE":
+        db.session.delete(teacher)
+        db.session.commit()
+        return jsonify({
+            'message': '这个老师已经被删了'
+        })
+

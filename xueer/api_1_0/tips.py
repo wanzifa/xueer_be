@@ -73,10 +73,11 @@ def new_tip():
     :param id: 贴士id
     :return:
     """
-    tip = Tips.from_json(request.get_json())
-    db.session.add(tip)
-    db.session.commit()
-    return jsonify({'id': tip.id}), 201
+    if request.method == "POST":
+        tip = Tips.from_json(request.get_json())
+        db.session.add(tip)
+        db.session.commit()
+        return jsonify({'id': tip.id}), 201
 
 
 @api.route('/tips/<int:id>/', methods=['PUT', 'GET'])
@@ -86,15 +87,16 @@ def update_tip(id):
     更新一条tips
     """
     tip = Tips.get_or_404(id)
-    tip.title = request.get_json().get('title') or tip.title
-    tip.img_url = request.get_json().get('img_url') or tip.img_url
-    tip.body = request.get_json().get('body') or tip.body
-    tip.author = request.get_json().get('author') or tip.author
-    db.session.add(tip)
-    db.session.commit()
-    return jsonify({
-        'update': tip.id
-    })
+    if request.method == "PUT":
+        tip.title = request.get_json().get('title') or tip.title
+        tip.img_url = request.get_json().get('img_url') or tip.img_url
+        tip.body = request.get_json().get('body') or tip.body
+        tip.author = request.get_json().get('author') or tip.author
+        db.session.add(tip)
+        db.session.commit()
+        return jsonify({
+           'update': tip.id
+        })
 
 
 
@@ -107,9 +109,10 @@ def delete_tip(id):
     :return:
     """
     tip = Tips.query.get_or_404(id)
-    db.session.delete(tip)
-    db.session.commit()
-    return jsonify({
-        'delete': tip.id
-    })
+    if request.method == "DELETE":
+        db.session.delete(tip)
+        db.session.commit()
+        return jsonify({
+            'delete': tip.id
+        })
 
