@@ -13,20 +13,15 @@ from flask_moment import Moment
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
-from config import config
+from xueer_config import config
 
 
 app = Flask(__name__)
-# app.config.from_object(config['default'])
-# config['default'].init_app(app)
-app.config.from_object(config['testing'])
-config['testing'].init_app(app)
+app.config.from_object(config['product'])
+app.config.from_envvar("XUEER_SERVER_SETTING")
 
 
 db = SQLAlchemy(app)
-engine = create_engine(app.config['SQLALCHEMY_DATABASE_URI'],\
-        convert_unicode=True)
-con = engine.connect()
 login_manager = LoginManager(app)
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'

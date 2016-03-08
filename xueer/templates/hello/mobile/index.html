@@ -14,6 +14,7 @@
 <link rel="manifest" href="/static/x_m/favicon/manifest.json">
 <meta name="msapplication-TileImage" content="/static/x_m/favicon/ms-icon-144x144.png">
 <link rel="icon" type="image/png" sizes="96x96" href="/static/x_m/favicon/favicon-96x96.png">
+<meta name="format-detection" content="telephone=no"/>
     <meta charset="UTF-8">
     <script src="/static/x_m/flexible.js"></script>
     <title>学而</title>
@@ -238,7 +239,7 @@
         </g>
     </g>
          </symbol>
-         <symbol id="back_to_top" width="8px" height="8px"viewBox="0 0 40 40">
+         <symbol id="back_to_top" viewBox="0 0 40 40">
              <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" fill-opacity="0.5">
              <g id="课程详情" transform="translate(-304.000000, -532.000000)" fill="#2BBB8F">
                 <g id="Group-2" transform="translate(304.000000, 532.000000)">
@@ -264,7 +265,7 @@
             </g>
          </symbol>
     </svg>
-    <div class="viewport">
+    <div class="viewport" style="display:none">
         <div id="nav"></div>
         <div id="pageview" class="pageview"></div>
         <div id="footer">
@@ -279,6 +280,7 @@
             <div class="copyright">Proudly Prowered by Backbone & Flask</div>
         </div>
     </div>
+    <div id="token" style="display:none">ZXlKcFpDSTZNWDAuMzJCRm1fT2VxWFhuNTU4ek9yMnQ5cXVlWURjOg==</div>
     <script type="text/template" id="nav_template">
         <div class="container">
             <div class="title_set">
@@ -320,7 +322,7 @@
             <span data-link="course/1" class="tab_text">推荐课程</span>
         </div>
         <div class="tab tab_all va_item">
-            <span data-link="courses?type=courses&page=1&sort=like" class="tab_text">所有课程</span>
+            <span data-link="courses?type=courses&page=1&sort=view" class="tab_text">所有课程</span>
         </div>
     </script>
     <script type="text/template" id="main_template">
@@ -428,7 +430,7 @@
     <script type="text/template" id="course_template">
     </script>
     <script type="text/template" id="comments_template">
-        <div class="comments_title">热门评论</div>
+        <div class="comments_title">所有评论</div>
         <div class="comments">
             <div class="comments_view">
                 <div class="prev_comments"></div>
@@ -490,13 +492,19 @@
         <div class="menu space">
             <div class="sort">
                 <span>排序方式：</span>
-                <span data-sort="view"class="s_item comments active">评论最多&nbsp;&nbsp;</span>
-                <span data-sort="like" class="s_item likes">&nbsp;&nbsp;点赞最多</span>
+                <span data-sort="view"class="s_item comments 
+                <% if (params.sort === 'view') { %>active <% } %>">
+                    评论最多
+                &nbsp;&nbsp;</span>
+                <span data-sort="like" class="s_item likes
+                <% if (params.sort === 'like') { %>active <% } %>">
+                &nbsp;&nbsp;点赞最多</span>
             </div>
             <div class="filter">筛选</div>
             <div class="filter_list">
                 <div class="filter_g">
-                    <input type="radio" name="category" id="public" value="1"/>
+                    <input type="radio" name="category" id="public" value="1"
+                    <% if (params.main_cat == "1") { %>checked<% } %>/>
                     <label for="public">
                         <svg class="filter_icon">
                             <use xlink:href="#hook"></use>
@@ -505,7 +513,8 @@
                     </label>
                 </div>
                 <div class="filter_g">
-                    <input type="radio" name="category" id="general" value="2"/>
+                    <input type="radio" name="category" id="general" value="2"
+                    <% if (params.main_cat == "2") { %>checked<% } %>/>
                     <label for="general">
                         <svg class="filter_icon">
                             <use xlink:href="#hook"></use>
@@ -514,7 +523,8 @@
                     </label>
                 </div>
                 <div class="filter_g">
-                    <input type="radio" name="category" id="pro" value="3"/>
+                    <input type="radio" name="category" id="pro" value="3"
+                    <% if (params.main_cat == "3") { %>checked<% } %>/>
                      <label for="pro">
                         <svg class="filter_icon">
                             <use xlink:href="#hook"></use>
@@ -523,7 +533,8 @@
                     </label>
                 </div>
                 <div class="filter_g">
-                    <input type="radio" name="category" id="quality" value="4"/>
+                    <input type="radio" name="category" id="quality" value="4"
+                    <% if (params.main_cat == "4") { %>checked<% } %>/>
                     <label for="quality">
                         <svg class="filter_icon">
                             <use xlink:href="#hook"></use>
@@ -587,7 +598,7 @@
             <div class="container">
                 <form>
                     <div class="row">
-                        <div class="label">用户名:</div>
+                        <div class="label">邮箱:</div>
                         <input type="text"class="input username" id="username"/>
                     </div>
                     <div class="row">
