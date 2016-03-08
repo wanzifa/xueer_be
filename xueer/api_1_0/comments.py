@@ -9,7 +9,7 @@
          用户 ---> 评论 ---> 课程
 """
 from flask import request, jsonify, url_for, current_app, g
-from .. import db, con
+from .. import db
 from flask_login import current_user
 from sqlalchemy import desc
 from ..models import Comments, Courses, User, Permission, Tips
