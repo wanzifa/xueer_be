@@ -280,7 +280,7 @@
             <div class="copyright">Proudly Prowered by Backbone & Flask</div>
         </div>
     </div>
-    <div id="token" style="display:none">ZXlKcFpDSTZNWDAuMzJCRm1fT2VxWFhuNTU4ek9yMnQ5cXVlWURjOg==</div>
+    <div id="token" style="display:none">ZXlKcFpDSTZNbjAuQW5xQU5HUjJRYUc0N0FDdXJSQ2ZTRkJBU3RZOg==</div>
     <script type="text/template" id="nav_template">
         <div class="container">
             <div class="title_set">
@@ -319,7 +319,7 @@
             <span data-link="tips" class="tab_text current">首页</span>
         </div>
         <div class="tab tab_recommend va_item">
-            <span data-link="course/1" class="tab_text">推荐课程</span>
+            <span data-link="courses?type=courses&page=1&sort=like" class="tab_text">推荐课程</span>
         </div>
         <div class="tab tab_all va_item">
             <span data-link="courses?type=courses&page=1&sort=view" class="tab_text">所有课程</span>
@@ -396,7 +396,8 @@
             <div class="btns space">
                 <div class="btn like space" id="course_like">
                    <div class="btn_container">
-                       <svg viewBox="0 0 17 15" class="heart_icon">
+                       <svg viewBox="0 0 17 15" 
+                       class="heart_icon <% if(liked) { %>heart_liked<% } %>">
                             <use xlink:href="#heart_s"></use>
                        </svg>
                        <span class="btn_text"><%= likes ? likes : 0 %></span>
@@ -485,7 +486,7 @@
                 </svg>
                 <%= likes %>
             </div>
-            <div class="tip_btn">返回首页</div>
+            <div class="tip_btn tip_btn_back">返回首页</div>
         </div>
     </script>
     <script type="text/template" id="courses_list_template">
