@@ -120,7 +120,7 @@ def get_course_id(id):
     return jsonify(course.to_json())
 
 
-@api.route('/courses/', methods=["POST"])
+@api.route('/courses/', methods=["GET", "POST"])
 @admin_required
 def new_course():
     """
