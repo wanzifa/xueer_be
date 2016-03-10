@@ -1,0 +1,17 @@
+[uwsgi]
+module = wsgi:app
+
+master = true
+callable = app
+processes = 4
+threads = 2
+
+# socket = 115.28.152.113:5000
+socket = 127.0.0.1:5050
+chmod-socket = 777
+vacuum = true
+
+die-on-term = true
+
+logto = /tmp/uwsgi_xueer.log
+# no-site = True

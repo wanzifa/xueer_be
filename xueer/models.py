@@ -31,7 +31,7 @@ class Role(db.Model):
     2. Moderator: MODERATE_COMMENTS
     3. Administrator: ADMINISTER
     """
-    __table_args__ = {'mysql_charset': 'utf8'}
+    #__table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
@@ -93,7 +93,7 @@ UTLike = db.Table(
 #     db.Column('count', db.Integer, db.ForeignKey('counts.id'))
 # )
 class CourseTag(db.Model):
-    __table_args__ = {'mysql_charset': 'utf8'}
+    #__table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses_tags'
     # id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), primary_key=True)
@@ -119,7 +119,7 @@ class User(UserMixin, db.Model):
     id, username, password, like(Courses), comment(Comment),
     UserLike: m to m
     """
-    __table_args__ = {'mysql_charset': 'utf8'}
+    # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(164), unique=True, index=True)
@@ -228,7 +228,7 @@ class User(UserMixin, db.Model):
 
 
 class AnonymousUser(AnonymousUserMixin):
-    __table_args__ = {'mysql_charset': 'utf8'}
+  # __table_args__ = {'mysql_charset': 'utf8'}
 
     def can(self, permissions):
         return False
@@ -250,7 +250,7 @@ def load_user(user_id):
 
 class Courses(db.Model):
     __searchable__ = ['teacher']
-    __table_args__ = {'mysql_charset': 'utf8'}
+    # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(280))
@@ -387,7 +387,7 @@ whooshalchemy.whoosh_index(app, Courses)
 #   3     专业课
 #   4     素质课
 class CourseCategories(db.Model):
-    __table_args__ = {'mysql_charset': 'utf8'}
+  # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
@@ -403,7 +403,7 @@ class CourseCategories(db.Model):
 # 1     通识核心课
 # 2     通识选修课
 class CoursesSubCategories(db.Model):
-    __table_args__ = {'mysql_charset': 'utf8'}
+  # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'subcategory'
     id = db.Column(db.Integer, primary_key=True)
     main_category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
@@ -421,7 +421,7 @@ class CoursesSubCategories(db.Model):
 #   3     艺体
 #   4     工科
 class CourseTypes(db.Model):
-    __table_args__ = {'mysql_charset': 'utf8'}
+  # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'type'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
@@ -432,7 +432,7 @@ class CourseTypes(db.Model):
 
 
 class Comments(db.Model):
-    __table_args__ = {'mysql_charset': 'utf8'}
+  # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'comments'
     id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'))
@@ -507,7 +507,7 @@ class Comments(db.Model):
 
 class Teachers(db.Model):
     __tablename__ = 'teachers'
-    __table_args__ = {'mysql_charset':'utf8'}
+    # __table_args__ = {'mysql_charset':'utf8'}
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     department = db.Column(db.String(150))
@@ -548,7 +548,7 @@ class Teachers(db.Model):
 
 
 class Tags(db.Model):
-    __table_args__ = {'mysql_charset':'utf8'}
+  # __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tags'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
@@ -573,7 +573,7 @@ class Tags(db.Model):
 
 
 class Tips(db.Model):
-    __table_args__ = {'mysql_charset':'utf8'}
+  # __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tips'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.Text)

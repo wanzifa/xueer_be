@@ -9,3 +9,4 @@ whoosh_index/
 xueer_config.py
 xueer_test.sqlite
 xueer_dev.sqlite
+supervisor.conf

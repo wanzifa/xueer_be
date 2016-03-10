@@ -128,12 +128,13 @@ def new_course():
     :return:
     """
     # request.get_json.get('item', 'default')
-    course = Courses.from_json(request.get_json())
-    db.session.add(course)
-    db.session.commit()
-    return jsonify({
-        'id': course.id
-    }), 201
+    if request.method == "POST":
+        course = Courses.from_json(request.get_json())
+        db.session.add(course)
+        db.session.commit()
+        return jsonify({
+            'id': course.id
+        }), 201
 
 
 @api.route('/courses/<int:id>/', methods=["GET", "PUT"])
