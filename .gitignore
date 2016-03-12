@@ -1,5 +1,6 @@
 **/*.pyc
 *.pyc
+.DS_Store
 xueer.sock
 -1
 .idea/

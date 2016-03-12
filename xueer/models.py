@@ -365,8 +365,8 @@ class Courses(db.Model):
         category_id = json_courses.get('category_id')
         credit = json_courses.get('credit')
         # 二级课程分类和学分分类可选
-        type_id = json_courses.get('type_id', 0)
-        subcategory_id = json_courses.get('sub_category_id', 0)
+        type_id = json_courses.get('type_id')
+        subcategory_id = json_courses.get('sub_category_id')
         return Courses(
             name=name,
             teacher=teacher,
