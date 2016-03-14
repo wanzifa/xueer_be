@@ -17,8 +17,8 @@ from xueer_config import config
 
 
 app = Flask(__name__)
-# app.config.from_object(config['product'])
-app.config.from_object(config['develop'])
+app.config.from_object(config['product'])
+# app.config.from_object(config['develop'])
 # app.config.from_envvar("XUEER_SERVER_SETTING")
 
 
