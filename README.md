@@ -103,14 +103,18 @@ search类用于存储这些分词 并且建立每个分词于原课程／教师�
 + [flask-whooshalchemy](https://github.com/gyllstromk/Flask-WhooshAlchemy)
 + [jieba分词](https://github.com/fxsjy/jieba)
 
-### 7. 后端功能测试
+### 7. 统一注册登录
+这次学而和以后木犀的其他所有产品会采用统一的账号验证登录, 纳入
+[muxiOOOOOauth](https://github.com/Muxi-Studio/muxiOOOOOauth)管理.
+
+### 8. 后端功能测试
 
 + 测试工具: [httpie](https://github.com/jkbrzt/httpie/)
     + 需要注意 httpie 会自动将 --auth 字段的值进行base64加密, 以及将token进行 "Basic Basic64(token:)" 编码
 + 抓包工具: [mitmproxy](http://mitmproxy.org)
     + [教程](http://liuxiang.logdown.com/posts/192057-use-mitmproxy-to-monitor-http-requests)
 
-### 7. 项目部署
+### 9. 项目部署
 
 [nginx](http://nginx.org) + [supervisord](http://supervisord.org) + [gunicorn](http://gunicorn.org) + wsgi <br/>
 **nginx 反向代理gunicorn启动flask应用,使用supervisord管理进程**
@@ -119,7 +123,7 @@ search类用于存储这些分词 并且建立每个分词于原课程／教师�
 2. [nginx常用命令](http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html)
 3. [gunicorn与uwsgi](http://lenciel.cn/2013/08/why-you-need-something-like-gunicorn/)
 
-### 8. 其他
+### 10. 其他
 
 1. 压力测试工具: [siege](https://github.com/JoeDog/siege)
 2. 统计工具: 百度统计...
