@@ -97,6 +97,8 @@ linux设置环境变量的方法
     + [postgresql新手入门](http://www.ruanyifeng.com/blog/2013/12/getting_started_with_postgresql.html)
 
 ### 6. 全文搜索
+基本思路: 主要是一个save函数和一个search类, save函数实现对存入的每一个课程／教师／标签名进行排查, 对没有分的进行分词
+search类用于存储这些分词 并且建立每个分词于原课程／教师／标签的关系.
 
 + [flask-whooshalchemy](https://github.com/gyllstromk/Flask-WhooshAlchemy)
 + [jieba分词](https://github.com/fxsjy/jieba)
