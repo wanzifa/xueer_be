@@ -13,14 +13,15 @@ from . import api
 from flask import request, jsonify
 
 
-@api.route('/sure/')
+@api.route('/sure/', methods=["GET", "POST"])
 def sure():
-    email = request.get_json().get('email')
-    user = User.query.filter_by(email=email).first()
-    if user:
-        return jsonify({
-          "user": "true"
-        })
-    else:
-        return jsonify({"user": "false"})
+    if request.method == "POST":
+        email = request.get_json().get('email')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            return jsonify({
+              "user": "true"
+            })
+        else:
+            return jsonify({"user": "false"})
 
