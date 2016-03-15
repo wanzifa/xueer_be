@@ -124,3 +124,6 @@ search类用于存储这些分词 并且建立每个分词于原课程／教师�
 1. 压力测试工具: [siege](https://github.com/JoeDog/siege)
 2. 统计工具: 百度统计...
 
+## LICENSE
+muxi license @ muxistudio
+
