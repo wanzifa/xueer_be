@@ -33,3 +33,12 @@ def admin_required(f):
             return f(*args, **kwargs)
     return decorated
 
+
+def admin_login(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not current_user.is_administrator():
+             abort(403)
+        return f(*args, **kwargs)
+    return decorated
+

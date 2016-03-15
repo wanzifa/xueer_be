@@ -17,8 +17,8 @@ from xueer_config import config
 
 
 app = Flask(__name__)
-# app.config.from_object(config['product'])
-app.config.from_object(config['develop'])
+app.config.from_object(config['product'])
+# app.config.from_object(config['develop'])
 # app.config.from_envvar("XUEER_SERVER_SETTING")
 
 
@@ -37,4 +37,7 @@ app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
 from api_1_0 import api as api_1_0_blueprint
 app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
+
+from admin import admin as admin_blueprint
+app.register_blueprint(admin_blueprint, url_prefix='/admin/')
 
