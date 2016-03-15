@@ -14,7 +14,7 @@ def category():
     """
     categories = CourseCategories.query.all()
     return jsonify({
-        category.name: category.id for category in categories
+     	category.name: [category.id for category in categories]
     })
 
 
@@ -57,7 +57,7 @@ def sub_category():
     main_category_id = request.args.get('main_category_id')
     sub_categories = CoursesSubCategories.query.filter_by(main_category_id=main_category_id).all()
     return jsonify({
-        sub_category.name: sub_category.id for sub_category in sub_categories
+        sub_category.name: [sub_category.id for sub_category in sub_categories]
     })
 
 
@@ -96,6 +96,6 @@ def credit_categories():
     """
     credit_categories = CourseTypes.query.all()
     return jsonify({
-        credit_category.name: credit_category.id for credit_category in credit_categories
+        credit_category.name: [credit_category.id for credit_category in credit_categories]
     })
 
