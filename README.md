@@ -1,105 +1,113 @@
-# xueer_be
+# 学而后端代码库
+![xueer](https://avatars2.githubusercontent.com/u/10476331?v=3&s=200)
 
-    the backend of xueer::学而后台
-  
-## 0. build
-### virtual environment
+## 1. 介绍
+学而后端代码主要使用[python flask](https://github.com/mitsuhiko/flas://github.com/mitsuhiko/flask)框架开发,
+提供后端数据存储[PostgreSql](http://www.postgresql.org),
+并向[学而移动版](https://github.com/Muxi-Studio/Xueer_Moblie),
+和学而桌面版(待开发)提供数据接口.
 
-    $ virtual venv
-    $ source venv/bin/activate
-    
-### install extensions
+## 2. 本地构建开发环境
 
-    $ pip install -r requirement.txt (--no-cache-dir)
-    
-### test database
-#### create Role
+### 1. clone 这个仓库到本地
 
-    $ chmod 777 data.sh
-    $ ./data.sh
+    $ git clone https://github.com/Muxi-Studio/xueer_be.git
+
+### 2. 创建虚拟环境并安装扩展
+
+    $ virtualenv venv && source venv/bin/activate
+    $ pip install -r requirements/dev.txt
+
+如果pip安装较慢推荐使用[豆瓣pypi源](https://www.douban.com/note/302711300/)
+
+### 3. 构建本地数据库
+本地数据库使用轻量的[sqlite](https://www.sqlite.org)
+
+    $ python manage.py db init  # 创建迁移目录
+    $ python manage.py db migrate  # 初始迁移
+    $ python manage.py db upgrade  # 更新数据库
+
+### 4. 创建用户角色
+学而设有三种用户角色(普通用户, 协管员, 管理员)
+
+    $ python manage.py shell
     >> Role.insert_roles()
 
-#### fake data
+### 5. 添加用户
 
-    >> User.generate_fake()
-    >> Courses.generate_fake()
-    >> quit()
+    $ python manage.py adduser username useremail
+    password: 
+    comfirmd: 
 
-    $ password:
-    $ confirm:
+完成以上步骤, 你就可以在本地运行学而桌面版(目前就一个placeholder页面),
+以及在浏览器手机调试器中运行学而web app, 并使用学而的API服务.
 
-### run
+    $ python manage.py runserver -d
 
-    python manage.py run (--help)
+Tips: 推荐使用[Navicat](http://www.navicat.com)管理数据库.
 
+## 3. 学而后端主要部分和实现原理
 
-## 1. 参与人员
+### 1. 同步开发模式
+由于学而后端主要通过API提供数据, 所以采用前后端分离的同步开发模式, 前后端约定好API文档后
+前端使用[mock虚拟数据](http://mockjs.com)占位, 后端则使用[httpie](https://github.zohttps://github.com/jkbrzt/httpieem/)在终端
+测试API.
 
-  朱承浩、王怡凡、黄刘胤
+### 2. 开发环境设置
+学而后端配置文件采用python 类的形式将配置环境分割为4个部分:
+<code>公有配置,开发配置,测试配置,生产配置</code>, 分别对应相应的扩展txt文件. <br/>
+并且采用系统环境变量配置密钥和数据库连接路径, 既保护了敏感信息,
+又有效解决了不同环境下配置的冲突问题. <br/>
+linux设置环境变量的方法
 
-## 2. 提交流程
+    $ vim ~/.bashrc
+    ==== file .bashrc ====
 
-	fork这个仓库, 每一个新功能checkout一个新分支，向这个仓库的主分支提交
-	朱承浩(@neo1218)负责合并和维护这个仓库
+    set ENVVAR
+    export ENVVAR="xxxxxxxxx"
+    export PATH=$PATH:$ENVVAR
 
-	ps: 请每次工作前务必git pull一下
+    ======================
+    $ source ~/.bashrc
 
-## 3. 进度
+### 3. 桌面版和移动版路由
+桌面版和移动版路由使用flask的路由、视图函数实现, 本身没有太多逻辑功能,
+只是作为一个路由占位,
+并使用<code>request.user_agent.platform</code>判断用户访问平台(代码如下)
 
-	151102: 任务安排1+提交流程
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151106: 任务安排2
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151109: 任务安排3 + 提交数据库修正
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151125: 任务安排4
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151126: 本地可以运行(无语法错误)
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151126: 完成清理工作(删除不必要的模版, 导航栏及其他)
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151127: 完成mysql远程数据库部署
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151129: fix ISSUE #2, 依据文档部分完成API编写
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    151201: 添加虚拟数据、修复API部分bug
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151201: 基础API review完毕， 有部分问题见 milestone(Basic API)
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151204: 首页、登录页、点赞、取消点赞API的编写
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151204: 完成基础资源(老师、课程、用户、评论、标签)的CRUD编写,
-	        完成部分相互调用API的编写
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151208: 基础API除了首页tips外全部搞定
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151210: 更新API字段
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151214: merge 首页tips API
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	151221: 在测试服务器上部署成功!!!
-	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    151222: nginx响应头修改
+    def is_mobie():
+        platform = request.user_agent.platform
+        if platform in ["android", "iphone", "ipad"]:
+            return True
+        else:
+            return False
 
+### 4. API
+采用flask编写API, 具体可以参见这篇博客
 
-## 4. ToDo
-~~0. clean~~ <br/>
-~~1. token可以请求~~ <br/>
-~~3. mysql 数据库测试成功~~ <br/>
-~~4. 数据库分页编写~~ <br/>
-~~5. 测试基础数据库API~~ <br/>
-~~6. 首页、登录页、点赞、取消点赞API~~ <br/>
+1. [flask编写API的核心思想](http://neo1218.github.io/api/)
 
-    1. API 测试
-        done!
-    2. API 编写
-~~7. 首页、课程信息页、登录页、注册页 API 编写~~ <br/>
-~~8. 点赞API,~~ <br/>
-~~9. 首页tips API~~ <br/>
-~~10. 搜索~~ <br/>
+### 5. 数据存储
+学而后台在开发过程中使用过3个数据库(sqlite, mysql, postgresql),
+最终决定使用两个数据库(sqlite和postgresql)分别用于本地环境和生产环境.需要注意sqlite不支持行更新和删除.
 
-    权限管理
-    错误与异常处理
++ postgresql资源
+    + [centos源码编译安装初始化postgresql数据库](http://www.centoscn.com/image-text/install/2015/0524/5518.html)
+    + [postgresql设置允许远程访问的方法](http://blog.csdn.net/ll136078/article/details/12747403)
+    + [postgresql新手入门](http://www.ruanyifeng.com/blog/2013/12/getting_started_with_postgresql.html)
 
-    优化(服务器性能优化配置、浏览器首页静态化。。。)
+### 6. 后端功能测试
+
++ 测试工具: [httpie](https://github.com/jkbrzt/httpie/)
+    + 需要注意 httpie 会自动将 --auth 字段的值进行base64加密, 以及将token进行 "Basic Basic64(token:)" 编码
++ 抓包工具: [mitmproxy](http://mitmproxy.org)
+    + [教程](http://liuxiang.logdown.com/posts/192057-use-mitmproxy-to-monitor-http-requests)
+
+### 7. 项目部署
+
+[nginx](http://nginx.org) + [supervisord](http://supervisord.org) + [gunicorn](http://gunicorn.org) + wsgi <br/>
+nginx 反向代理gunicorn启动flask应用,使用supervisord管理进程
+
+1. [supervisord使用教程](http://www.restran.net/2015/10/04/supervisord-tutorial/)
+
 
