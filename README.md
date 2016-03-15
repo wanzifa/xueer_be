@@ -96,7 +96,12 @@ linux设置环境变量的方法
     + [postgresql设置允许远程访问的方法](http://blog.csdn.net/ll136078/article/details/12747403)
     + [postgresql新手入门](http://www.ruanyifeng.com/blog/2013/12/getting_started_with_postgresql.html)
 
-### 6. 后端功能测试
+### 6. 全文搜索
+
++ [flask-whooshalchemy](https://github.com/gyllstromk/Flask-WhooshAlchemy)
++ [jieba分词](https://github.com/fxsjy/jieba)
+
+### 7. 后端功能测试
 
 + 测试工具: [httpie](https://github.com/jkbrzt/httpie/)
     + 需要注意 httpie 会自动将 --auth 字段的值进行base64加密, 以及将token进行 "Basic Basic64(token:)" 编码
@@ -106,8 +111,14 @@ linux设置环境变量的方法
 ### 7. 项目部署
 
 [nginx](http://nginx.org) + [supervisord](http://supervisord.org) + [gunicorn](http://gunicorn.org) + wsgi <br/>
-nginx 反向代理gunicorn启动flask应用,使用supervisord管理进程
+**nginx 反向代理gunicorn启动flask应用,使用supervisord管理进程**
 
 1. [supervisord使用教程](http://www.restran.net/2015/10/04/supervisord-tutorial/)
+2. [nginx常用命令](http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html)
+3. [gunicorn与uwsgi](http://lenciel.cn/2013/08/why-you-need-something-like-gunicorn/)
 
+### 8. 其他
+
+1. 压力测试工具: [siege](https://github.com/JoeDog/siege)
+2. 统计工具: 百度统计...
 
