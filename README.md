@@ -96,18 +96,38 @@ linux设置环境变量的方法
     + [postgresql设置允许远程访问的方法](http://blog.csdn.net/ll136078/article/details/12747403)
     + [postgresql新手入门](http://www.ruanyifeng.com/blog/2013/12/getting_started_with_postgresql.html)
 
-### 6. 后端功能测试
+### 6. 全文搜索
+基本思路: 主要是一个save函数和一个search类, save函数实现对存入的每一个课程／教师／标签名进行排查, 对没有分的进行分词
+search类用于存储这些分词 并且建立每个分词于原课程／教师／标签的关系.
+
++ [flask-whooshalchemy](https://github.com/gyllstromk/Flask-WhooshAlchemy)
++ [jieba分词](https://github.com/fxsjy/jieba)
+
+### 7. 统一注册登录
+这次学而和以后木犀的其他所有产品会采用统一的账号验证登录, 纳入
+[muxiOOOOOauth](https://github.com/Muxi-Studio/muxiOOOOOauth)管理.
+
+### 8. 后端功能测试
 
 + 测试工具: [httpie](https://github.com/jkbrzt/httpie/)
     + 需要注意 httpie 会自动将 --auth 字段的值进行base64加密, 以及将token进行 "Basic Basic64(token:)" 编码
 + 抓包工具: [mitmproxy](http://mitmproxy.org)
     + [教程](http://liuxiang.logdown.com/posts/192057-use-mitmproxy-to-monitor-http-requests)
 
-### 7. 项目部署
+### 9. 项目部署
 
 [nginx](http://nginx.org) + [supervisord](http://supervisord.org) + [gunicorn](http://gunicorn.org) + wsgi <br/>
-nginx 反向代理gunicorn启动flask应用,使用supervisord管理进程
+**nginx 反向代理gunicorn启动flask应用,使用supervisord管理进程**
 
 1. [supervisord使用教程](http://www.restran.net/2015/10/04/supervisord-tutorial/)
+2. [nginx常用命令](http://www.cnblogs.com/derekchen/archive/2011/02/17/1957209.html)
+3. [gunicorn与uwsgi](http://lenciel.cn/2013/08/why-you-need-something-like-gunicorn/)
 
+### 10. 其他
+
+1. 压力测试工具: [siege](https://github.com/JoeDog/siege)
+2. 统计工具: 百度统计...
+
+## LICENSE
+muxi license @ muxistudio
 
