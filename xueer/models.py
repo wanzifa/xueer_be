@@ -147,7 +147,7 @@ class User(UserMixin, db.Model):
         password_decode = base64.b64decode(password)
         self.password_hash = generate_password_hash(password_decode)
 
-   def verify_password(self, password):
+    def verify_password(self, password):
         # password = base64.b64decode(password)
         return check_password_hash(self.password_hash, password)
 
@@ -407,7 +407,7 @@ class CoursesSubCategories(db.Model):
     __tablename__ = 'subcategory'
     id = db.Column(db.Integer, primary_key=True)
     main_category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    name = db.Column(db.String(40))
+    name = db.Column(db.String(640))
     courses = db.relationship('Courses', backref='subcategory', lazy='dynamic')
 
     def __repr__(self):

@@ -4,6 +4,7 @@ from xueer import db
 from xueer.decorators import admin_required
 from xueer.models import CourseCategories, CourseTypes, CoursesSubCategories
 from flask import jsonify, request
+import json
 
 
 @api.route('/main_category/', methods=['GET'])
@@ -56,9 +57,11 @@ def update_category(id):
 def sub_category():
     main_category_id = request.args.get('main_category_id')
     sub_categories = CoursesSubCategories.query.filter_by(main_category_id=main_category_id).all()
-    return jsonify({
-        sub_category.name: [sub_category.id for sub_category in sub_categories]
-    })
+    return json.dumps(
+         [{sub_category.name:sub_category.id} for sub_category in sub_categories],
+         indent = 1,
+	 ensure_ascii = True
+    ), 200
 
 
 @api.route('/sub_category/', methods=['GET', 'POST'])
