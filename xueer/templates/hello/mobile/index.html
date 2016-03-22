@@ -445,13 +445,13 @@
 				<img src="/static/x_m/avatar.png"></img>
             </div>
             <div class="content <% if (fold){ %>content_fold<% } %>">
-                <div class="name"><%= user_name %></div>
+                <div class="name"><%= _.escape(user_name) %></div>
                 <div class="time"><%= date %></div>
                 <div class="body">
                  <% if (fold){ %> 
-                    <%= body_short %> 
+                    <%= _.escape(body_short) %> 
                  <% } else { %>
-                    <%= body %> 
+                    <%= _.escape(body) %> 
                  <% } %>
                 </div>
                 <div class="like">
