@@ -149,10 +149,8 @@ def put_course(id):
         course.name = data_dict.get('name', course.name)
         course.teacher = data_dict.get('teacher', course.teacher)
         course.category_id = data_dict.get('category_id', course.category_id)
-        if course.subcategory_id:
-            course.subcategory_id = data_dict.get('sub_category_id', course.subcategory_id)
-        if course.type_id:
-            course.type_id = data_dict.get('type_id', course.type_id)
+        course.subcategory_id = data_dict.get('sub_category_id', course.subcategory_id)
+        course.type_id = data_dict.get('type_id', course.type_id)
         db.session.add(course)
         db.session.commit()
     return jsonify({'update': id}), 200
