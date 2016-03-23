@@ -679,7 +679,7 @@ class Search(db.Model):
 
 whooshalchemy.whoosh_index(app, Search)
 
-
+"""
 def save():
     for course in Courses.query.all():
         seg_list = jieba.cut_for_search(course.name)
@@ -714,6 +714,7 @@ def save():
                 s.tags.append(tag)
                 db.session.add(s)
                 db.session.commit()
+"""
 
 
 class KeyWords(db.Model):

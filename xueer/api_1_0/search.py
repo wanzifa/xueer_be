@@ -3,7 +3,7 @@
 from flask import jsonify, url_for, request, current_app
 from flask_login import current_user
 from .authentication import auth
-from ..models import Courses, User, Tags, CourseCategories, Search, save, Teachers, KeyWords
+from ..models import Courses, User, Tags, CourseCategories, Search,  Teachers, KeyWords
 from . import api
 from xueer import db
 import json
@@ -18,7 +18,6 @@ def get_search():
     :param keywords:
     :return:
     """
-    save()
     courses = []
     course1 = []
     course2 = []
