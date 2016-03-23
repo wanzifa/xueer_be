@@ -37,7 +37,7 @@ class Role(db.Model):
     name = db.Column(db.String(64), unique=True)
     default = db.Column(db.Boolean, default=False, index=True)
     permissions = db.Column(db.Integer)
-    users = db.relationship('User', backref='role', lazy='dynamic')
+    users = db.relationship('User', backref='role', lazy='dynamic', cascade='all')
 
     @staticmethod
     def insert_roles():
@@ -128,7 +128,7 @@ class User(UserMixin, db.Model):
     qq = db.Column(db.String(164), index=True)
     major = db.Column(db.String(200), index=True)
     password_hash = db.Column(db.String(128))
-    comments = db.relationship("Comments", backref='users', lazy="dynamic")
+    comments = db.relationship("Comments", backref='users', lazy="dynamic", cascade='all')
     phone = db.Column(db.String(200), default=None)
     school = db.Column(db.String(200), index=True, default=None)
 
@@ -267,18 +267,19 @@ class Courses(db.Model):
     introduction = db.Column(db.Text)
 
     # comment(定义和Comments表的一对多关系)
-    comment = db.relationship('Comments', backref="courses", lazy='dynamic')
+    comment = db.relationship('Comments', backref="courses", lazy='dynamic', cascade='all')
     # count: 课程对应的评论数
     count = db.Column(db.Integer)
     # likes: 课程对应的点赞数
     likes = db.Column(db.Integer)
     # 定义与标签的多对多关系
-    tags = db.relationship("CourseTag", backref="courses", lazy="dynamic")
+    tags = db.relationship("CourseTag", backref="courses", lazy="dynamic", cascade='all')
     users = db.relationship(
         "User",
         secondary=UCLike,
         backref=db.backref('courses', lazy="dynamic"),
-        lazy='dynamic'
+        lazy='dynamic',
+        cascade='all'
     )
     #search定义和search表的多对多关系
 
@@ -391,8 +392,8 @@ class CourseCategories(db.Model):
     __tablename__ = 'category'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
-    courses = db.relationship("Courses", backref="category", lazy="dynamic")
-    subcategories = db.relationship("CoursesSubCategories", backref="category", lazy="dynamic")
+    courses = db.relationship("Courses", backref="category", lazy="dynamic", cascade='all')
+    subcategories = db.relationship("CoursesSubCategories", backref="category", lazy="dynamic", cascade='all')
 
 
     def __repr__(self):
@@ -408,7 +409,7 @@ class CoursesSubCategories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     main_category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     name = db.Column(db.String(640))
-    courses = db.relationship('Courses', backref='subcategory', lazy='dynamic')
+    courses = db.relationship('Courses', backref='subcategory', lazy='dynamic', cascade='all')
 
     def __repr__(self):
         return "<SubCategory %r> % self.name"
@@ -425,7 +426,7 @@ class CourseTypes(db.Model):
     __tablename__ = 'type'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30))
-    courses = db.relationship("Courses", backref="type", lazy="dynamic")
+    courses = db.relationship("Courses", backref="type", lazy="dynamic", cascade='all')
 
     def __repr__(self):
         return '<CourseType %r>' % self.name
@@ -450,7 +451,8 @@ class Comments(db.Model):
         "User",
         secondary=UCMLike,
         backref=db.backref('comment', lazy="dynamic"),
-        lazy='dynamic'
+        lazy='dynamic',
+        cascade='all'
     )
 
     @property
@@ -553,7 +555,7 @@ class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     count = db.Column(db.Integer)
-    courses = db.relationship("CourseTag", backref="tags", lazy="dynamic")
+    courses = db.relationship("CourseTag", backref="tags", lazy="dynamic", cascade='all')
 
     def to_json(self):
         json_tag = {
@@ -589,7 +591,7 @@ class Tips(db.Model):
         "User",
         secondary=UTLike,
         backref=db.backref('tips', lazy="dynamic"),
-        lazy='dynamic'
+        lazy='dynamic', cascade='all'
     )
 
     @property
@@ -662,13 +664,13 @@ class Search(db.Model):
         'Courses',
         secondary = CourseSearch,
         backref = db.backref('search', lazy='dynamic'),
-        lazy='dynamic'
+        lazy='dynamic', cascade='all'
     )
     tags = db.relationship(
         'Tags',
         secondary = TagSearch,
         backref = db.backref('search', lazy='dynamic'),
-        lazy='dynamic'
+        lazy='dynamic', cascade='all'
     )
 
     def __repr__(self):
