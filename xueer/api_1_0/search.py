@@ -108,9 +108,9 @@ def get_search():
 
     if not courses:
         course_name_count = {}
-        for item in keywords:
+        for course in Courses.query.all():
             course_name_count[course.name] = 0
-            for course in Courses.query.all():
+            for item in keywords:
                 if item in course.name:
                     course_name_count[course.name] += 1
                     if course_name_count[course.name] == len(keywords)/3:
