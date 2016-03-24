@@ -16,24 +16,21 @@ def get_search():
     """
     获取搜索结果
     :param keywords:
-    :return:
+    :return: search results
     """
-    courses = []
-    course1 = []
-    course2 = []
-    course3 = []
-    if request.args.get('keywords'):
-        keywords = request.args.get('keywords')
-        if KeyWords.query.filter_by(name=keywords).all():
-            k = KeyWords.query.filter_by(name=keywords).first()
-        else:
+    courses = []; course1 = []; course2 = [] ;course3 = []
+    keywords = request.args.get('keywords')
+    if keywords:
+        k = KeyWords.query.filter_by(name=keywords).first()
+        if k is None:
             k = KeyWords(name=keywords)
             db.session.add(k)
             db.session.commit()
         k.counts += 1
         db.session.add(k)
         db.session.commit()
-        searches = Search.query.whoosh_search(keywords)
+
+        searches = Search.query.whoosh_search(keywords)  # ?what searches is?
         course3 = Courses.query.whoosh_search(keywords).all()
         if request.args.get('sort') == 'view':
             if request.args.get('main_cat'):
@@ -59,7 +56,6 @@ def get_search():
                             course2 += tag.courses.fiter_by(category_id=request.args.get('main_cat')).all()
                     course0 = course1 + course2 + course3
                     courses =sorted(course0,  key=lambda course : course.count, reverse=True)
-
             else:
                 for search in searches:
                     course1 += search.courses.all()
@@ -68,7 +64,6 @@ def get_search():
                         course2 += tag.courses.all()
                     course0 = course1 + course2 + course3
                     courses = sorted(course0,  key=lambda course : course.count, reverse=True)
-
         elif request.args.get('sort') == 'like':
             if request.args.get('main_cat'):
                 if request.args.get('ts_cat'):
