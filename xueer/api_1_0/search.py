@@ -106,6 +106,7 @@ def get_search():
                    course2 += tag.courses.all()
             courses = course1+course2+course3
 
+    """
     if not courses:
         course_name_count = {}
         for course in Courses.query.all():
@@ -118,6 +119,7 @@ def get_search():
             courses =sorted(courses,  key=lambda course : course.count, reverse=True)
         elif request.args.get('sort') == 'like':
             courses =sorted(courses,  key=lambda course : course.likes, reverse=True)
+    """
 
     return json.dumps(
         [course.to_json2() for course in courses],
