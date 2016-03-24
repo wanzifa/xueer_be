@@ -113,7 +113,7 @@ def get_search():
                 course_name_count[course.name] = 0
                 if item in course.name:
                     course_name_count[course.name] += 1
-                    if course_name_count[course.name] == len(item)/3:
+                    if course_name_count[course.name] == len(keywords)/3:
                         courses.append(course)
         if request.args.get('sort') == 'view':
             courses =sorted(course0,  key=lambda course : course.count, reverse=True)
