@@ -68,6 +68,7 @@ def new_tag(id):
     for seg in results:
         s = Search(name=seg)
         db.session.add(s)
+        s.tags.append(tag)
         db.session.commit()
     return jsonify({'id': tag.id}), 201, {
         # location 会自动写在头部
