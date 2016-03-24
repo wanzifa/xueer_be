@@ -111,6 +111,7 @@ def get_search():
                for tag in tags:
                    course2 += tag.courses.all()
             courses = course1+course2+course3
+
     if not courses:
         course_name_count = {}
         for item in keywords:
