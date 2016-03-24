@@ -108,12 +108,20 @@ def get_search():
 
     """
     if not courses:
+        #这个字典用来存储课程名以及它对应的关键字元素匹配个数
         course_name_count = {}
         for course in Courses.query.all():
+            #关键字元素匹配个数初始值都是0
             course_name_count[course.name] = 0
+            #item就是关键字中取出来做匹配的元素
             for item in keywords:
                 if item in course.name:
-                    courses.append(course)
+                    courses_name_count[course.name] += 1
+                    # 如果课程名对应的关键字元素匹配数和关键字内的元素个数相等
+                    # 比如"马基"有两个汉字 如果courses_name_count也等于2 也就是匹配了这个名字中拆开的所有字
+                    # 说明这个课程和马基关联很大 我们返回搜索结果
+                    if courses_name_count[course.name] == len(keywords)/3:
+                        courses.append(course)
         courses = list(set(courses))
         if request.args.get('sort') == 'view':
             courses =sorted(courses,  key=lambda course : course.count, reverse=True)
