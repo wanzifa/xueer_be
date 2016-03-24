@@ -116,9 +116,9 @@ def get_search():
                     if course_name_count[course.name] == len(keywords)/3:
                         courses.append(course)
         if request.args.get('sort') == 'view':
-            courses =sorted(course0,  key=lambda course : course.count, reverse=True)
+            courses =sorted(courses,  key=lambda course : course.count, reverse=True)
         elif request.args.get('sort') == 'like':
-            courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
+            courses =sorted(courses,  key=lambda course : course.likes, reverse=True)
 
     return json.dumps(
         [course.to_json2() for course in courses],
