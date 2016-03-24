@@ -140,6 +140,7 @@ def new_course():
             results.append(course.name)
         for seg in results:
             s = Search(name=seg)
+            s.courses.append(course)
             db.session.add(s)
             db.session.commit()
         return jsonify({
@@ -163,6 +164,16 @@ def put_course(id):
         course.type_id = data_dict.get('type_id', course.type_id)
         db.session.add(course)
         db.session.commit()
+        generator = jieba.cut_for_search(course.name)
+        seg_list = '/'.join(generator)
+        results = seg_list.split('/')
+        if course.name not in results:
+            results.append(course.name)
+        for seg in results:
+            s = Search(name=seg)
+            s.courses.append(course)
+            db.session.add(s)
+            db.session.commit()
     return jsonify({'update': id}), 200
 
 
