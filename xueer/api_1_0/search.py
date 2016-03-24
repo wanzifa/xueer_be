@@ -118,9 +118,8 @@ def get_search():
             course_name_count[course.name] = 0
             for item in keywords:
                 if item in course.name:
-                    course_name_count[course.name] += 1
-            if course_name_count[course.name] == len(keywords.decode('utf8'))/3:
-                courses.append(course)
+                    courses.append(course)
+        courses = list(set(courses))
         if request.args.get('sort') == 'view':
             courses =sorted(courses,  key=lambda course : course.count, reverse=True)
         elif request.args.get('sort') == 'like':
