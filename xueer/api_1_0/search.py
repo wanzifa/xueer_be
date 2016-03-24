@@ -111,6 +111,19 @@ def get_search():
                for tag in tags:
                    course2 += tag.courses.all()
             courses = course1+course2+course3
+    if not courses:
+        course_name_count = {}
+        for item in keywords:
+            for course in Courses.query.all():
+                course_name_count[course.name] = 0
+                if item in course.name:
+                    course_name_count[course.name] += 1
+                    if course_name_count[course.name] == len(item)/3:
+                        courses.append(course)
+        if request.args.get('sort') == 'view':
+            courses =sorted(course0,  key=lambda course : course.count, reverse=True)
+        elif request.args.get('sort') == 'like':
+            courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
 
     return json.dumps(
         [course.to_json2() for course in courses],
