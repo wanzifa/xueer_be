@@ -34,15 +34,18 @@ def get_search():
         db.session.add(k)
         db.session.commit()
         searches = Search.query.whoosh_search(keywords)
+        #对教师进行搜索
         course3 = Courses.query.whoosh_search(keywords).all()
         if request.args.get('sort') == 'view':
             if request.args.get('main_cat'):
                 if request.args.get('ts_cat'):
+                    #根据课程名搜索
                     for search in searches:
                         course1 = search.courses.filter_by(
                             type_id=request.args.get('ts_cat'),
                             category_id=request.args.get('main_cat')
                         ).all()
+                        #根据标签搜索
                         for tag in search.tags:
                             course = tag.courses.filter_by(
                             type_id=request.args.get('ts_cat'),
