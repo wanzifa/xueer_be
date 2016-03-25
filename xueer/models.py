@@ -552,6 +552,7 @@ class Teachers(db.Model):
 class Tags(db.Model):
   # __table_args__ = {'mysql_charset':'utf8'}
     __tablename__ = 'tags'
+    __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80))
     count = db.Column(db.Integer)
@@ -666,12 +667,12 @@ class Search(db.Model):
         backref = db.backref('search', lazy='dynamic'),
         lazy='dynamic', cascade='all'
     )
-    tags = db.relationship(
-        'Tags',
-        secondary = TagSearch,
-        backref = db.backref('search', lazy='dynamic'),
-        lazy='dynamic', cascade='all'
-    )
+    # tags = db.relationship(
+    #   'Tags',
+    #    secondary = TagSearch,
+    #    backref = db.backref('search', lazy='dynamic'),
+    #    lazy='dynamic', cascade='all'
+    # )
 
     def __repr__(self):
         return '<Search %r>' % self.name

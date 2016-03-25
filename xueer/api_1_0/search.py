@@ -33,83 +33,105 @@ def get_search():
         k.counts += 1
         db.session.add(k)
         db.session.commit()
-        searches = Search.query.whoosh_search(keywords)
-        #对教师进行搜索
-        course3 = Courses.query.whoosh_search(keywords).all()
+        search = Search.query.whoosh_search(keywords).first()
         if request.args.get('sort') == 'view':
             if request.args.get('main_cat'):
                 if request.args.get('ts_cat'):
+                    #对教师进行搜索
+                    course3 = Courses.query.whoosh_search(keywords).filter_by(
+                                type_id=request.args.get('ts_cat'),
+                                category_id=request.args.get('main_cat')
+                            ).all()
+                    #对标签进行搜索
+                    course2 = Tags.query.whoosh_search(keywords).first().courses.filter_by(
+                                        type_id=request.args.get('ts_cat'),
+                                        category_id=request.args.get('main_cat')
+                              ).all()
                     #根据课程名搜索
-                    for search in searches:
-                        course1 = search.courses.filter_by(
-                            type_id=request.args.get('ts_cat'),
-                            category_id=request.args.get('main_cat')
-                        ).all()
-                        #根据标签搜索
-                        for tag in search.tags:
-                            course = tag.courses.filter_by(
-                            type_id=request.args.get('ts_cat'),
-                            category_id=request.args.get('main_cat')
-                        ).all()
-                            course2 += course
-                    course0 = course1 + course2 + course3
-                    courses =sorted(course0,  key=lambda course : course.count, reverse=True)
+                    course1 = search.courses.filter_by(
+                        type_id=request.args.get('ts_cat'),
+                        category_id=request.args.get('main_cat')
+                    ).all()
+                    course0 = list(set(course1 + course2 + course3))
+                    courses = sorted(course0,  key=lambda course : course.count, reverse=True)
                 else:
-                    for search in searches:
-                        course1 += search.courses.filter_by(category_id=request.args.get('main_cat')).all()
-                        tags = search.tags
-                        for tag in tags:
-                            course2 += tag.courses.fiter_by(category_id=request.args.get('main_cat')).all()
-                    course0 = course1 + course2 + course3
+                    #对教师进行搜索
+                    course3 = Courses.query.whoosh_search(keywords).filter_by(
+                                category_id=request.args.get('main_cat')
+                            ).all()
+                    #对标签进行搜索
+                    course2 = Tags.query.whoosh_search(keywords).first().courses.filter_by(
+                                        category_id=request.args.get('main_cat')
+                              ).all()
+                    #根据课程名搜索
+                    course1 = search.courses.filter_by(
+                        category_id=request.args.get('main_cat')
+                    ).all()
+                    course0 = list(set(course1 + course2 + course3))
                     courses =sorted(course0,  key=lambda course : course.count, reverse=True)
 
             else:
-                for search in searches:
-                    course1 += search.courses.all()
-                    tags = search.tags
-                    for tag in tags:
-                        course2 += tag.courses.all()
-                    course0 = course1 + course2 + course3
-                    courses = sorted(course0,  key=lambda course : course.count, reverse=True)
+                #对教师进行搜索
+                course3 = Courses.query.whoosh_search(keywords).all()
+                #对标签进行搜索
+                course2 = Tags.query.whoosh_search(keywords).first().courses.all()
+                #根据课程名搜索
+                course1 = search.courses.all()
+                course0 = list(set(course1 + course2 + course3))
+                courses = sorted(course0,  key=lambda course : course.count, reverse=True)
 
         elif request.args.get('sort') == 'like':
             if request.args.get('main_cat'):
                 if request.args.get('ts_cat'):
-                    for search in searches:
-                        course1 = search.courses.filter_by(
-                            type_id=request.args.get('ts_cat'),
-                            category_id=request.args.get('main_cat')
-                        ).all()
-                        for tag in search.tags:
-                            course = tag.courses.filter_by(
-                            type_id=request.args.get('ts_cat'),
-                            category_id=request.args.get('main_cat')
-                        ).all()
-                            course2 += course
-                    course0 = course1 + course2 + course3
-                    courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
+                    #对教师进行搜索
+                    course3 = Courses.query.whoosh_search(keywords).filter_by(
+                                type_id=request.args.get('ts_cat'),
+                                category_id=request.args.get('main_cat')
+                            ).all()
+                    #对标签进行搜索
+                    course2 = Tags.query.whoosh_search(keywords).first().courses.filter_by(
+                                        type_id=request.args.get('ts_cat'),
+                                        category_id=request.args.get('main_cat')
+                              ).all()
+                    #根据课程名搜索
+                    course1 = search.courses.filter_by(
+                        type_id=request.args.get('ts_cat'),
+                        category_id=request.args.get('main_cat')
+                    ).all()
+                    course0 = list(set(course1 + course2 + course3))
+                    courses = sorted(course0,  key=lambda course : course.likes, reverse=True)
                 else:
-                    for search in searches:
-                        course1 += search.courses.filter_by(category_id=request.args.get('main_cat')).all()
-                        tags = search.tags
-                        for tag in tags:
-                            course2 += tag.courses.fiter_by(category_id=request.args.get('main_cat')).all()
-                    course0 = course1 + course2 + course3
+                    #对教师进行搜索
+                    course3 = Courses.query.whoosh_search(keywords).filter_by(
+                                category_id=request.args.get('main_cat')
+                            ).all()
+                    #对标签进行搜索
+                    course2 = Tags.query.whoosh_search(keywords).first().courses.filter_by(
+                                        category_id=request.args.get('main_cat')
+                              ).all()
+                    #根据课程名搜索
+                    course1 = search.courses.filter_by(
+                        category_id=request.args.get('main_cat')
+                    ).all()
+                    course0 = list(set(course1 + course2 + course3))
                     courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
             else:
-                for search in searches:
-                    course1 += search.courses.all()
-                    tags = search.tags
-                    for tag in tags:
-                        course2 += tag.courses.all()
-                course0 = course1 + course2 + course3
+                #对教师进行搜索
+                course3 = Courses.query.whoosh_search(keywords).all()
+                #对标签进行搜索
+                course2 = Tags.query.whoosh_search(keywords).first().courses.all()
+                #根据课程名搜索
+                course1 = search.courses.all()
+                course0 = list(set(course1 + course2 + course3))
                 courses =sorted(course0,  key=lambda course : course.likes, reverse=True)
         else:
-            for search in searches:
-               course1 += search.courses.all()
-               tags = search.tags
-               for tag in tags:
-                   course2 += tag.courses.all()
+            #对教师进行搜索
+            course3 = Courses.query.whoosh_search(keywords).all()
+            #对标签进行搜索
+            course2 = Tags.query.whoosh_search(keywords).first().courses.all()
+            #根据课程名搜索
+            course1 = search.courses.all()
+            course0 = list(set(course1 + course2 + course3))
             courses = course1+course2+course3
 
     """
