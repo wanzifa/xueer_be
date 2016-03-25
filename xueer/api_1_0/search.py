@@ -29,7 +29,7 @@ def get_search():
         k.counts += 1
         db.session.add(k)
         db.session.commit()
-        search = Search.query.whoosh_search(keywords).first()
+        searches = Search.query.whoosh_search(keywords).all()
         if request.args.get('sort') == 'view':
             if request.args.get('main_cat'):
                 if request.args.get('ts_cat'):
@@ -46,10 +46,12 @@ def get_search():
                                 category_id=request.args.get('main_cat')
                             ).all()
                     #根据课程名搜索
-                    course1 = search.courses.filter_by(
-                        type_id=request.args.get('ts_cat'),
-                        category_id=request.args.get('main_cat')
-                    ).all()
+                    for search in searches:
+                        if search.courses is not None:
+                        course1 += search.courses.filter_by(
+                            type_id=request.args.get('ts_cat'),
+                            category_id=request.args.get('main_cat')
+                        ).all()
                     course0 = list(set(course1 + course2 + course3))
                     courses = sorted(course0,  key=lambda course : course.count, reverse=True)
                 else:
@@ -64,9 +66,11 @@ def get_search():
                                 category_id=request.args.get('main_cat')
                             ).all()
                     #根据课程名搜索
-                    course1 = search.courses.filter_by(
-                        category_id=request.args.get('main_cat')
-                    ).all()
+                    for search in searches:
+                        if search.courses is not None:
+                        course1 += search.courses.filter_by(
+                            category_id=request.args.get('main_cat')
+                        ).all()
                     course0 = list(set(course1 + course2 + course3))
                     courses = sorted(course0,  key=lambda course : course.count, reverse=True)
             else:
@@ -77,7 +81,9 @@ def get_search():
                 if tag is not None:
                     course2 = tag.courses.all()
                 #根据课程名搜索
-                course1 = search.courses.all()
+                for search in searches:
+                    if search.courses is not None:
+                        course1 += search.courses.all()
                 course0 = list(set(course1 + course2 + course3))
                 courses = sorted(course0,  key=lambda course : course.count, reverse=True)
 
@@ -97,10 +103,12 @@ def get_search():
                                 category_id=request.args.get('main_cat')
                             ).all()
                     #根据课程名搜索
-                    course1 = search.courses.filter_by(
-                        type_id=request.args.get('ts_cat'),
-                        category_id=request.args.get('main_cat')
-                    ).all()
+                    for search in searches:
+                        if search.courses is not None:
+                            course1 += search.courses.filter_by(
+                                type_id=request.args.get('ts_cat'),
+                                category_id=request.args.get('main_cat')
+                            ).all()
                     course0 = list(set(course1 + course2 + course3))
                     courses = sorted(course0,  key=lambda course : course.likes, reverse=True)
                 else:
@@ -115,9 +123,11 @@ def get_search():
                                 category_id=request.args.get('main_cat')
                             ).all()
                     #根据课程名搜索
-                    course1 = search.courses.filter_by(
-                        category_id=request.args.get('main_cat')
-                    ).all()
+                    for search in searches:
+                        course1 += search.courses.filter_by(
+                            type_id=request.args.get('ts_cat'),
+                            category_id=request.args.get('main_cat')
+                        ).all()
                     course0 = list(set(course1 + course2 + course3))
                     courses = sorted(course0,  key=lambda course : course.likes, reverse=True)
             else:
@@ -128,9 +138,12 @@ def get_search():
                 if tag is not None:
                     course2 = tag.courses.all()
                 #根据课程名搜索
-                course1 = search.courses.all()
+                for search in searches:
+                    if search.courses is not None:
+                        course1 += search.courses.all()
                 course0 = list(set(course1 + course2 + course3))
                 courses = sorted(course0,  key=lambda course : course.likes, reverse=True)
+
         else:
             #对教师进行搜索
             course3 = Courses.query.whoosh_search(keywords).all()
@@ -139,7 +152,9 @@ def get_search():
             if tag is not None:
                 course2 = tag.courses.all()
             #根据课程名搜索
-            course1 = search.courses.all()
+            for search in searches:
+                if search.courses is not None:
+                    course1 += search.courses.all()
             courses = course1+course2+course3
 
     """
