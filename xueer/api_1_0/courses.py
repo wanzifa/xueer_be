@@ -139,7 +139,9 @@ def new_course():
         if course.name not in results:
             results.append(course.name)
         for seg in results:
-            s = Search(name=seg)
+            s = Search.query.filter_by(name=seg).first()
+            if not s:
+                s = Search(name=seg)
             s.courses.append(course)
             db.session.add(s)
             db.session.commit()
@@ -170,7 +172,9 @@ def put_course(id):
         if course.name not in results:
             results.append(course.name)
         for seg in results:
-            s = Search(name=seg)
+            s = Search.query.filter_by(name=seg).first()
+            if not s:
+                s = Search(name=seg)
             s.courses.append(course)
             db.session.add(s)
             db.session.commit()
