@@ -42,11 +42,11 @@ def get_search():
                     tags = Tags.query.whoosh_search(keywords).all()
                     for tag in tags:
                         if tag.courses is not None:
-                            for ct in tag.courses:
+                            for ct in tag.courses.all():
                                 course2 += ct.courses.filter_by(
                                         type_id=request.args.get('ts_cat'),
                                         category_id=request.args.get('main_cat')
-                                    ).all()
+                                    )
                     #根据课程名搜索
                     for search in searches:
                         if search.courses is not None:
@@ -65,10 +65,10 @@ def get_search():
                     tags = Tags.query.whoosh_search(keywords).all()
                     for tag in tags:
                         if tag.courses is not None:
-                            for ct in tag.courses:
+                            for ct in tag.courses.all():
                                 course2 += ct.courses.filter_by(
                                         category_id=request.args.get('main_cat')
-                                    ).all()
+                                    )
                     #根据课程名搜索
                     for search in searches:
                         if search.courses is not None:
@@ -84,8 +84,8 @@ def get_search():
                 tags = Tags.query.whoosh_search(keywords).all()
                 for tag in tags:
                     if tag.courses is not None:
-                        for ct in tag.courses:
-                            course2 += ct.courses.all()
+                        for ct in tag.courses.all():
+                            course2 += ct.courses
                 #根据课程名搜索
                 for search in searches:
                     if search.courses is not None:
@@ -105,11 +105,11 @@ def get_search():
                     tags = Tags.query.whoosh_search(keywords).all()
                     for tag in tags:
                         if tag.courses is not None:
-                            for ct in tag.courses:
+                            for ct in tag.courses.all():
                                 course2 += ct.courses.filter_by(
                                         type_id=request.args.get('ts_cat'),
                                         category_id=request.args.get('main_cat')
-                                    ).all()
+                                    )
                     #根据课程名搜索
                     for search in searches:
                         if search.courses is not None:
@@ -128,10 +128,10 @@ def get_search():
                     tags = Tags.query.whoosh_search(keywords).all()
                     for tag in tags:
                         if tag.courses is not None:
-                            for ct in tag.courses:
+                            for ct in tag.courses.all():
                                 course2 += ct.courses.filter_by(
                                         category_id=request.args.get('main_cat')
-                                    ).all()
+                                    )
                     #根据课程名搜索
                     for search in searches:
                         if search.courses is not None:
@@ -147,8 +147,8 @@ def get_search():
                 tags = Tags.query.whoosh_search(keywords).all()
                 for tag in tags:
                     if tag.courses is not None:
-                        for ct in tag.courses:
-                                course2 += ct.courses.all()
+                        for ct in tag.courses.all():
+                                course2 += ct.courses
                 #根据课程名搜索
                 for search in searches:
                     if search.courses is not None:
@@ -163,8 +163,8 @@ def get_search():
             tags = Tags.query.whoosh_search(keywords).all()
             for tag in tags:
                 if tag.courses is not None:
-                    for ct in tag.courses:
-                            course2 += ct.courses.all()
+                    for ct in tag.courses.all():
+                            course2 += ct.courses
             #根据课程名搜索
             for search in searches:
                 if search.courses is not None:
