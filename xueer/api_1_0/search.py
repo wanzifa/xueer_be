@@ -69,7 +69,6 @@ def get_search():
                                 course2 += ct.courses.filter_by(
                                         category_id=request.args.get('main_cat')
                                     ).all()
-                                ).all()
                     #根据课程名搜索
                     for search in searches:
                         if search.courses is not None:
