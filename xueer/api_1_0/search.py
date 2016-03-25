@@ -163,8 +163,7 @@ def get_search():
             tags = Tags.query.whoosh_search(keywords).all()
             for tag in tags:
                 if tag.courses is not None:
-                    for ct in tag.courses.all():
-                            course2 += ct.courses
+                 course2 = [c.courses for c in tag.courses.all()]
             #根据课程名搜索
             for search in searches:
                 if search.courses is not None:
