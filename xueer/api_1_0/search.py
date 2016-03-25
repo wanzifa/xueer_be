@@ -48,10 +48,10 @@ def get_search():
                     #根据课程名搜索
                     for search in searches:
                         if search.courses is not None:
-                        course1 += search.courses.filter_by(
-                            type_id=request.args.get('ts_cat'),
-                            category_id=request.args.get('main_cat')
-                        ).all()
+                            course1 += search.courses.filter_by(
+                                type_id=request.args.get('ts_cat'),
+                                category_id=request.args.get('main_cat')
+                            ).all()
                     course0 = list(set(course1 + course2 + course3))
                     courses = sorted(course0,  key=lambda course : course.count, reverse=True)
                 else:
