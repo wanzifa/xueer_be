@@ -155,7 +155,7 @@ def get_search():
             for search in searches:
                 if search.courses is not None:
                     course1 += search.courses.all()
-            courses = course1+course2+course3
+            courses = list(set(course1+course2+course3))
 
     """
     if not courses:
