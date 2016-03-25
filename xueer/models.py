@@ -85,17 +85,10 @@ UTLike = db.Table(
     db.Column('tips_id', db.Integer, db.ForeignKey('tips.id'))
 )
 
-# a secondary table
-# CourseTag = db.Table(
-#     'courses_tags',
-#     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id')),
-#     db.Column('course_id', db.Integer, db.ForeignKey('courses.id')),
-#     db.Column('count', db.Integer, db.ForeignKey('counts.id'))
-# )
+
 class CourseTag(db.Model):
     #__table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses_tags'
-    # id = db.Column(db.Integer, primary_key=True)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), primary_key=True)
     tag_id = db.Column(db.Integer, db.ForeignKey('tags.id'), primary_key=True)
     count = db.Column(db.Integer)
@@ -175,7 +168,7 @@ class User(UserMixin, db.Model):
                (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
-        # return self.can(Permission.ADMINISTER)
+        # is administrator
         return (self.role_id == 2)
 
     def ping(self):
@@ -187,8 +180,6 @@ class User(UserMixin, db.Model):
             'id': self.id,
             'url': url_for('api.get_user_id', id=self.id, _external=True),
             'username': self.username,
-            # 'like_courses': url_for('api.get_user_like_courses', id=self.id, _external=True),
-            # 'like_comments': self.comment.all(),
             'email': self.email,
             'qq': self.qq,
             'major': self.major,
@@ -249,6 +240,7 @@ def load_user(user_id):
 
 
 class Courses(db.Model):
+    """Courses model"""
     __searchable__ = ['teacher']
     # __table_args__ = {'mysql_charset': 'utf8'}
     __tablename__ = 'courses'
@@ -657,6 +649,11 @@ class Tips(db.Model):
 
 
 class Search(db.Model):
+    """
+    分词表: jieba分词
+    courses: 课程多对多关系
+    tags: 标签多对多关系
+    """
     __tablename__ = 'search'
     __searchable__ = ['name']
     id = db.Column(db.Integer, primary_key=True)
@@ -682,6 +679,7 @@ whooshalchemy.whoosh_index(app, Search)
 
 
 class KeyWords(db.Model):
+    """Key Words"""
     __tablename__ = 'keywords'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(164))
@@ -696,3 +694,4 @@ class KeyWords(db.Model):
 
     def __repr__(self):
         return '<KeyWords %r>' % self.name
+

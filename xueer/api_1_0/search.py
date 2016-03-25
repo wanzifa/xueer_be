@@ -16,17 +16,13 @@ def get_search():
     """
     获取搜索结果
     :param keywords:
-    :return:
+    :return: search results
     """
-    courses = []
-    course1 = []
-    course2 = []
-    course3 = []
-    if request.args.get('keywords'):
-        keywords = request.args.get('keywords')
-        if KeyWords.query.filter_by(name=keywords).all():
-            k = KeyWords.query.filter_by(name=keywords).first()
-        else:
+    courses = []; course1 = []; course2 = [] ;course3 = []
+    keywords = request.args.get('keywords')
+    if keywords:
+        k = KeyWords.query.filter_by(name=keywords).first()
+        if k is None:
             k = KeyWords(name=keywords)
             db.session.add(k)
             db.session.commit()
@@ -69,7 +65,6 @@ def get_search():
                     ).all()
                     course0 = list(set(course1 + course2 + course3))
                     courses =sorted(course0,  key=lambda course : course.count, reverse=True)
-
             else:
                 #对教师进行搜索
                 course3 = Courses.query.whoosh_search(keywords).all()
