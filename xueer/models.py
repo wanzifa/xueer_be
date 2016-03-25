@@ -566,6 +566,9 @@ class Tags(db.Model):
     def __repr__(self):
         return '<Tags %r>' % self.name
 
+whooshalchemy.whoosh_index(app, Tags)
+
+
 
 class Tips(db.Model):
   # __table_args__ = {'mysql_charset':'utf8'}
