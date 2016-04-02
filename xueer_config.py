@@ -10,7 +10,7 @@
 
 # the root url of this flask application
 import os
-from _basedir import basedir
+#from _basedir import basedir
 
 
 class Config(object):
