@@ -157,7 +157,8 @@ def get_search():
                 if search.courses is not None:
                     course1 += search.courses.all()
             courses = list(set(course1+course2+course3))
-       pagination = courses.paginate(page, per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
+       pagination = courses.paginate(
+               page, per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
                error_out=False
        ) 
        prev = ""
