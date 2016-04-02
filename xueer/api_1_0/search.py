@@ -18,6 +18,7 @@ def get_search():
     :param keywords:
     :return: search results
     """
+    page = request.args.get('page', 1, type=int)
     courses = []; course1 = []; course2 = [] ;course3 = []
     keywords = request.args.get('keywords')
     if keywords:
@@ -156,35 +157,28 @@ def get_search():
                 if search.courses is not None:
                     course1 += search.courses.all()
             courses = list(set(course1+course2+course3))
+       pagination = courses.paginate(page, per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
+               error_out=False
+       ) 
+       prev = ""
+       if pagination.has_prev:
+           prev = url_for('api.get_search', page=page-1)
+       next = ""
+       if pagination.has_next:
+           next = url_for('api.get_search', page=page+1)
+       courses_count = len(courses)
+       if courses_count%current_app.config['XUEER_COURSES_PER_PAGE'] == 0:
+           page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE']
+       else:
+           page_count = courses_count//current_app.config['XUEER_COURSES_PER_PAGE']+1
+       last = url_for('api.get_search', page=page_count, _external=True) 
 
-    """
-    if not courses:
-        #这个字典用来存储课程名以及它对应的关键字元素匹配个数
-        course_name_count = {}
-        for course in Courses.query.all():
-            #关键字元素匹配个数初始值都是0
-            course_name_count[course.name] = 0
-            #item就是关键字中取出来做匹配的元素
-            for item in keywords:
-                if item in course.name:
-                    courses_name_count[course.name] += 1
-                    # 如果课程名对应的关键字元素匹配数和关键字内的元素个数相等
-                    # 比如"马基"有两个汉字 如果courses_name_count也等于2 也就是匹配了这个名字中拆开的所有字
-                    # 说明这个课程和马基关联很大 我们返回搜索结果
-                    if courses_name_count[course.name] == len(keywords)/3:
-                        courses.append(course)
-        courses = list(set(courses))
-        if request.args.get('sort') == 'view':
-            courses =sorted(courses,  key=lambda course : course.count, reverse=True)
-        elif request.args.get('sort') == 'like':
-            courses =sorted(courses,  key=lambda course : course.likes, reverse=True)
-    """
 
     return json.dumps(
         [course.to_json2() for course in courses],
         ensure_ascii=False,
         indent=1
-    ), 200
+        ), 200,{"link":"<%s>;rel='next',<%s>;rel='last'" % (next, last)}
 
 
 
