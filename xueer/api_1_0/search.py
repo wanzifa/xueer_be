@@ -8,6 +8,7 @@ from . import api
 from xueer import db
 import json
 from sqlalchemy import desc
+from flask.ext.paginate import Pagination
 
 
 
@@ -157,7 +158,7 @@ def get_search():
                 if search.courses is not None:
                     course1 += search.courses.all()
             courses = list(set(course1+course2+course3))
-       pagination = courses.paginate(
+       pagination = Paginate(
                page, per_page=current_app.config['XUEER_COURSES_PER_PAGE'],
                error_out=False
        ) 
